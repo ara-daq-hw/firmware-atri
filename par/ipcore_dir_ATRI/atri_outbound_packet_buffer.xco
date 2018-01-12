@@ -1,7 +1,7 @@
 ##############################################################
 #
-# Xilinx Core Generator version 14.2
-# Date: Sun Oct 11 07:13:36 2015
+# Xilinx Core Generator version 14.7
+# Date: Fri Jan 12 16:13:44 2018
 #
 ##############################################################
 #
@@ -12,7 +12,7 @@
 #
 ##############################################################
 #
-#  Generated from component: xilinx.com:ip:fifo_generator:9.2
+#  Generated from component: xilinx.com:ip:fifo_generator:9.3
 #
 ##############################################################
 #
@@ -36,7 +36,7 @@ SET verilogsim = true
 SET vhdlsim = false
 # END Project Options
 # BEGIN Select
-SELECT Fifo_Generator xilinx.com:ip:fifo_generator:9.2
+SELECT FIFO_Generator xilinx.com:ip:fifo_generator:9.3
 # END Select
 # BEGIN Parameters
 CSET add_ngc_constraint_axi=false
@@ -207,7 +207,7 @@ CSET write_data_count_width=10
 CSET wuser_width=1
 # END Parameters
 # BEGIN Extra information
-MISC pkg_timestamp=2012-06-23T13:35:37Z
+MISC pkg_timestamp=2012-11-19T12:39:56Z
 # END Extra information
 GENERATE
-# CRC: 5d6f9321
+# CRC: 8961ac17

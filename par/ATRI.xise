@@ -9,10 +9,10 @@
     <!-- along with the project source files, is sufficient to open and    -->
     <!-- implement in ISE Project Navigator.                               -->
     <!--                                                                   -->
-    <!-- Copyright (c) 1995-2012 Xilinx, Inc.  All rights reserved. -->
+    <!-- Copyright (c) 1995-2013 Xilinx, Inc.  All rights reserved. -->
   </header>
 
-  <version xil_pn:ise_version="14.2" xil_pn:schema_version="2"/>
+  <version xil_pn:ise_version="14.7" xil_pn:schema_version="2"/>
 
   <files>
     <file xil_pn:name="../rtl/ev2_interface.v" xil_pn:type="FILE_VERILOG">
@@ -484,37 +484,9 @@
       <association xil_pn:name="PostRouteSimulation" xil_pn:seqID="144"/>
       <association xil_pn:name="PostTranslateSimulation" xil_pn:seqID="144"/>
     </file>
-    <file xil_pn:name="ipcore_dir_ATRI/atri_outbound_packet_buffer.xco" xil_pn:type="FILE_COREGEN">
-      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="145"/>
-      <association xil_pn:name="Implementation" xil_pn:seqID="98"/>
-    </file>
-    <file xil_pn:name="ipcore_dir_ATRI/block_info_buffer.xco" xil_pn:type="FILE_COREGEN">
-      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="146"/>
-      <association xil_pn:name="Implementation" xil_pn:seqID="51"/>
-    </file>
-    <file xil_pn:name="ipcore_dir_ATRI/chipscope_icon.xco" xil_pn:type="FILE_COREGEN">
-      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="147"/>
-      <association xil_pn:name="Implementation" xil_pn:seqID="78"/>
-    </file>
-    <file xil_pn:name="ipcore_dir_ATRI/chipscope_ila.xco" xil_pn:type="FILE_COREGEN">
-      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="148"/>
-      <association xil_pn:name="Implementation" xil_pn:seqID="77"/>
-    </file>
-    <file xil_pn:name="ipcore_dir_ATRI/chipscope_vio.xco" xil_pn:type="FILE_COREGEN">
-      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="149"/>
-      <association xil_pn:name="Implementation" xil_pn:seqID="76"/>
-    </file>
     <file xil_pn:name="ipcore_dir_ATRI/event_fifo_large.xco" xil_pn:type="FILE_COREGEN">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="151"/>
       <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
-    </file>
-    <file xil_pn:name="ipcore_dir_ATRI/irs_readout_fifo.xco" xil_pn:type="FILE_COREGEN">
-      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="152"/>
-      <association xil_pn:name="Implementation" xil_pn:seqID="23"/>
-    </file>
-    <file xil_pn:name="ipcore_dir_ATRI/trigger_info_buffer.xco" xil_pn:type="FILE_COREGEN">
-      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="153"/>
-      <association xil_pn:name="Implementation" xil_pn:seqID="75"/>
     </file>
     <file xil_pn:name="../rtl/pcie_modules/atri_pcie_bridge.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="134"/>
@@ -588,10 +560,6 @@
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="163"/>
       <association xil_pn:name="Implementation" xil_pn:seqID="59"/>
     </file>
-    <file xil_pn:name="ipcore_dir_ATRI/data_fifo_to_pcie.xco" xil_pn:type="FILE_COREGEN">
-      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="164"/>
-      <association xil_pn:name="Implementation" xil_pn:seqID="50"/>
-    </file>
     <file xil_pn:name="ev2_fifo_interface.vhd" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="255"/>
       <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
@@ -600,13 +568,66 @@
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="249"/>
       <association xil_pn:name="Implementation" xil_pn:seqID="27"/>
     </file>
-    <file xil_pn:name="ATR0_revB.ucf" xil_pn:type="FILE_UCF">
+    <file xil_pn:name="ATRI_revB.ucf" xil_pn:type="FILE_UCF">
       <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
+    </file>
+    <file xil_pn:name="ipcore_dir_ATRI/block_info_buffer.xco" xil_pn:type="FILE_COREGEN">
+      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="261"/>
+      <association xil_pn:name="Implementation" xil_pn:seqID="51"/>
+    </file>
+    <file xil_pn:name="ipcore_dir_ATRI/data_fifo_to_pcie.xco" xil_pn:type="FILE_COREGEN">
+      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="224"/>
+      <association xil_pn:name="Implementation" xil_pn:seqID="50"/>
+    </file>
+    <file xil_pn:name="ipcore_dir_ATRI/irs_readout_fifo.xco" xil_pn:type="FILE_COREGEN">
+      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="234"/>
+      <association xil_pn:name="Implementation" xil_pn:seqID="23"/>
+    </file>
+    <file xil_pn:name="ipcore_dir_ATRI/chipscope_icon.xco" xil_pn:type="FILE_COREGEN">
+      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="244"/>
+      <association xil_pn:name="Implementation" xil_pn:seqID="78"/>
+    </file>
+    <file xil_pn:name="ipcore_dir_ATRI/chipscope_ila.xco" xil_pn:type="FILE_COREGEN">
+      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="253"/>
+      <association xil_pn:name="Implementation" xil_pn:seqID="77"/>
+    </file>
+    <file xil_pn:name="ipcore_dir_ATRI/chipscope_vio.xco" xil_pn:type="FILE_COREGEN">
+      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="262"/>
+      <association xil_pn:name="Implementation" xil_pn:seqID="76"/>
+    </file>
+    <file xil_pn:name="ipcore_dir_ATRI/atri_outbound_packet_buffer.xco" xil_pn:type="FILE_COREGEN">
+      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="271"/>
+      <association xil_pn:name="Implementation" xil_pn:seqID="98"/>
+    </file>
+    <file xil_pn:name="ipcore_dir_ATRI/trigger_info_buffer.xco" xil_pn:type="FILE_COREGEN">
+      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="281"/>
+      <association xil_pn:name="Implementation" xil_pn:seqID="75"/>
     </file>
     <file xil_pn:name="ipcore_dir_ATRI/s6_pcie_v1_4.xise" xil_pn:type="FILE_COREGENISE">
       <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
     </file>
+    <file xil_pn:name="ipcore_dir_ATRI/block_info_buffer.xise" xil_pn:type="FILE_COREGENISE">
+      <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
+    </file>
     <file xil_pn:name="ipcore_dir_ATRI/data_fifo_to_pcie.xise" xil_pn:type="FILE_COREGENISE">
+      <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
+    </file>
+    <file xil_pn:name="ipcore_dir_ATRI/irs_readout_fifo.xise" xil_pn:type="FILE_COREGENISE">
+      <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
+    </file>
+    <file xil_pn:name="ipcore_dir_ATRI/chipscope_icon.xise" xil_pn:type="FILE_COREGENISE">
+      <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
+    </file>
+    <file xil_pn:name="ipcore_dir_ATRI/chipscope_ila.xise" xil_pn:type="FILE_COREGENISE">
+      <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
+    </file>
+    <file xil_pn:name="ipcore_dir_ATRI/chipscope_vio.xise" xil_pn:type="FILE_COREGENISE">
+      <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
+    </file>
+    <file xil_pn:name="ipcore_dir_ATRI/atri_outbound_packet_buffer.xise" xil_pn:type="FILE_COREGENISE">
+      <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
+    </file>
+    <file xil_pn:name="ipcore_dir_ATRI/trigger_info_buffer.xise" xil_pn:type="FILE_COREGENISE">
       <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
     </file>
   </files>
@@ -675,7 +696,7 @@
   </properties>
 
   <bindings>
-    <binding xil_pn:location="/ATRI_revB" xil_pn:name="ATR0_revB.ucf"/>
+    <binding xil_pn:location="/ATRI_revB" xil_pn:name="ATRI_revB.ucf"/>
   </bindings>
 
   <libraries/>

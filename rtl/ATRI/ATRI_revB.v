@@ -163,7 +163,7 @@ module ATRI_revB(
 	//% "YES": multiplexed IRS/TRIG. "PC": debug=PC. "I2C": I2C controller. "IRS": IRS. "PCIE": PCIE interface. "NONE": no cores.
 	parameter DEBUG = "PCIE";
 	//% IFCLK phase shift. For behavioral simulations, set this to 0.
-	parameter IFCLK_PS = -75;
+	parameter IFCLK_PS = -80;
 	//% Determines whether or not daughterboard sensing happens slow (ms) or fast (ns)
 	parameter SENSE = "SLOW";
 	//% Number of daughterboards

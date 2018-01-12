@@ -414,9 +414,9 @@ NET "pci_exp_txn" LOC = "A6";
 NET "pci_exp_rxp" LOC = "D7";
 NET "pci_exp_rxn" LOC = "C7";
 #NET "FPGA_REFCLK_P" TNM_NET = "TG_REFCLK";
-###NET "IFCLK" TNM_NET = "TG_IFCLK";
+NET "IFCLK" TNM_NET = "TG_IFCLK";
 ###TIMEGRP "TG_FIFOSEL" = FFS("phy_bridge/fifo_select*");
-###TIMESPEC "TS_IFCLK" = PERIOD "TG_IFCLK" 20.83 ns;
+TIMESPEC "TS_IFCLK" = PERIOD "TG_IFCLK" 20.83 ns;
 
 # All of these setup times from Cypress are bullshit. We'll shave 3 ns off the worst ones (SLRD/SLWR).
 # (this means we ADD 3 ns)
