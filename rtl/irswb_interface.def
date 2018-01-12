@@ -1,0 +1,29 @@
+HEADER IRS-to-IRSWB interface.
+HEADER
+HEADER This is the IRS-to-IRSWB interface. This interface will likely
+HEADER be obsoleted when we move to the unified irs_quad_top arch.
+
+NAME irswb
+END irs REASSIGN yes
+END wb REASSIGN yes
+TAP debug
+
+SIGNAL irs_clk LENGTH 1 FROM irs TO wb
+SIGNAL wb_clk LENGTH 1 FROM wb TO irs
+SIGNAL enable LENGTH 1 FROM wb TO irs
+SIGNAL soft_trig_en LENGTH 1 FROM wb TO irs
+SIGNAL rf_trig_en LENGTH 2 FROM wb TO irs
+SIGNAL tsa_mon LENGTH 8 FROM irs TO wb
+SIGNAL tsa_mon_update LENGTH 1 FROM irs TO wb
+SIGNAL tsa_mon_start LENGTH 1 FROM wb TO irs
+SIGNAL wilk_mon LENGTH 10 FROM irs TO wb
+SIGNAL wilk_mon_update LENGTH 1 FROM irs TO wb
+SIGNAL wilk_mon_start LENGTH 1 FROM wb TO irs
+SIGNAL ped_mode LENGTH 1 FROM wb TO irs
+SIGNAL ped_address LENGTH 9 FROM wb TO irs
+SIGNAL ped_clear LENGTH 1 FROM wb TO irs
+SIGNAL ch_mask LENGTH 8 FROM wb TO irs
+SIGNAL irs_mode LENGTH 1 FROM wb TO irs
+SIGNAL irs_rst LENGTH 1 FROM wb TO irs
+SIGNAL sbbias LENGTH 12 FROM wb TO irs
+SIGNAL wilkcnt LENGTH 12 FROM wb TO irs

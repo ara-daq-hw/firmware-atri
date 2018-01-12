@@ -1,0 +1,24 @@
+HEADER Event interface, version 2.
+HEADER
+HEADER This interface describes a FIFO connection from the IRS
+HEADER to the PHY. The FIFO is 16-bits, and asynchronous (independent
+HEADER clocks on both sides) and contains a data count to the IRS.
+HEADER
+HEADER Unlike the previous versions, this version only connects the
+HEADER IRS to the FIFO. It does not connect the readout logic
+HEADER to the FIFO as well: the FIFO is presumed to be in the PHY
+HEADER logic.
+
+NAME ev2
+END fifo REASSIGN yes
+END irs REASSIGN yes
+TAP debug
+
+# ALL signals are in the IRS clock domain.
+SIGNAL irsclk LENGTH 1 FROM irs TO fifo
+SIGNAL dat LENGTH 16 FROM irs TO fifo
+SIGNAL count LENGTH 16 FROM fifo TO irs
+SIGNAL wr LENGTH 1 FROM irs TO fifo
+SIGNAL full LENGTH 1 FROM fifo TO irs
+SIGNAL rst LENGTH 1 FROM irs TO fifo
+SIGNAL rst_ack LENGTH 1 FROM fifo TO irs

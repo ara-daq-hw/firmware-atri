@@ -1,0 +1,65 @@
+# ENDs are endpoints of the interface - they describe the sources/sinks of the data.
+# Interfaces from ENDs can be reassigned - that is, if you've got an END named "a",
+# and the interface to "a" is named "a_if", it can be reassigned to "renamed_a_if"
+# using a reassign module.
+#
+# 
+# A <--a_if--> (A_reassign(a_if, renamed_a_if)) <--renamed_a_if--> B
+#
+# A B_reassign could be used if the order of the ports were changed...
+#
+# A <--a_if--> (B_reassign(renamed_a_if, a_if)) <--renamed_a_if--> B
+#
+# MIDDLEs are midpoints of the interface. Some care must be taken with MIDDLEs
+# since reassigns can be done on interfaces that terminate at an END, but
+# not with interfaces that come from a MIDDLE.
+#
+# As an example, if we have ENDs A and B, and middle M, the connections might
+# be
+# 
+# A <--a_if--> M <--b_if--> B
+#
+# Here we can reassign a_if using an A_reassign. We cannot reassign a_if using
+# a B_reassign since it is no longer coming *from* B.
+#
+# Thus each interface can have 2 ENDs and 1 MIDDLE, and no more.
+#
+# Typically MIDDLEs inject signals into the interface, like a clock or a reset.
+#
+# TAPs pull off data for debugging. An interface can have any number of taps.
+#
+
+# SIGNALs can be multiply named: if an interface side has identically named signals
+# they will each get a "_" followed by the source before their direction suffix.
+
+
+HEADER WISHBONE master-to-slave interface.
+HEADER A syscon module is required to inject the clk and rst into the interface.
+HEADER
+HEADER Minimally, you would have:
+HEADER
+HEADER wire [`WBIF_SIZE-1:0] interface;
+HEADER wire clk;
+HEADER wire rst;
+HEADER some_wishbone_master u_master(.interface_io(interface));
+HEADER wb_syscon syscon(.interface_io(interface),.clk_i(clk), .rst_i(rst));
+HEADER some_wishbone_slave u_slave(.interface_io(interface));
+HEADER
+
+NAME wb
+END slave REASSIGN yes
+END master REASSIGN yes
+MIDDLE syscon
+TAP debug
+
+SIGNAL clk LENGTH 1 FROM syscon TO slave TO master
+SIGNAL rst LENGTH 1 FROM syscon TO slave TO master
+SIGNAL cyc LENGTH 1 FROM master TO slave
+SIGNAL wr LENGTH 1 FROM master TO slave
+SIGNAL stb LENGTH 1 FROM master TO slave
+SIGNAL ack LENGTH 1 FROM slave TO master
+SIGNAL err LENGTH 1 FROM slave TO master
+SIGNAL rty LENGTH 1 FROM slave TO master
+SIGNAL adr LENGTH 16 FROM master TO slave
+SIGNAL dat LENGTH 8 FROM master TO slave
+SIGNAL dat LENGTH 8 FROM slave TO master

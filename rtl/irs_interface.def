@@ -1,0 +1,44 @@
+HEADER IRS interface.
+HEADER
+HEADER This encapsulates the entire connection from an FPGA to
+HEADER an IRS. The signal naming is the "IRS2" naming convention.
+HEADER It also contains a power and drive pair.
+HEADER "power" is asserted when power to the IRS is on.
+HEADER "drive" is asserted when signals to the IRS are being
+HEADER driven.
+HEADER
+
+NAME irs
+END ctrl REASSIGN yes
+END infra REASSIGN yes
+TAP debug
+
+# Data readout
+SIGNAL dat LENGTH 12 FROM infra TO ctrl
+SIGNAL smp LENGTH 6 FROM ctrl TO infra
+SIGNAL ch LENGTH 3 FROM ctrl TO infra
+SIGNAL smpall LENGTH 1 FROM ctrl TO infra
+
+# Wilkinson control
+SIGNAL ramp LENGTH 1 FROM ctrl TO infra
+SIGNAL start LENGTH 1 FROM ctrl TO infra
+SIGNAL clr LENGTH 1 FROM ctrl TO infra
+
+# Write block and write strobe
+SIGNAL wr LENGTH 10 FROM ctrl TO infra
+SIGNAL wrstrb LENGTH 1 FROM ctrl TO infra
+# Read block and read strobe
+SIGNAL rd LENGTH 10 FROM infra TO ctrl
+SIGNAL rdo LENGTH 10 FROM ctrl TO infra
+SIGNAL rdoe LENGTH 10 FROM ctrl TO infra
+SIGNAL rden LENGTH 1 FROM ctrl TO infra
+
+# Timing interface
+SIGNAL tsa LENGTH 1 FROM ctrl TO infra
+SIGNAL tsa_close LENGTH 1 FROM ctrl TO infra
+SIGNAL tsaout LENGTH 1 FROM infra TO ctrl
+SIGNAL tstout LENGTH 1 FROM infra TO ctrl
+
+# IRS power/drive
+SIGNAL power LENGTH 1 FROM infra TO ctrl
+SIGNAL drive LENGTH 1 FROM infra TO ctrl

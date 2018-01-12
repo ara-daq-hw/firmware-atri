@@ -1,0 +1,49 @@
+In verbose mode
+Interface Verilog file: irsi2c_interface.v
+Interface name - irsi2c
+Looking for // BEGIN irsi2c 
+Found a module - irsi2c_irs (date Thu Mar 8, 2012 21:12:17)
+Found a module - irsi2c_i2c (date Thu Mar 8, 2012 21:12:17)
+Found a module - irsi2c_debug (date Thu Mar 8, 2012 21:12:17)
+Processing irs_wishbone_v4.v for modules to replace...
+Leading whitespace is '	'
+irs_wishbone_v4.v has a request for module wb_slave from interface wb (2 replaces, 0 skips)
+Leading whitespace is '			'
+irs_wishbone_v4.v has a request for module irsi2c_irs from interface irsi2c (2 replaces, 1 skips)
+... searching for interface end marker...
+Found end marker.
+This skip says skip irs_clk_o
+Matching against wire irs_clk_o;
+Skip it
+Skipped wire irs_clk_o;
+
+This skip says skip irs_clk_o
+Matching against wire i2c_clk_i;
+Inserting: wire i2c_clk_i;
+This skip says skip irs_clk_o
+Matching against wire irs_init_o;
+Inserting: wire irs_init_o;
+This skip says skip irs_clk_o
+Matching against wire [1:0] gpio_o;
+Inserting: wire [1:0] gpio_o;
+This skip says skip irs_clk_o
+Matching against wire [1:0] gpio_ack_i;
+Inserting: wire [1:0] gpio_ack_i;
+This skip says skip irs_clk_o
+Matching against irsi2c_irs irsi2cif(.interface_io(interface_io),
+Inserting: irsi2c_irs irsi2cif(.interface_io(i2cif_io[ci]),
+This skip says skip irs_clk_o
+Matching against                     .irs_clk_i(irs_clk_o),
+Inserting:                     .irs_clk_i(irs_clk_o),
+This skip says skip irs_clk_o
+Matching against                     .i2c_clk_o(i2c_clk_i),
+Inserting:                     .i2c_clk_o(i2c_clk_i),
+This skip says skip irs_clk_o
+Matching against                     .irs_init_i(irs_init_o),
+Inserting:                     .irs_init_i(irs_init_o),
+This skip says skip irs_clk_o
+Matching against                     .gpio_i(gpio_o),
+Inserting:                     .gpio_i(gpio_o),
+This skip says skip irs_clk_o
+Matching against                     .gpio_ack_o(gpio_ack_i));
+Inserting:                     .gpio_ack_o(gpio_ack_i));

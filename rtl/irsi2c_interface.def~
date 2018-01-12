@@ -1,0 +1,11 @@
+HEADER IRS-to-I2C controller interface.
+HEADER
+HEADER The IRS module occasionally needs to tell the I2C controller
+HEADER to do something. Right now this only involves issuing the
+HEADER GPIO initialization.
+
+NAME irsi2c
+END irs REASSIGN yes
+END i2c REASSIGN yes
+TAP debug
+
