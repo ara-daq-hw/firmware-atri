@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<report-views version="2.0" >
+ <header>
+  <ImplementationReportsDirectory>C:/Users/tmeures/Documents/Projects/ARA/ARA_firmwareRepo/ara/firmware/ATRI/branches/tmeures/working\</ImplementationReportsDirectory>
+  <ModuleName>ATRI_revB</ModuleName>
+  <DateModified>2017-11-19T12:13:42</DateModified>
+  <SavedFilePath>C:/Users/tmeures/Documents/Projects/ARA/ARA_firmwareRepo/ara/firmware/ATRI/branches/tmeures/par/iseconfig/ATRI_revB.xreport</SavedFilePath>
+  <DateInitialized>2016-08-25T16:30:18</DateInitialized>
+  <EnableMessageFiltering>false</EnableMessageFiltering>
+ </header>
+</report-views>

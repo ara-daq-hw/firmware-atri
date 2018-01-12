@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="C:/cygwin/home/barawn/repositories/ara/firmware/ATRI/branches/unified/working/irs_block_readout_v3_tb_isim_beh.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="irs_block_readout_v3_tb" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="8" />
+   <wvobject fp_name="group45" type="group">
+      <obj_property name="label">Block Input</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/irs_block_readout_v3_tb/ch_mask_i" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">ch_mask_i[7:0]</obj_property>
+         <obj_property name="ObjectShortName">ch_mask_i[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/irs_block_readout_v3_tb/raddr_ack_o" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">raddr_ack_o</obj_property>
+         <obj_property name="ObjectShortName">raddr_ack_o</obj_property>
+      </wvobject>
+      <wvobject fp_name="/irs_block_readout_v3_tb/raddr_i" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">raddr_i[8:0]</obj_property>
+         <obj_property name="ObjectShortName">raddr_i[8:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/irs_block_readout_v3_tb/raddr_stb_i" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">raddr_stb_i</obj_property>
+         <obj_property name="ObjectShortName">raddr_stb_i</obj_property>
+      </wvobject>
+      <wvobject fp_name="/irs_block_readout_v3_tb/uut/address_selector/ramp_done_i" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">ramp_done_i</obj_property>
+         <obj_property name="ObjectShortName">ramp_done_i</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group43" type="group">
+      <obj_property name="label">Block Output</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/irs_block_readout_v3_tb/block_addr_o" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">block_addr_o[8:0]</obj_property>
+         <obj_property name="ObjectShortName">block_addr_o[8:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/irs_block_readout_v3_tb/block_dat_o" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">block_dat_o[11:0]</obj_property>
+         <obj_property name="ObjectShortName">block_dat_o[11:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/irs_block_readout_v3_tb/block_start_o" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">block_start_o</obj_property>
+         <obj_property name="ObjectShortName">block_start_o</obj_property>
+      </wvobject>
+      <wvobject fp_name="/irs_block_readout_v3_tb/block_valid_o" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">block_valid_o</obj_property>
+         <obj_property name="ObjectShortName">block_valid_o</obj_property>
+      </wvobject>
+      <wvobject fp_name="/irs_block_readout_v3_tb/block_done_o" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">block_done_o</obj_property>
+         <obj_property name="ObjectShortName">block_done_o</obj_property>
+      </wvobject>
+      <wvobject fp_name="/irs_block_readout_v3_tb/block_mask_o" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">block_mask_o[7:0]</obj_property>
+         <obj_property name="ObjectShortName">block_mask_o[7:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group68" type="group">
+      <obj_property name="label">Readout Ctrl</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/irs_block_readout_v3_tb/uut/readout_controller/state" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">state[2:0]</obj_property>
+         <obj_property name="ObjectShortName">state[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/irs_block_readout_v3_tb/uut/readout_controller/sample_counter" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">sample_counter[5:0]</obj_property>
+         <obj_property name="ObjectShortName">sample_counter[5:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/irs_block_readout_v3_tb/uut/readout_controller/channel_counter" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">channel_counter[2:0]</obj_property>
+         <obj_property name="ObjectShortName">channel_counter[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/irs_block_readout_v3_tb/uut/readout_controller/is_last_channel" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">is_last_channel</obj_property>
+         <obj_property name="ObjectShortName">is_last_channel</obj_property>
+      </wvobject>
+      <wvobject fp_name="/irs_block_readout_v3_tb/uut/readout_controller/counter" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">counter[3:0]</obj_property>
+         <obj_property name="ObjectShortName">counter[3:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group29" type="group">
+      <obj_property name="label">IRS</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/irs_block_readout_v3_tb/irs_dat_i" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">irs_dat_i[11:0]</obj_property>
+         <obj_property name="ObjectShortName">irs_dat_i[11:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/irs_block_readout_v3_tb/irs_ramp_o" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">irs_ramp_o</obj_property>
+         <obj_property name="ObjectShortName">irs_ramp_o</obj_property>
+      </wvobject>
+      <wvobject fp_name="/irs_block_readout_v3_tb/irs_rd_o" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">irs_rd_o[9:0]</obj_property>
+         <obj_property name="ObjectShortName">irs_rd_o[9:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/irs_block_readout_v3_tb/irs_rden_o" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">irs_rden_o</obj_property>
+         <obj_property name="ObjectShortName">irs_rden_o</obj_property>
+      </wvobject>
+      <wvobject fp_name="/irs_block_readout_v3_tb/irs_smp_o" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">irs_smp_o[5:0]</obj_property>
+         <obj_property name="ObjectShortName">irs_smp_o[5:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/irs_block_readout_v3_tb/irs_ch_o" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">irs_ch_o[2:0]</obj_property>
+         <obj_property name="ObjectShortName">irs_ch_o[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/irs_block_readout_v3_tb/irs_smpall_o" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">irs_smpall_o</obj_property>
+         <obj_property name="ObjectShortName">irs_smpall_o</obj_property>
+      </wvobject>
+      <wvobject fp_name="/irs_block_readout_v3_tb/irs_start_o" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">irs_start_o</obj_property>
+         <obj_property name="ObjectShortName">irs_start_o</obj_property>
+      </wvobject>
+      <wvobject fp_name="/irs_block_readout_v3_tb/irs_clr_o" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">irs_clr_o</obj_property>
+         <obj_property name="ObjectShortName">irs_clr_o</obj_property>
+      </wvobject>
+      <wvobject fp_name="/irs_block_readout_v3_tb/irs_rd_o[0]" type="logic" db_ref_id="1">
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="ElementShortName">[0]</obj_property>
+         <obj_property name="ObjectShortName">irs_rd_o[0]</obj_property>
+         <obj_property name="label">RD_ADDR_ADV</obj_property>
+      </wvobject>
+      <wvobject fp_name="/irs_block_readout_v3_tb/irs_rd_o[1]" type="logic" db_ref_id="1">
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="ElementShortName">[1]</obj_property>
+         <obj_property name="ObjectShortName">irs_rd_o[1]</obj_property>
+         <obj_property name="label">RD_ADDR_RST</obj_property>
+      </wvobject>
+      <wvobject fp_name="/irs_block_readout_v3_tb/irs_rd_o[2]" type="logic" db_ref_id="1">
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="ElementShortName">[2]</obj_property>
+         <obj_property name="ObjectShortName">irs_rd_o[2]</obj_property>
+         <obj_property name="label">DOE</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group44" type="group">
+      <obj_property name="label">Debug</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/irs_block_readout_v3_tb/irs_address_sel_o" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">irs_address_sel_o</obj_property>
+         <obj_property name="ObjectShortName">irs_address_sel_o</obj_property>
+      </wvobject>
+      <wvobject fp_name="/irs_block_readout_v3_tb/irs_ramping_o" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">irs_ramping_o</obj_property>
+         <obj_property name="ObjectShortName">irs_ramping_o</obj_property>
+      </wvobject>
+      <wvobject fp_name="/irs_block_readout_v3_tb/irs_readout_o" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">irs_readout_o</obj_property>
+         <obj_property name="ObjectShortName">irs_readout_o</obj_property>
+      </wvobject>
+      <wvobject fp_name="/irs_block_readout_v3_tb/debug_o" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">debug_o[47:0]</obj_property>
+         <obj_property name="ObjectShortName">debug_o[47:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/irs_block_readout_v3_tb/clk_i" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">clk_i</obj_property>
+      <obj_property name="ObjectShortName">clk_i</obj_property>
+   </wvobject>
+   <wvobject fp_name="group28" type="group">
+      <obj_property name="label">Reset/Acks</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/irs_block_readout_v3_tb/rst_ack_o" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">rst_ack_o</obj_property>
+         <obj_property name="ObjectShortName">rst_ack_o</obj_property>
+      </wvobject>
+      <wvobject fp_name="/irs_block_readout_v3_tb/rst_i" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">rst_i</obj_property>
+         <obj_property name="ObjectShortName">rst_i</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/irs_block_readout_v3_tb/irs_mode_i" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">irs_mode_i</obj_property>
+      <obj_property name="ObjectShortName">irs_mode_i</obj_property>
+   </wvobject>
+</wave_config>

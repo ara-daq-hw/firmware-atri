@@ -1,0 +1,99 @@
+; PicoBlaze sample mon
+
+; ports
+
+dcm_status  DSIO $00
+phasectrl   DSOUT $01
+sampledata  DSIO $02
+irssel      DSIO $03
+debug       DSOUT $80
+
+MAX_REWIND  EQU   105                                                           ; see FPGA Clocking Resources guide.
+MAX_SHIFTS  EQU   210                                                                          ;
+
+irsactive   EQU   sF
+currentirs  EQU   sE
+irsaddr     EQU   sD
+
+main:
+            ; Reset all output data.
+            load    s0, $03
+            load    s1, $00
+            out     s0, irssel
+            out     s1, sampledata
+            load    s0, $02
+            out     s0, irssel
+            out     s1, sampledata
+            load    s0, $01
+            out     s0, irssel
+            out     s1, sampledata
+            load    s0, $00
+            out     s0, irssel
+            out     s1, sampledata
+            ; Clear debug
+            out     s1, debug
+            in      irsactive, irssel
+            call    dcm_reset
+            load    currentirs, $01
+            load    irsaddr, $00
+mainloop:
+            test    irsactive, currentirs
+            jump    Z, next_irs
+            out     irsaddr, irssel
+            call    dcm_reset
+            call    rewind_delay_line
+; this is test software: just step through the entire delay chain
+            in      s0, sampledata                                              ; dummy read
+            load    s1, $00
+mainloop_lp0:
+            load    s0, $01
+            out     s0, phasectrl
+mainloop_lp1:
+            in      s0, dcm_status
+            test    s0, $10                                                     ; phase shift done. Read previous sample.
+            jump    Z, mainloop_lp1
+            in      s0, sampledata
+            out     s1, debug
+mainloop_lp2:
+            in      s0, dcm_status                                              ; is previous sample done?
+            test    s0, $20
+            jump    Z, mainloop_lp2                                             ; if not, wait, otherwise, continue
+            add     s1, 1
+            comp    s1, MAX_SHIFTS
+            jump    NZ, mainloop_lp0
+next_irs:
+            sl0     currentirs
+            add     irsaddr, 1
+            test    currentirs, $10
+            jump    Z, mainloop
+            load    currentirs, $01
+            load    irsaddr, $00
+            jump    mainloop
+
+; Reset the DCM.
+; Registers: s0
+; Memory: none
+dcm_reset:
+            load    s0, $01
+            out     s0, dcm_status
+            load   s0, s0                                                       ; wait 2 instructions for 4 cycle high DCM status
+            load   s0, $00
+            out    s0, dcm_status
+wait_dcm_lock:
+            in    s0, dcm_status                                                ; check to see if LOCKED bit is high
+            test  s0, $08
+            jump  Z, wait_dcm_lock                                              ; wait for the DCM to lock
+            ret                                                                 ; Done
+rewind_delay_line:                                                              ; Decrement the delay line until it's at its max neg. steps.
+            load  s1, MAX_REWIND
+rewind_delay_line_lp0:
+            load  s0, $00
+            out s0, phasectrl
+rewind_delay_line_lp1:
+            in s0, dcm_status
+            test s0, $10
+            jump Z, rewind_delay_line_lp1
+            sub s1, 1
+            jump NZ, rewind_delay_line_lp0
+            ret
+

@@ -1,0 +1,517 @@
+;
+; PicoBlaze Event Controller, v1
+;
+
+;
+; Ports
+;
+
+; This is the block info buffer data.
+trigdata0   DSIN  $00
+trigdata1   DSIN  $01
+trigdata2   DSIN  $02
+trigdata3   DSIN  $03
+trigdata4   DSIN  $04
+trigdata5   DSIN  $05
+trigdata6   DSIN  $06
+trigdata7   DSIN  $07
+trigdata8   DSIN  $08
+trigstat    DSIO  $09
+; Channel mask for the IRS readout.
+mask0       DSIO  $10
+mask1       DSIO  $11
+mask2       DSIO  $12
+mask3       DSIO  $13
+; Indicates which IRSes are ready to accept a new block
+irsready    DSIN  $40
+; Begin IRS readout
+irsgo       DSOUT $41
+; Indicates which IRSes are currently intended to be active
+active      DSIN  $42
+; This is the mask that should be checked for L4 triggers.
+; This is just here to keep the code identical if the spare L4 triggers are added.
+l4maskin    DSIN  $43
+; Indicate event readout not ready/disable triggers.
+evrdready   DSOUT $43
+
+; FIFOCNT is nominally number of bytes written,
+; so you would normally have to subtract.
+; Our FIFO is 128x1024 words deep: for fully-read out
+; data, this is about 3 events deep.
+; Nominally we want to subtract the fifo count
+; from 0x20000. We actually just invert it: so the
+; count you get is actually number of words remaining,
+; minus 1. Close enough.
+fifocnt     DSIO  $50
+fifocnt_high DSIO $51
+
+; Trigger info interface
+tinfocsr    DSIO  $60
+tinfo0      DSIO  $64
+tinfo1      DSIO  $65
+tinfo2      DSIO  $66
+tinfo3      DSIO  $67
+
+; DMA interface. DMA handles all 4 IRSes at the same time.
+; You write the number of words (in 128-byte quantities - an additional header
+; word is assumed), and it transfers them into the event FIFO.
+; The first IRS will take a while (since the IRSes transfer slowly), and the
+; remaining will readout very quickly. The individual IRS FIFOs are large enough
+; to hold 2 full readouts (they're 1 BRAM each) so the next block can be
+; read out while the first one is still emptying into the event FIFO.
+; In truth it should take waaay less cycles to empty all of them than
+; it will take to even convert the next block, so we may actually convert them
+; to use 1 BRAM for 2 IRSes.
+dmacsr      DSIO  $24
+dma0        DSIO  $20
+dma1        DSIO  $21
+dma2        DSIO  $22
+dma3        DSIO  $23
+
+; Free interface. Strobe is generated on write to free_addr_h
+free_addr_l DSOUT $30
+free_addr_h DSOUT $31
+
+; Parameters. Only readout delay is the current one.
+readout_delay DSIN $70
+
+; Output data to the 16-bit event FIFO.
+outdata     DSOUT $80
+outdata_high DSOUT $81
+outdata_err DSOUT $82
+
+;
+; Registers
+; s0-s6 are general purpose.
+block_count       EQU         sF
+block_header      EQU         sE
+l4mask            EQU         sD
+event_error       EQU         sC
+; This is the event ID. Reset to 0 when the digitizer subsystem is reset.
+event_count_low   EQU         s8
+event_count_high  EQU         s9
+block_size_low    EQU         sA
+block_size_high   EQU         sB
+int0              EQU         s7
+;
+; Scratchpad RAM. We have 64 bytes. We need 9 bytes to grab the
+; block info so we can convert continuously.
+;
+trigcache0   EQU   $00
+trigcache1   EQU   $01
+trigcache2   EQU   $02
+trigcache3   EQU   $03
+trigcache4   EQU   $04
+trigcache5   EQU   $05
+trigcache6   EQU   $06
+trigcache7   EQU   $07
+trigcache8   EQU   $08
+D1_count     EQU   $10
+D2_count     EQU   $11
+D3_count     EQU   $12
+D4_count     EQU   $13
+dmablock_l   EQU   $20
+dmablock_h   EQU   $21
+;
+; Constants
+;
+TRIG_EMPTY EQU    $01
+TRIG_READ  EQU    $02
+NEW_EVENT  EQU    $02
+; This is a cheat: roughly the size of an RF event, which is (num active IRSes)*64*8*20 = 0x2800 times number of active IRSes.
+; We actually just want to wait for
+; 4 IRS active: 0xFFFF (1111)
+; 3 IRS active: 0xBFFF (1011)
+; 2 IRS active: 0x7FFF (0111)
+; 1 IRS active: 0x3FFF (0011)
+; So we just subtract 1 from active, rotate right 2, and then OR with 0x3FFF.
+MAX_EVSZ_BASE_MSB EQU $3F
+MAX_EVSZ_BASE_LSB EQU $FF	  
+; The PicoBlaze spits out an error frame if something happens it doesn't
+; know how to handle (like, you enabled triggers before enabling the IRSes).
+; After this point the digitizer subsystem needs to be reset.
+ERR_HEADER                      EQU     'X'
+ERR_FIRST_BLOCK_NOT_NEW_EVENT   EQU     $FF
+ERR_NOT_ALL_DIGITIZERS_READY    EQU     $FE
+ERR_WTF                         EQU     $FD
+; Number of words in a trigger info (2)
+TRIGINFO_COUNT EQU 2
+; Size of the event header (1 word version, 1 word PPS, 2 words cycle, 1 word ID)
+EVENT_HEADER_SIZE EQU 5
+; Minimum size of the block header.
+; 1 word frame
+; 1 word length
+; 1 word l4/l4new
+; 1 word blkidpat
+BLOCK_HEADER_MIN EQU 4
+; Number of that minimum that's framing. (1 byte for frame start, 1 for length)
+BLOCK_HEADER_FRAMING EQU 2
+; Number of words per channel (64)
+CHANNEL_SIZE EQU 64
+
+; New block
+EVHEADER_NEW EQU 'E'
+; Last block
+EVHEADER_LAST EQU 'F'
+; Middle block
+EVHEADER_MID EQU 'B'
+; Only block
+EVHEADER_ONLY EQU 'O'
+
+; Error codes. Only EVERROR_CODE_1 is used now, when the event FIFO is full.
+; Might suck all of these into a count of the number of cycles waiting.
+EVERROR_CODE_0 EQU $00                                                          ; No error.
+EVERROR_CODE_1 EQU $20                                                          ; FIFO full.
+EVERROR_CODE_2 EQU $40
+EVERROR_CODE_3 EQU $60
+EVERROR_CODE_4 EQU $80
+EVERROR_CODE_5 EQU $A0
+EVERROR_CODE_6 EQU $C0
+EVERROR_CODE_7 EQU $E0
+; Event format version. This is version 2.
+EVHEADER_VER EQU 2
+main:
+            ; initialize stuff I guess
+            load block_header, $00
+            load block_size_low, $00
+            load block_size_high, $00
+            load event_count_low, $00
+            load event_count_high, $00
+            load event_error, EVERROR_CODE_0
+	    out event_error, evrdready
+            in l4mask, l4maskin
+poll:
+            comp event_error, EVERROR_CODE_1
+	        jump Z, check_fifo_space
+            in s0, trigstat
+            test s0, TRIG_EMPTY
+            jump NZ, poll
+            in s0, trigdata1
+            test s0, NEW_EVENT
+            jump Z, main_err_new_event
+            call handle_new_event
+            ; If we're back here, it means that we've fully pushed the
+            ; new event out, and there is no new event waiting. So we can
+            ; go back to polling.
+            jump poll
+main_err_new_event:
+            ; Something has gone wrong - we need to push out an error frame
+            ; to let software know to reset everything.
+            load s0, ERR_FIRST_BLOCK_NOT_NEW_EVENT
+            jump error_frame
+check_fifo_space:
+	   in s0, active							; Get active IRSes
+       call popcount
+       load s0, s1
+	   sub s0, 1
+ 	   rr s0
+	   rr s0
+	   or s0, MAX_EVSZ_BASE_MSB
+	   load s1, MAX_EVSZ_BASE_LSB
+	   in s2, fifocnt_high
+	   in s3, fifocnt
+	   sub s3, s1
+	   subc s2, s0
+       jump Z, clear_error_code
+       jump C, clear_error_code
+       jump poll
+clear_error_code:
+	   load event_error, EVERROR_CODE_0
+	   out event_error, evrdready
+	   jump poll
+
+; DONE MAIN LOOP
+
+handle_new_event:
+; Set the new event flag.
+           load block_header, EVHEADER_NEW
+           load block_count, $00
+handle_new_event_do_block:
+           call start_new_block
+; Now we have to calculate the block size. Start with the IRS count.
+hne_irscount:
+           in s2, active                                                        ; +1
+           load s3, mask0                                                       ; +1
+           load s4, $00
+hne_irscount_lp0:
+           sr0 s2                                                               ; +4
+           jump NC, hne_irscount_lp1                                            ; +4 - skip if bit is not set.
+           add s4, 1                                                            ; +4
+           in s0, s3                                                            ; +4
+           xor s0, $FF                                                          ; +4
+           call popcount                                                        ; +72
+           store s1, s3                                                         ; +4 sleaze! we store the popcounts in scr_mask0/mask3, same address
+           add block_size_high, s1                                              ; +4
+hne_irscount_lp1:
+           add s3, 1                                                            ; +4
+           comp s3, mask3+1                                                     ; +4
+           jump NZ, hne_irscount_lp0                                            ; +4
+           sr0 block_size_high                                                  ; +1 we now have NCH*256 words. We want NCH*64, so divide by 4.
+           sra block_size_low                                                   ; +1
+           sr0 block_size_high                                                  ; +1 
+           sra block_size_low                                                   ; +1 sleaze! at 110 instr. here (2.2 us)
+           add block_size_low, s4                                               ; add the block headers
+           addc block_size_low, $00
+           fetch s0, trigcache2                                                 ; +1
+           call popcount                                                        ; +18 
+           sl0  s1                                                              ; +1: TRIGINFO_COUNT is 2
+           add block_size_low, s1                                               ; +1
+           addc block_size_high, $00                                            ; +1
+                                                                                ; at 132 instr. here (2.64 us)
+; Add the MINIMUM block header
+           add block_size_low, BLOCK_HEADER_MIN                                 ; +1
+           add block_size_high, $00                                             ; +1
+; Now we need to determine if this is the first block, middle, last, or only
+           in s0, trigstat                                                      ; +1
+           test s0, TRIG_EMPTY                                                  ; +1
+; If it's empty, this is the last block, so our header is different
+           jump NZ, handle_last_block_count                                      ; +1
+; If it's not empty, we need to check to see if it's a new event pending
+           in s0, trigdata1                                                     ; +1
+           test s0, NEW_EVENT
+; It is a new event, so this is the last block
+           jump NZ, handle_last_block_count                                     ; +1
+; Is this the first block?
+           comp block_header, EVHEADER_NEW                                      ; +1
+           jump Z, handle_first_block_count                                     ; +1
+; Our event size is now correct. So we wait for space.                          ; at 147 instr. here (2.94 us)
+wait_for_space:
+            in s0, dmacsr
+            test s0, $01                                                        ; is DMA still busy?
+            jump NZ, wait_for_space                                             ; yes: wait
+            in s0, fifocnt
+            in s1, fifocnt_high
+            sub s0, block_size_low
+            subc s1, block_size_high
+            jump NC, fill_data                                                  ; Enough space available.
+            ; Do something here, since we're waiting! If we wait too long bad things happen
+            load event_error, EVERROR_CODE_1                                    ; Error code 1, folks. Too long!
+            ; We should probably kill incoming triggers...
+	        out event_error, evrdready
+            jump wait_for_space                                                 ; And keep waiting.
+
+handle_last_block_count:
+            comp block_header, EVHEADER_NEW                                     ; Is this also the first block?
+            jump Z, handle_last_block_count_jp0                                 ; Yes: so we need to switch to ONLY
+            load block_header, EVHEADER_LAST                                    ; No, so we just switch the block header and continue
+            jump wait_for_space
+handle_last_block_count_jp0:
+            load block_header, EVHEADER_ONLY                                    ; Switch to only...
+            jump handle_first_block_count                                       ; and add the initial header
+handle_first_block_count:
+            add block_size_low, EVENT_HEADER_SIZE
+            addc block_size_high, $00
+            jump wait_for_space
+handle_new_event_err_active:
+            load s0, ERR_NOT_ALL_DIGITIZERS_READY
+            call error_frame
+
+fill_data:                                                                      ; Now we can actually fill data! (at 152 instr. here)
+            load s0, block_count                                                ; Start with framing. Only 1 frame/block.
+            out s0, outdata                                                     ; output it
+            out block_header, outdata_high                                      ; output frame type
+            sub block_size_low, BLOCK_HEADER_FRAMING
+            subc block_size_high, $00
+            out block_size_low, outdata
+            out block_size_high, outdata_high                                   ; output length
+            comp block_header, EVHEADER_MID                                     ; Skip the event header unless we're EVHEADER_FIRST
+            jump Z, fill_block_header                                           ; or EVHEADER_ONLY
+            comp block_header, EVHEADER_LAST
+            jump Z, fill_block_header
+            load s1, EVHEADER_VER
+            out s1, outdata                                                     ; version, low (2)
+            out s0, outdata_high                                                ; version, high (0)
+            fetch s1, trigcache3
+            out s1, outdata                                                     ; PPS[15:8]
+            fetch s1, trigcache4
+            out s1, outdata_high                                                ; PPS[7:0]
+            fetch s1, trigcache7
+            out s1, outdata                                                     ; CYCLE[23:16]
+            fetch s1, trigcache8
+            out s1, outdata_high                                                ; CYCLE[31:24]
+            fetch s1, trigcache5
+            out s1, outdata                                                     ; CYCLE[7:0]
+            fetch s1, trigcache6
+            out s1, outdata_high                                                ; CYCLE[15:8]
+            out event_count_low, outdata
+            out event_count_high, outdata_high
+            add event_count_low, 1                                              ; Increment event counter.
+            addc event_count_low, 0
+fill_block_header:                                                              ; At 182 instr. here (3.64 us: halfway!)
+            fetch s1, trigcache1
+            sr0 s1
+            sr0 s1
+            out s1, outdata                                                     ; TRIG_L4[7:0]
+            fetch s1, trigcache2
+            out s1, outdata_high                                                ; TRIG_L4_NEW[7:0]
+            and s1, l4mask
+            load s2, $FF
+fill_trigger_headers:                                                           ; at 190 instr. here
+            add s2, 1
+            sr0 s1
+            jump NC, fill_trigger_headers_end
+            out s2, tinfocsr
+            in s3, tinfo2
+            out s3, outdata
+            in s3, tinfo3
+            out s3, outdata_high
+            in s3, tinfo0
+            out s3, outdata
+            in s3, tinfo1
+            out s3, outdata_high
+fill_trigger_headers_end:
+            jump NZ, fill_trigger_headers                                       ; all we did is in/out: Z hasn't changed
+                                                                                ; 13*6 = 78 max, 268 instr (5.36 us, but almost done!)
+            fetch s1, trigcache0                                                ; 
+            out s1, outdata                                                     ; block ID
+            fetch s1, trigcache1                                                ;
+            and s1, $01                                                         ; only low bit
+            in s2, active
+            sl0 s2                                                              ; Shift it up by 1...
+            or s1, s2                                                           ; and OR it with the high block bit
+            or s1, event_error                                                  ; now OR it with the event error bits
+            out s1, outdata_high                                                ; block id and active IRS pattern
+                                                                                ; and we're done, at 279 instr. Have 80 remaining
+                                                                                ; before the IRS is even done converting!
+fill_D1:
+            test s2, $02                                                        ; is D1 involved in this?
+            jump Z, fill_D2
+            fetch s0, D1_count
+            out s0, dma0
+fill_D2:
+            test s2, $04
+            jump Z, fill_D3
+            fetch s0, D2_count
+            out s0, dma1
+fill_D3:
+            test s2, $08
+            jump Z, fill_D4
+            fetch s0, D3_count
+            out s0, dma2
+fill_D4:
+            test s2, $10
+            jump Z, finish
+            fetch s0, D4_count
+            out s0, dma3
+
+finish:     fetch s0, trigcache0                                                ; Get the block # for when DMA completes
+            store s0, dmablock_l
+            fetch s0, trigcache1
+            and s0, $01                                                         ; only the low bit (9 bit blocks)
+            store s0, dmablock_h
+            eint                                                                ; and enable interrupts.
+            load s0, $01
+            out s0, dmacsr                                                      ; Tell DMA to begin. When it finishes, we free the block.
+            load block_size_low, $00                                            ; Zero the block size.
+            load block_size_high, $00                                           ; Zero the block size.
+; Wait until the IRSes finish reading out. DMA won't be complete yet.
+wait_irs_done:
+            in s0, active
+            in s1, irsready
+            comp s0,s1
+            jump NZ, wait_irs_done
+            comp block_header, EVHEADER_LAST
+            ret Z
+            comp block_header, EVHEADER_ONLY
+            ret Z
+            add block_count, 1
+            load block_header, EVHEADER_MID
+            jump handle_new_event_do_block                                      ; FIXME: THIS is where the block should be freed, not after DMA.
+                                                                                ; It's not much difference (~20 m
+
+start_new_block:
+; If we're here, the IRSes should always be ready.
+; If they're not, we spit out an error frame and tell the software to
+; stop screwing around.
+;
+; We check against our active daughter mask, first.
+           in s0, irsready
+           in s1, active
+           xor s0, s1
+           jump NZ, handle_new_event_err_active
+           comp block_header, EVHEADER_NEW
+           call Z, delay_new_event
+; Here would be where we handle channel masking on a block by block basis:
+; the easy way would be -
+; in s0, trigdata1
+; test s0, $F4
+; call Z, mask_surface_triggers
+; Now we tell them to go
+           out s1, irsgo
+; Now cache the block data.
+           in s0, trigdata0
+           store s0, trigcache0
+           in s0, trigdata1
+           store s0, trigcache1
+           in s0, trigdata2
+           store s0, trigcache2
+           in s0, trigdata3
+           store s0, trigcache3
+           in s0, trigdata4
+           store s0, trigcache4
+           in s0, trigdata5
+           store s0, trigcache5
+           in s0, trigdata6
+           store s0, trigcache6
+           in s0, trigdata7
+           store s0, trigcache7
+           in s0, trigdata8
+           store s0, trigcache8
+           load s0, TRIG_READ
+           out s0, trigstat
+; Now we can deal with figuring out what to do next
+           ret
+
+popcount:
+           load s1, $00
+           sr0 s0                                                               ; 1
+           addc s1,0                                                              ; .
+           sr0 s0                                                               ; 2
+           addc s1,0                                                              ; .
+           sr0 s0                                                               ; 3
+           addc s1,0                                                              ; .
+           sr0 s0                                                               ; 4
+           addc s1,0                                                              ; .
+           sr0 s0                                                               ; 5
+           addc s1,0                                                              ; .
+           sr0 s0                                                               ; 6
+           addc s1,0                                                              ; .
+           sr0 s0                                                               ; 7
+           addc s1,0                                                              ; .
+           sr0 s0                                                               ; 8
+           addc s1,0                                                              ; done
+           ret
+
+error_frame:
+           in s1, fifocnt
+           comp s1, $03
+           jump C, error_frame
+           load s1, ERR_HEADER
+           out s1, outdata
+           load s1, 0
+           out s1, outdata_high
+           load s1, 1
+           out s1, outdata
+           load s1, 0
+           out s1, outdata_high
+           out s0, outdata_err
+           out s1, outdata_high
+err_halt:  jump err_halt                                                        ; Will need a reset now!
+
+delay_new_event:                                                                ; s0 is available here
+           in s0, readout_delay
+delay_new_event_lp0:
+           sub s0, 1
+           jump NZ, delay_new_event_lp0
+           ret
+
+isr:       fetch int0, dmablock_l
+           out int0, free_addr_l
+           fetch int0, dmablock_h
+           out int0, free_addr_h
+           reti disable                                                         ; return, no interrupts
+ORG $3FD
+           load s0, ERR_WTF
+           jump error_frame
+ORG $3FF
+isr_vec:   jump isr

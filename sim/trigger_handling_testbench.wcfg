@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="C:/cygwin/home/barawn/repositories/ara/firmware/ATRI/branches/unified/working/trigger_handling_testbench_isim_beh.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="trigger_handling_testbench" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="19" />
+   <wvobject fp_name="/trigger_handling_testbench/pretrigger_vector_i" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">pretrigger_vector_i[15:0]</obj_property>
+      <obj_property name="ObjectShortName">pretrigger_vector_i[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/trigger_handling_testbench/delay_vector_i" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">delay_vector_i[15:0]</obj_property>
+      <obj_property name="ObjectShortName">delay_vector_i[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/trigger_handling_testbench/T1_o" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">T1_o</obj_property>
+      <obj_property name="ObjectShortName">T1_o</obj_property>
+   </wvobject>
+   <wvobject fp_name="/trigger_handling_testbench/T1_scaler_o" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">T1_scaler_o</obj_property>
+      <obj_property name="ObjectShortName">T1_scaler_o</obj_property>
+   </wvobject>
+   <wvobject fp_name="/trigger_handling_testbench/T1_offset_o" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">T1_offset_o[8:0]</obj_property>
+      <obj_property name="ObjectShortName">T1_offset_o[8:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/trigger_handling_testbench/l4_matched_o" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">l4_matched_o[3:0]</obj_property>
+      <obj_property name="ObjectShortName">l4_matched_o[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/trigger_handling_testbench/pretrigger" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">pretrigger[3:0,3:0]</obj_property>
+      <obj_property name="ObjectShortName">pretrigger[3:0,3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/trigger_handling_testbench/delay" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">delay[3:0,3:0]</obj_property>
+      <obj_property name="ObjectShortName">delay[3:0,3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/trigger_handling_testbench/l4_i" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">l4_i[3:0]</obj_property>
+      <obj_property name="ObjectShortName">l4_i[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/trigger_handling_testbench/T1_mask_i" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">T1_mask_i</obj_property>
+      <obj_property name="ObjectShortName">T1_mask_i</obj_property>
+   </wvobject>
+   <wvobject fp_name="/trigger_handling_testbench/clk_i" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">clk_i</obj_property>
+      <obj_property name="ObjectShortName">clk_i</obj_property>
+   </wvobject>
+   <wvobject fp_name="/trigger_handling_testbench/rst_i" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">rst_i</obj_property>
+      <obj_property name="ObjectShortName">rst_i</obj_property>
+   </wvobject>
+   <wvobject fp_name="/trigger_handling_testbench/block_counter_ce" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">block_counter_ce</obj_property>
+      <obj_property name="ObjectShortName">block_counter_ce</obj_property>
+   </wvobject>
+   <wvobject fp_name="/trigger_handling_testbench/block_counter" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">block_counter[8:0]</obj_property>
+      <obj_property name="ObjectShortName">block_counter[8:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/trigger_handling_testbench/l4_i_latched" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">l4_i_latched[3:0]</obj_property>
+      <obj_property name="ObjectShortName">l4_i_latched[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/trigger_handling_testbench/l4_o_latched" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">l4_o_latched[3:0]</obj_property>
+      <obj_property name="ObjectShortName">l4_o_latched[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/trigger_handling_testbench/l4_trigger_block" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">l4_trigger_block[3:0,8:0]</obj_property>
+      <obj_property name="ObjectShortName">l4_trigger_block[3:0,8:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/trigger_handling_testbench/l4_block_out" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">l4_block_out[3:0,8:0]</obj_property>
+      <obj_property name="ObjectShortName">l4_block_out[3:0,8:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/trigger_handling_testbench/check" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">check[3:0]</obj_property>
+      <obj_property name="ObjectShortName">check[3:0]</obj_property>
+   </wvobject>
+</wave_config>

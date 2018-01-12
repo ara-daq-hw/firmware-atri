@@ -1,0 +1,793 @@
+          ;
+          ; Ethernet control processor, v2.
+          ;
+          ; This version essentially has a completely separate interrupt service routine
+          ; and regular running thread. The ISR processes incoming data and buffers it
+          ; externally so the regular running thread can process it at will. This should
+          ; make the system significantly more stable, especially by imposing a timer
+          ; on sending event data to make sure that commands can be processed in the
+          ; meantime.
+          ;
+      01  ethernet_data     DSIO   0x01                     ; port for incoming ethernet data: reading from here reads from the FIFO
+          ; writing to here pushes data and does not update the CRC
+      03  ethernet_crc      DSOUT  0x03                     ; port for outgoing ethernet data: writing to here pushed data and updates the CRC
+      00  ethernet_ctl      DSIO   0x00                     ; control port for ethernet data
+      02  ethernet_done     DSIO   0x02                     ; done port for ethernet data
+      04  packet_data       DSIN   0x04                     ; port for data that has been processed by the ISR
+      05  packet_status     DSIN   0x05                     ; port for status of the packet buffer (data from ISR)
+          
+          
+      10  pc_fifo_status    DSIN   0x10                     ; port for status of the PC outbound fifo (data from packet controller)
+      11  pc_dma_ctl        DSOUT  0x11                     ; port for beginning the DMA of data from packet buffer to PC
+      12  pc_dma_count      DSIO   0x12                     ; port for setting the number of bytes to DMA from packet buffer to PC
+      13  pc_reset          DSOUT  0x13                     ; port for resetting packet controller
+          
+      14  evfifo_timer      DSIO   0x14                     ; port for controlling event FIFO timer
+      15  evfifo_status     DSIN   0x15                     ; port for event FIFO status
+      16  ev_dma_count      DSOUT  0x16                     ; port for setting number of bytes for DMA from event FIFO to PC
+      17  ev_dma_ctl        DSIO   0x17                     ; port for beginning DMA of data from event FIFO to PC
+      18  lram_page         DSIO   0x18                     ; port for controlling LRAM page
+          
+          
+      20  ethernet_crc_ctl  DSOUT  0x20                     ; port for controlling CRC
+      21  ethernet_crc_data DSIN   0x21                     ; port for reading calculated CRC
+      24  eframe_etype      DSIN   0x24                     ; ethertype (low 8 bits) out of ethernet frame processor
+      25  eframe_bcast      DSIN   0x25                     ; this packet was a broadcast send, from ethernet frame processor
+      28  eframe_sender_mac DSIN   0x28                     ; port for reading sender mac out of ethernet frame processor (8 ports, only 6 real)
+          
+      30  mac               DSIN   0x30                     ; port for reading our IP address
+      36  ip                DSIN   0x36                     ; port for reading our MAC address
+      3A  ip_checksum_base_l DSIN   0x3A
+      3B  ip_checksum_base_h DSIN   0x3B
+      40  lram              DSRAM  0x40                     ; local RAM, from $40-$5F. These are the top 256 bytes, split into 8 pages of 32 (Except $3FF)
+      80  fifo              DSIN   0x80                     ; PC outbound FIFO in
+      81  evfifo            DSIN   0x81                     ; event FIFO outbound in
+      82  fifo_high         DSIN   0x82                     ; unused
+      83  evfifo_high       DSIN   0x83                     ; event FIFO high byte in (maybe unused? don't remember)
+          
+      C0  spram             DSRAM  0xC0                     ; this is actually the internal SPRAM, mapped to port space (64 bytes)
+          ; Registers
+          ; ISR needs 7 registers
+      09  in0               EQU    s9                       ; ISR register 0
+      0A  in1               EQU    sA                       ; ISR register 1
+      0B  in2               EQU    sB                       ; ISR register 2
+      0C  in3               EQU    sC                       ; ISR register 3
+      0D  in4               EQU    sD                       ; ISR register 4
+      0E  in5               EQU    sE                       ; ISR register 5
+      0F  in6               EQU    sF                       ; ISR register 6
+          
+          ; Scratchpad RAM (64 bytes)
+      00  connected_mac_0   EQU    0x00
+      01  connected_mac_1   EQU    0x01
+      02  connected_mac_2   EQU    0x02
+      03  connected_mac_3   EQU    0x03
+      04  connected_mac_4   EQU    0x04
+      05  connected_mac_5   EQU    0x05
+      06  connected_ip_0    EQU    0x06
+      07  connected_ip_1    EQU    0x07
+      08  connected_ip_2    EQU    0x08
+      09  connected_ip_3    EQU    0x09
+      0A  connected_ip_4    EQU    0x0A
+      0B  sender_mac_0      EQU    0x0B                     ; sender MAC byte 0
+      0C  sender_mac_1      EQU    0x0C
+      0D  sender_mac_2      EQU    0x0D
+      0E  sender_mac_3      EQU    0x0E
+      0F  sender_mac_4      EQU    0x0F
+      10  sender_mac_5      EQU    0x10
+      11  sender_ip_0       EQU    0x11
+      12  sender_ip_1       EQU    0x12
+      13  sender_ip_2       EQU    0x13
+      14  sender_ip_3       EQU    0x14
+      15  packet_length     EQU    0x15
+      16  pc_packet_buf_0   EQU    0x16                     ; PC packet buffer, byte 0 (SOF)
+      17  pc_packet_buf_1   EQU    0x17                     ; PC packet buffer, byte 1 (source)
+      18  pc_packet_buf_2   EQU    0x18                     ; PC packet buffer, byte 2 (pktno)
+      19  ev_frame_remain_l EQU    0x19                     ; event remaining, low
+      1A  ev_frame_remain_h EQU    0x1A                     ; event remaining, high
+      1B  ev_frame_number   EQU    0x1B                     ; event frame number
+      1C  tmp_store         EQU    0x1C                     ; temporary - any function can use (non-ISR)
+      1D  tmp_store_0       EQU    0x1D
+      1E  tmp_store_1       EQU    0x1E
+      1F  connected         EQU    0x1F                     ; are we connected?
+      20  ev_frame_header   EQU    0x20
+      21  ev_frame_cur_number EQU    0x21
+      22  ev_frame_cur_remain_l EQU    0x22
+      23  ev_frame_cur_remain_h EQU    0x23
+      30  isr_sender_mac_0  EQU    0x30                     ; sender MAC byte 0 in ISR
+      31  isr_sender_mac_1  EQU    0x31                     ; sender MAC byte 1 in ISR
+      32  isr_sender_mac_2  EQU    0x32                     ; sender MAC byte 2 in ISR
+      33  isr_sender_mac_3  EQU    0x33                     ; sender MAC byte 3 in ISR
+      34  isr_sender_mac_4  EQU    0x34                     ; sender MAC byte 4 in ISR
+      35  isr_sender_mac_5  EQU    0x35                     ; sender MAC byte 5 in ISR
+      36  isr_sender_ip_0   EQU    0x36                     ; sender IP byte 0 in ISR
+      37  isr_sender_ip_1   EQU    0x37                     ; sender IP byte 1 in ISR
+      38  isr_sender_ip_2   EQU    0x38                     ; sender IP byte 2 in ISR
+      39  isr_sender_ip_3   EQU    0x39                     ; sender IP byte 3 in ISR
+      3A  isr_ip_length     EQU    0x3A                     ; IP packet length (low only)
+          
+      C0  spram_connected_mac_0 EQU    0xC0                 ; connected MAC byte 0
+      C6  spram_connected_ip_0 EQU    0xC6                  ; connected IP byte 0
+      CB  spram_sender_mac_0 EQU    0xCB                    ; sender MAC byte 0
+      D1  spram_sender_ip_0 EQU    0xD1                     ; sender IP byte 0
+          
+      F0  spram_isr_sender_mac_0 EQU    0xF0                ; sender MAC byte 0 in ISR
+      F6  spram_isr_sender_ip_0 EQU    0xF6                 ; sender IP byte 0 in ISR
+      FA  spram_isr_ip_length EQU    0xFA                   ; IP packet length (low only)
+          
+          ; Ethernet definitions
+      08  ETHERTYPE_HIGH_ARP_IP EQU    0x08                 ; ARP/IP high byte ethertype
+      06  ETHERTYPE_LOW_ARP EQU    0x06                     ; ARP ethertype (0x0806)
+      00  ETHERTYPE_LOW_IP  EQU    0x00                     ; IP ethertype (0x0800)
+      00  ARP_HTYPE_HIGH_ETH EQU    0x00
+      01  ARP_HTYPE_LOW_ETH EQU    0x01
+      08  ARP_PTYPE_HIGH_IPV4 EQU    0x08
+      00  ARP_PTYPE_LOW_IPV4 EQU    0x00
+      01  ARP_REQUEST       EQU    0x01
+      45  IPV4_AND_5_INTS   EQU    0x45
+      11  IPPROTO_UDP       EQU    0x11
+      01  IPPROTO_ICMP      EQU    0x01
+      55  ETHERNET_PREAMBLE EQU    0x55
+      07  ETHERNET_PREAMBLE_BYTES EQU    0x07
+      D5  ETHERNET_SFD      EQU    0xD5
+      2E  ETHERNET_MIN_PAYLOAD_SIZE EQU    0x2E             ; Ethernet min payload size (46 bytes)
+      1A  IP_MIN_PAYLOAD_SIZE EQU    0x1A                   ; IP min payload size (26 bytes)
+      12  UDP_MIN_PAYLOAD_SIZE EQU    0x12                  ; UDP min payload size (18 bytes)
+      08  ICMP_ECHO_REQUEST EQU    0x08
+      00  ICMP_ECHO_REPLY   EQU    0x00
+      80  IP_TTL            EQU    0x80
+      08  UDP_MIN_PACKET_SIZE EQU    0x08                   ; 2 bytes for src port, 2 bytes for dest port, 2 bytes for length, 2 bytes for cksum
+      14  IP_MIN_PACKET_SIZE EQU    0x14                    ; IP min size is 20 bytes
+          ; Ethernet control definitions
+      03  ETHERNET_CTL_DUMP EQU    0x03                     ; ethernet_dump_frame && ethernet_enable
+      41  ETHERNET_CTL_TRANSMIT EQU    0x41                 ; ethernet_transmit_frame && ethernet_enable
+      10  ETHERNET_CTL_TXRDY_BIT EQU    0x10                ; ethernet can transmit now
+      08  ETHERNET_CTL_DONE_BIT EQU    0x08
+          ; LRAM pages
+      00  LRAM_PAGE_ARP     EQU    0x00                     ; Constant portion of an ARP header
+      20  LRAM_PAGE_IDENT_STR EQU    0x20                   ; Version string that we output on version request
+          
+          
+          ;
+          ; MAIN PROGRAM GOES HERE
+          ; We have from address 0x000 to 0x308, registers s0-s8, and SPRAM address 00-0x2F.
+          ; Should be enough, I hope.
+          ;
+          ; Definitions
+      01  PACKET_EMPTY_BIT  EQU    0x01
+      01  PC_NOT_EMPTY_BIT  EQU    0x01
+      01  EVFIFO_TIMER_EXPIRED_BIT EQU    0x01
+      10  EVFIFO_NOT_EMPTY_BIT EQU    0x10                  ; bottom nybble is type
+      06  PACKET_TYPE_ARP   EQU    0x06
+      11  PACKET_TYPE_UDP   EQU    0x11
+      01  PACKET_TYPE_ICMP  EQU    0x01
+      05  PC_MIN_PACKET_SIZE EQU    0x05                    ; SOF SRC PKTNO PKTLEN EOF
+      04  EV_MIN_PACKET_SIZE EQU    0x04                    ; ftype fno rem_l rem_h
+      1B  UDP_CTRL_PORT_HIGH EQU    0x1B
+      59  UDP_CTRL_PORT_LOW EQU    0x59
+      1B  UDP_CONN_PORT_HIGH EQU    0x1B
+      58  UDP_CONN_PORT_LOW EQU    0x58
+      1B  UDP_EVENT_PORT_HIGH EQU    0x1B
+      5A  UDP_EVENT_PORT_LOW EQU    0x5A
+          
+      20  IDENT_PACKET_SIZE EQU    0x20
+      0E  EV_MIN_PAYLOAD_SIZE EQU    0x0E                   ; Minimum event payload (14 bytes)
+      04  EV_MIN_FRAME_SIZE EQU    0x04                     ; Minimum event frame size (4 bytes)
+      DE  EV_FRAME_MAX      EQU    0xDE                     ; Maximum event frame size (222 bytes)
+          
+      01  ETHERNET_DONE_ARP EQU    0x01
+      02  ETHERNET_DONE_IP  EQU    0x02
+      04  ETHERNET_DONE_UDP_ICMP EQU    0x04
+          
+000       init            :                                 ; Do any initialization
+000 04000                   IN     s0, ethernet_ctl
+001 12020                   TEST   s0, 0x20
+002 35000                   JUMP   Z, init
+003 00001                   LOAD   s0, 0x01
+004 2C000                   OUT    s0, ethernet_ctl         ; enable
+005 3C001                   EINT  
+006       main_loop       :                                 ; Begin main loop
+006 04005                   IN     s0, packet_status        ; check inbound packet status
+007 12001                   TEST   s0, PACKET_EMPTY_BIT     ; is the PACKET_EMPTY_BIT set?
+008 35016                   JUMP   Z, handle_ethernet_packet ; no: so handle ethernet packet
+009 0601F                   FETCH  s0, connected
+00A 14001                   COMP   s0, 1
+00B 35406                   JUMP   NZ, main_loop            ; if we're not connected, skip everything else
+00C 04010                   IN     s0, pc_fifo_status       ; check PC inbound FIFO
+00D 12001                   TEST   s0, PC_NOT_EMPTY_BIT     ; is the PC_EMPTY_BIT set?
+00E 350A6                   JUMP   Z, handle_pc_packet      ; no: so handle packet controller packet
+00F 04014                   IN     s0, evfifo_timer         ; check the event fifo timer
+010 12001                   TEST   s0, EVFIFO_TIMER_EXPIRED_BIT ; is the EVFIFO_TIMER_EXPIRED_BIT set?
+011 35006                   JUMP   Z, main_loop             ; yes: so jump back to the main loop (event pacing)
+012 04015                   IN     s0, evfifo_status        ; check the event FIFO status
+013 12010                   TEST   s0, EVFIFO_NOT_EMPTY_BIT ; is the EVFIFO_NOT_EMPTY_BIT set?
+014 354CD                   JUMP   NZ, handle_event_frame   ; no: so handle event frame
+015 34006                   JUMP   main_loop                ; and repeat!
+016       handle_ethernet_packet:                           ; We have an inbound Ethernet packet to handle
+016 04604                   IN     s6, packet_data          ; First byte is packet type
+017 04004                   IN     s0, packet_data          ; Length: if ARP, this is 10. If IP, this is PAYLOAD LENGTH: MINUS IP header length
+018 2E015                   STORE  s0, packet_length        ; store it into SPRAM
+019 00104                   LOAD   s1, packet_data          ; copy MAC+IP to SPRAM
+01A 002CB                   LOAD   s2, spram_sender_mac_0   ;
+01B 00300                   LOAD   s3, 0x00
+01C 00401                   LOAD   s4, 0x01
+01D 0000A                   LOAD   s0, 10
+01E 30112                   CALL   portcopy                 ; copy MAC+IP to SPRAM
+01F 14606                   COMP   s6, PACKET_TYPE_ARP      ; is it an ARP packet?
+020 35026                   JUMP   Z, handle_arp_packet     ; yes, handle it
+021 14601                   COMP   s6, PACKET_TYPE_ICMP     ; is it an ICMP ping packet?
+022 3503C                   JUMP   Z, handle_icmp_packet    ; yes, handle it
+023 14611                   COMP   s6, PACKET_TYPE_UDP      ; is it a UDP packet?
+024 35061                   JUMP   Z, handle_udp_packet     ; yes, handle it
+025 34006                   JUMP   main_loop                ; huh?
+026       handle_arp_packet:                                ; We have an inbound ARP packet to handle
+026 00006                   LOAD   s0, ETHERTYPE_LOW_ARP
+027 30125                   CALL   do_ethernet_header       ; Output the Ethernet header (also waits for transmit available)
+028 00000                   LOAD   s0, LRAM_PAGE_ARP        ; Switch the LRAM to ARP page
+029 2C018                   OUT    s0, lram_page            ; (cont.)
+02A 00140                   LOAD   s1, lram                 ; Prepare to portcopy (src)
+02B 00203                   LOAD   s2, ethernet_crc         ; Prepare to portcopy (dst)
+02C 00301                   LOAD   s3, 0x01                 ; Prepare to portcopy (src incr)
+02D 00400                   LOAD   s4, 0x00                 ; Prepare to portcopy (dst incr)
+02E 00008                   LOAD   s0, 8                    ; Prepare to portcopy (nbytes)
+02F 30112                   CALL   portcopy                 ; Copy ARP header to Ethernet
+030 00130                   LOAD   s1, mac                  ; Prepare to portcopy (src)
+031 0000A                   LOAD   s0, 10                   ; Prepare to portcopy (nbytes)
+032 30112                   CALL   portcopy                 ; Copy MAC and IP to Ethernet (dst, dst incr, src incr stay the same)
+033 001CB                   LOAD   s1, spram_sender_mac_0   ; Prepare to portcopy (src)
+034 0000A                   LOAD   s0, 10                   ; Prepare to portcopy (nbytes)
+035 30112                   CALL   portcopy                 ; Copy sender MAC and sender IP to Ethernet (dst, dst incr, src incr stay the same)
+036 00000                   LOAD   s0, 0x00                 ; prepare to fill (fill byte)
+037 00112                   LOAD   s1, 18                   ; prepare to fill (nbytes)
+038 00203                   LOAD   s2, ethernet_crc         ; prepare to fill (dst)
+039 3011D                   CALL   do_fill_out              ; Fill 18 zeroes
+03A 30176                   CALL   do_crc_out               ; output Ethernet CRC, and we're done
+03B 34006                   JUMP   main_loop                ; and begin main loop again
+03C       handle_icmp_packet:                               ; We have an ICMP packet to handle (length, MAC, IP autofilled)
+03C 06015                   FETCH  s0, packet_length        ; packet length here is number of payload bytes in IP packet (after IP header)
+03D 1C001                   SUB    s0, 1                    ; sub off the type
+03E 00104                   LOAD   s1, packet_data          ; get ready if we need to dump
+03F 04604                   IN     s6, packet_data          ; Read type
+040 14608                   COMP   s6, ICMP_ECHO_REQUEST    ; is it a ping request?
+041 35044                   JUMP   Z, handle_icmp_packet_cp0
+042 30121                   CALL   do_dump
+043 34006                   JUMP   main_loop
+044       handle_icmp_packet_cp0:
+044 00000                   LOAD   s0, ETHERTYPE_LOW_IP
+045 30125                   CALL   do_ethernet_header       ; output the Ethernet header
+046 00001                   LOAD   s0, IPPROTO_ICMP
+047 06115                   FETCH  s1, packet_length        ; fetch payload length
+048 3013B                   CALL   do_ip_header             ; output the IP header
+049 00000                   LOAD   s0, ICMP_ECHO_REPLY      ; output type is echo reply
+04A 2C003                   OUT    s0, ethernet_crc         ; output type
+04B 2C003                   OUT    s0, ethernet_crc         ; output code is also 0
+04C 04004                   IN     s0, packet_data          ; get type and ignore it
+04D 04004                   IN     s0, packet_data          ; first byte of checksum
+04E 04104                   IN     s1, packet_data          ; second byte of checksum
+04F 18008                   ADD    s0, 0x08                 ; add 0x08 to high byte and if we overflow...
+050 1A100                   ADDC   s1, 0x00                 ; add 1 to low byte
+051 2C003                   OUT    s0, ethernet_crc         ; output new checksum
+052 2C103                   OUT    s1, ethernet_crc         ; output new checksum
+053 00104                   LOAD   s1, packet_data
+054 00203                   LOAD   s2, ethernet_crc
+055 00300                   LOAD   s3, 0
+056 00400                   LOAD   s4, 0
+057 06015                   FETCH  s0, packet_length        ; get IP packet length
+058 1C004                   SUB    s0, 4                    ; subtract code/type/checksum/checksum
+059 30112                   CALL   portcopy                 ; copy remaining bytes to ethernet CRC
+05A 00000                   LOAD   s0, 0x00                 ; fill byte
+05B 00203                   LOAD   s2, ethernet_crc         ; fill dest
+05C 06115                   FETCH  s1, packet_length
+05D 1C11A                   SUB    s1, IP_MIN_PAYLOAD_SIZE  ; packet length is payload length - must be 26 bytes or more to fill min frame
+05E 31919                   CALL   C, do_calculated_fill
+05F 30176                   CALL   do_crc_out
+060 34006                   JUMP   main_loop
+061       handle_udp_packet:
+061 06015                   FETCH  s0, packet_length        ; this is the payload length
+062 1C004                   SUB    s0, 4                    ; subtract off source/dest port bytes in case we need to dump
+063 2E015                   STORE  s0, packet_length        ; re-store the packet length
+064 00104                   LOAD   s1, packet_data          ; get ready in case we need to dump
+065 04204                   IN     s2, packet_data          ; ignore source port high
+066 04204                   IN     s2, packet_data          ; ignore source port low
+067 04204                   IN     s2, packet_data          ; get dest port high
+068 04304                   IN     s3, packet_data          ; get dest port low
+069 1421B                   COMP   s2, UDP_CTRL_PORT_HIGH   ; compare to 0x1B
+06A 3506D                   JUMP   Z, handle_udp_packet_cp0 ; if yes, continue
+06B 30121                   CALL   do_dump
+06C 34006                   JUMP   main_loop
+06D       handle_udp_packet_cp0:
+06D 14358                   COMP   s3, UDP_CONN_PORT_LOW    ; is it a connection port request?
+06E 35075                   JUMP   Z, handle_connection_request ; if so, handle it
+06F 14359                   COMP   s3, UDP_CTRL_PORT_LOW    ; is it data on the control port?
+070 35093                   JUMP   Z, handle_control_packet ; if so, handle it
+071 1435A                   COMP   s3, UDP_EVENT_PORT_LOW   ; is it data on the event port?
+072 350A3                   JUMP   Z, handle_event_packet   ; if so, handle it
+073 30121                   CALL   do_dump                  ; I don't know what you are, go away
+074 34006                   JUMP   main_loop
+075       handle_connection_request:                        ; someone sent a packet on our connection port
+075 0000A                   LOAD   s0, 10
+076 001CB                   LOAD   s1, spram_sender_mac_0
+077 002C0                   LOAD   s2, spram_connected_mac_0
+078 00301                   LOAD   s3, 1
+079 00401                   LOAD   s4, 1
+07A 30112                   CALL   portcopy
+07B 00104                   LOAD   s1, packet_data          ; prep to dump if we need to
+07C 06015                   FETCH  s0, packet_length        ; packet length is now UDP payload length
+07D 14000                   COMP   s0, 0                    ; are there non-zero bytes remaining?
+07E 31521                   CALL   NZ, do_dump              ; get rid of the remaining bytes
+07F 00000                   LOAD   s0, ETHERTYPE_LOW_IP     ; this is an IP packet
+080 30125                   CALL   do_ethernet_header       ; Check to see if we can transmit.
+081 00011                   LOAD   s0, IPPROTO_UDP          ; this is a UDP packet
+082 00128                   LOAD   s1, UDP_MIN_PACKET_SIZE + IDENT_PACKET_SIZE ; IP payload length
+083 3013B                   CALL   do_ip_header
+084 00058                   LOAD   s0, UDP_CONN_PORT_LOW
+085 00120                   LOAD   s1, IDENT_PACKET_SIZE    ; UDP payload length
+086 3016A                   CALL   do_udp_header
+087 00020                   LOAD   s0, LRAM_PAGE_IDENT_STR  ; Switch to LRAM page
+088 2C018                   OUT    s0, lram_page
+089 00020                   LOAD   s0, IDENT_PACKET_SIZE
+08A 00140                   LOAD   s1, lram
+08B 00203                   LOAD   s2, ethernet_crc
+08C 00301                   LOAD   s3, 1
+08D 00400                   LOAD   s4, 0
+08E 30112                   CALL   portcopy                 ; and portcopy ident packet over
+08F 30176                   CALL   do_crc_out               ; IDENT_PACKET_SIZE is 32, so we're already over (20+8+32 > 46)
+090 00001                   LOAD   s0, 1
+091 2E01F                   STORE  s0, connected            ; set connected = 1
+092 34006                   JUMP   main_loop
+093       handle_control_packet:
+093 06015                   FETCH  s0, packet_length        ; packet_length is the number of bytes after source/dest ports.
+094 00104                   LOAD   s1, packet_data
+095 0621F                   FETCH  s2, connected
+096 14200                   COMP   s2, 0
+097 31121                   CALL   Z, do_dump               ; if we haven't gotten a connection packet yet, we ignore it
+098 35006                   JUMP   Z, main_loop             ; do_dump returns with Z set
+          ; Need to dump first 4 bytes
+099 00004                   LOAD   s0, 4                    ; we need to dump the first 4 bytes anyway (length, checksum)
+09A 30121                   CALL   do_dump                  ; s1 is unaffected prior to this
+          ; Now fetch the length
+09B 06015                   FETCH  s0, packet_length
+09C 1C004                   SUB    s0, 4                    ; subtract off the 4 we just dumped (header length, checksum)
+09D 2C012                   OUT    s0, pc_dma_count         ; prep to DMA to packet fifo
+09E 2C011                   OUT    s0, pc_dma_ctl           ; .. and DMA over the data
+09F 04011 check_dma_complete: IN     s0, pc_dma_ctl
+0A0 12001                   TEST   s0, 0x01                 ; check to see if the DMA is done
+0A1 3509F                   JUMP   Z, check_dma_complete    ; if not, check again
+0A2 34006                   JUMP   main_loop
+0A3       handle_event_packet:
+0A3 06015                   FETCH  s0, packet_length
+0A4 30121                   CALL   do_dump
+0A5 34006                   JUMP   main_loop
+0A6       handle_pc_packet:                                 ; We have a packet to handle from the packet controller FIFO
+0A6 3017F                   CALL   store_connected_mac_ip   ; Copy our current connection's mac/ip to sender mac/ip.
+0A7 00000                   LOAD   s0, ETHERTYPE_LOW_IP     ; this is an IP packet
+0A8 30125                   CALL   do_ethernet_header       ; We can do an ethernet header now. This also checks to see if we can transmit.
+0A9 04080                   IN     s0, fifo                 ; get SOF
+0AA 2E016                   STORE  s0, pc_packet_buf_0      ; store
+0AB 04080                   IN     s0, fifo                 ; get src
+0AC 2E017                   STORE  s0, pc_packet_buf_0 + 1  ; store
+0AD 04080                   IN     s0, fifo                 ; get pktno
+0AE 2E018                   STORE  s0, pc_packet_buf_0 + 2  ; store
+0AF 04180                   IN     s1, fifo                 ; get packet length. This is what we need
+0B0 18105                   ADD    s1, PC_MIN_PACKET_SIZE
+0B1 2E115                   STORE  s1, packet_length        ; packet_length is now the UDP payload size
+0B2 18108                   ADD    s1, UDP_MIN_PACKET_SIZE  ; add minimum packet sizes (IP payload size)
+0B3 00011                   LOAD   s0, IPPROTO_UDP          ; this is a UDP packet
+0B4 3013B                   CALL   do_ip_header             ; add the IP header
+0B5 00059                   LOAD   s0, UDP_CTRL_PORT_LOW    ; prep for UDP header
+0B6 06115                   FETCH  s1, packet_length        ; this is UDP payload size
+0B7 3016A                   CALL   do_udp_header            ; add the UDP header
+0B8 06016                   FETCH  s0, pc_packet_buf_0      ; get SOF, src, len, and output them
+0B9 2C003                   OUT    s0, ethernet_crc         ; output SOF
+0BA 06017                   FETCH  s0, pc_packet_buf_0 + 1
+0BB 2C003                   OUT    s0, ethernet_crc         ; output SRC
+0BC 06018                   FETCH  s0, pc_packet_buf_0 + 2
+0BD 2C003                   OUT    s0, ethernet_crc         ; output PKTNO
+0BE 06015                   FETCH  s0, packet_length        ;
+0BF 1C005                   SUB    s0, PC_MIN_PACKET_SIZE   ;
+0C0 2C003                   OUT    s0, ethernet_crc         ; output PKTLEN
+0C1 00180                   LOAD   s1, fifo                 ; prepare to portcopy (src)
+0C2 00203                   LOAD   s2, ethernet_crc         ; prepare to portcopy (dst)
+0C3 00300                   LOAD   s3, 0                    ; prepare to portcopy (src incr)
+0C4 00400                   LOAD   s4, 0                    ; prepare to portcopy (dst incr)
+0C5 30112                   CALL   portcopy                 ; copy remaining bytes to Ethernet
+0C6 04080                   IN     s0, fifo                 ; get EOF
+0C7 2C003                   OUT    s0, ethernet_crc         ; and output it
+0C8 06115                   FETCH  s1, packet_length
+0C9 1C112                   SUB    s1, UDP_MIN_PAYLOAD_SIZE ; are we under the min UDP payload size (probably)?
+0CA 31919                   CALL   C, do_calculated_fill
+0CB 30176                   CALL   do_crc_out
+0CC 34006                   JUMP   main_loop
+0CD       handle_event_frame:                               ; We have an event frame to handle
+0CD 2C014                   OUT    s0, evfifo_timer         ; Reset the timer.
+0CE 3017F                   CALL   store_connected_mac_ip   ; Copy our current connection's mac/ip to sender mac/ip.
+0CF 00000                   LOAD   s0, ETHERTYPE_LOW_IP     ; this is an IP packet
+0D0 30125                   CALL   do_ethernet_header       ; We can do an ethernet header now. This also checks to see if we can transmit.
+0D1 04015                   IN     s0, evfifo_status        ; fetch the base type (gets uppercased in handle_new_event)
+0D2 0A00F                   AND    s0, 0x0F
+0D3 0C040                   OR     s0, 0x40
+0D4 2E020                   STORE  s0, ev_frame_header      ; and store it
+0D5 0601B                   FETCH  s0, ev_frame_number      ; is an event in progress? If not, frame counter is zero.
+0D6 2E021                   STORE  s0, ev_frame_cur_number  ; store the current number (gets restored in handle_new_event)
+0D7 14000                   COMP   s0, 0
+0D8 31108                   CALL   Z, handle_new_event      ; Do housekeeping for first frame.
+0D9 18001                   ADD    s0, 1                    ; s0 is still ev_frame_number, so increment it
+0DA 2E01B                   STORE  s0, ev_frame_number      ; and store it again
+0DB 06119                   FETCH  s1, ev_frame_remain_l
+0DC 0621A                   FETCH  s2, ev_frame_remain_h
+0DD 2E122                   STORE  s1, ev_frame_cur_remain_l
+0DE 2E223                   STORE  s2, ev_frame_cur_remain_h
+0DF 000DE                   LOAD   s0, EV_FRAME_MAX
+0E0 1D100                   SUB    s1, s0
+0E1 1E200                   SUBC   s2, 0
+0E2 35CE9                   JUMP   NC, handle_event_frame_cp0 ; If we didn't overflow (last frame) continue on
+0E3 19100                   ADD    s1, s0                   ; otherwise add it back
+0E4 1A200                   ADDC   s2, 0                    ; .. ditto
+0E5 01010                   LOAD   s0, s1                   ; and copy s1 to s0 (number of bytes to write)
+0E6 2E21B                   STORE  s2, ev_frame_number      ; s2 must be 0 at this point (since we fixed the carry above)
+0E7 1D100                   SUB    s1, s0
+0E8 1E200                   SUBC   s2, 0                    ; zero out s1, s2 (total bytes remaining)
+0E9       handle_event_frame_cp0:
+0E9 2E119                   STORE  s1, ev_frame_remain_l
+0EA 2E21A                   STORE  s2, ev_frame_remain_h
+0EB 2E015                   STORE  s0, packet_length        ; store the number of event bytes we're going to DMA
+0EC 1800C                   ADD    s0, EV_MIN_FRAME_SIZE + UDP_MIN_PACKET_SIZE ; add the minimum event frame size and minimum UDP packet size
+0ED 01100                   LOAD   s1, s0                   ; sigh, register remap
+0EE 00011                   LOAD   s0, IPPROTO_UDP
+0EF 3013B                   CALL   do_ip_header             ; and do the IP header
+0F0 0005A                   LOAD   s0, UDP_EVENT_PORT_LOW
+0F1 06115                   FETCH  s1, packet_length
+0F2 18104                   ADD    s1, EV_MIN_FRAME_SIZE
+0F3 3016A                   CALL   do_udp_header
+0F4 06020                   FETCH  s0, ev_frame_header
+0F5 2C003                   OUT    s0, ethernet_crc
+0F6 06021                   FETCH  s0, ev_frame_cur_number
+0F7 2C003                   OUT    s0, ethernet_crc
+0F8 06022                   FETCH  s0, ev_frame_cur_remain_l
+0F9 2C003                   OUT    s0, ethernet_crc
+0FA 06023                   FETCH  s0, ev_frame_cur_remain_h
+0FB 2C003                   OUT    s0, ethernet_crc
+0FC 06015                   FETCH  s0, packet_length
+0FD 00181                   LOAD   s1, evfifo
+          ;                       out      s0, ev_dma_count
+          ;                       out      s0, ev_dma_ctl
+0FE       handle_event_frame_lp0:
+0FE 05210                   IN     s2, s1
+0FF 2C203                   OUT    s2, ethernet_crc
+100 0E102                   XOR    s1, 0x02
+101 1C001                   SUB    s0, 1
+102 354FE                   JUMP   NZ, handle_event_frame_lp0
+          ;                       in       s0, ev_dma_ctl
+          ;                       test     s0, $01
+          ;                      jump     Z, handle_event_frame_lp0
+103 06115                   FETCH  s1, packet_length
+104 1C10E                   SUB    s1, EV_MIN_PAYLOAD_SIZE
+105 31919                   CALL   C, do_calculated_fill
+106 30176                   CALL   do_crc_out
+107 34006                   JUMP   main_loop
+108       handle_new_event:
+108 04181                   IN     s1, evfifo               ; Fetch number of words, low
+109 04283                   IN     s2, evfifo_high          ; Fetch number of words, high
+10A 20106                   SL0    s1
+10B 20200                   SLA    s2                       ; shift up by 1 to get bytes
+10C 2E119                   STORE  s1, ev_frame_remain_l
+10D 2E21A                   STORE  s2, ev_frame_remain_h
+10E 06120                   FETCH  s1, ev_frame_header
+10F 0C120                   OR     s1, 0x20
+110 2E120                   STORE  s1, ev_frame_header
+111 2A000                   RET                             ; don't touch s0, as it's zero before and needs to be after
+112       portcopy        :                                 ; Copy from one port to another.
+112 05510                   IN     s5, s1
+113 2D520                   OUT    s5, s2
+114 19130                   ADD    s1, s3                   ; source increment
+115 19240                   ADD    s2, s4                   ; dest increment
+116 1C001                   SUB    s0, 1
+117 2B000                   RET    Z
+118 34112                   JUMP   portcopy
+119 00203 do_calculated_fill: LOAD   s2, ethernet_crc       ; pad
+11A 00000                   LOAD   s0, 0x00
+11B 0E1FF                   XOR    s1, 0xFF                 ; 2's complement s1 (number of bytes)
+11C 18101                   ADD    s1, 1                    ; ... and move on to do_fill_out
+11D       do_fill_out     :                                 ; Fill port output with a fixed byte
+11D 2D020                   OUT    s0, s2
+11E 1C101                   SUB    s1, 1
+11F 3551D                   JUMP   NZ, do_fill_out
+120 2A000                   RET   
+121       do_dump         :                                 ; Read and ignore N bytes from a port
+121 05210                   IN     s2, s1
+122 1C001                   SUB    s0, 1
+123 35521                   JUMP   NZ, do_dump
+124 2A000                   RET   
+125       do_ethernet_header:                               ; Fill the Ethernet header
+125 2E01C                   STORE  s0, tmp_store            ; Store s0 (we know the functions later don't use this)
+126 30185                   CALL   wait_ethernet_tx_ready   ; Wait for TX ready
+127 00055                   LOAD   s0, ETHERNET_PREAMBLE    ; Prepare to do_fill_out (constant) load ETHERNET_PREAMBLE ($55)
+128 00107                   LOAD   s1, ETHERNET_PREAMBLE_BYTES ; Prepare to do_fill_out (nbytes)
+129 00201                   LOAD   s2, ethernet_data        ; Prepare to do_fill_out (dst)
+12A 3011D                   CALL   do_fill_out
+12B 000D5                   LOAD   s0, ETHERNET_SFD         ; load start of frame delimiter (SFD)
+12C 2C001                   OUT    s0, ethernet_data        ; output it to Ethernet
+12D 001CB                   LOAD   s1, spram_sender_mac_0   ; prepare to portcopy (src)
+12E 00203                   LOAD   s2, ethernet_crc         ; prepare to portcopy (dst)
+12F 00301                   LOAD   s3, 0x01                 ; prepare to portcopy (src incr)
+130 00400                   LOAD   s4, 0x00                 ; prepare to portcopy (dst incr)
+131 00006                   LOAD   s0, 6                    ; prepare to portcopy (nbytes)
+132 30112                   CALL   portcopy                 ; copy sender MAC to Ethernet
+133 00130                   LOAD   s1, mac                  ; prepare to portcopy (src)
+134 00006                   LOAD   s0, 6                    ; prepare to portcopy (nbytes)
+135 30112                   CALL   portcopy                 ; copy my MAC to Ethernet (dst, dst incr, src incr stay the same)
+136 00008                   LOAD   s0, ETHERTYPE_HIGH_ARP_IP ; Ethertype high byte
+137 2C003                   OUT    s0, ethernet_crc
+138 0601C                   FETCH  s0, tmp_store
+139 2C003                   OUT    s0, ethernet_crc         ; Ethertype low byte
+13A 2A000                   RET   
+13B       do_ip_header    :                                 ; Output the IP header (s0 is ipproto)
+13B 2E01C                   STORE  s0, tmp_store
+13C 18114                   ADD    s1, IP_MIN_PACKET_SIZE   ; add length of IP header
+13D 2E11D                   STORE  s1, tmp_store + 1
+          ; Get the checksum base (stored externally since it's parameterized)
+          ; IP header calculation:
+          ; Start with the base (since most of the IP header bytes are unchanged:
+          ; sender IP, etc.), and then for each two byte short pair (s2,s3) (s2 = [7:0], s3 = [15:8])
+          ; modify the checksum stored in (s0, s1) (s0 = [7:0], s1 = [15:8]) as
+          ; subc s1, s3
+          ; subc s0, s2
+13E 0403A                   IN     s0, ip_checksum_base_l
+13F 0413B                   IN     s1, ip_checksum_base_h
+          ; The checksum base includes IPPROTO_HIGH already, so fetch the low byte...
+140 0621C                   FETCH  s2, tmp_store            ; fetch IPPROTO_LOW
+          ; and just subtract
+141 1D020                   SUB    s0, s2                   ; begin sub
+          ; Now fetch the length. High byte is always zero.
+142 0621D                   FETCH  s2, tmp_store + 1        ; fetch length
+143 1F020                   SUBC   s0, s2                   ; sub
+144 1E100                   SUBC   s1, 0x00                 ; length high is always $00
+          ; Now fetch the sender IP, [15:0]
+145 06214                   FETCH  s2, sender_ip_3          ;
+146 06313                   FETCH  s3, sender_ip_2          ;
+          ; and subtract
+147 1F020                   SUBC   s0, s2
+148 1F130                   SUBC   s1, s3
+          ; Now fetch the sender IP second word [31:16]
+149 06212                   FETCH  s2, sender_ip_1
+14A 06311                   FETCH  s3, sender_ip_0
+          ; and subtract
+14B 1F020                   SUBC   s0, s2
+14C 1F130                   SUBC   s1, s3
+          ; and pull the carry over
+14D 1E000                   SUBC   s0, 0x00
+          ; Now we're done: (s0,s1) contains our checksum.
+14E 00245                   LOAD   s2, IPV4_AND_5_INTS      ; version/IHL
+14F 2C203                   OUT    s2, ethernet_crc
+150 00200                   LOAD   s2, 0x00
+151 2C203                   OUT    s2, ethernet_crc         ; type of service
+152 2C203                   OUT    s2, ethernet_crc         ; always less than 256 bytes (length high)
+153 0621D                   FETCH  s2, tmp_store + 1
+154 2C203                   OUT    s2, ethernet_crc         ; length (low)
+155 00200                   LOAD   s2, 0x00
+156 2C203                   OUT    s2, ethernet_crc         ; ident high
+157 2C203                   OUT    s2, ethernet_crc         ; ident low
+158 2C203                   OUT    s2, ethernet_crc         ; fragment high
+159 2C203                   OUT    s2, ethernet_crc         ; fragment low
+15A 00280                   LOAD   s2, IP_TTL               ; time to live
+15B 2C203                   OUT    s2, ethernet_crc
+15C 0621C                   FETCH  s2, tmp_store            ; get back IPPROTO
+15D 2C203                   OUT    s2, ethernet_crc
+15E 2C103                   OUT    s1, ethernet_crc         ; checksum high
+15F 2C003                   OUT    s0, ethernet_crc         ; checksum low
+160 00136                   LOAD   s1, ip                   ; prepare to portcopy (src)
+161 00203                   LOAD   s2, ethernet_crc         ; prepare to portcopy (dst)
+162 00301                   LOAD   s3, 0x01                 ; src incr
+163 00400                   LOAD   s4, 0x00                 ; dst incr
+164 00004                   LOAD   s0, 4                    ; nbytes
+165 30112                   CALL   portcopy                 ; copy my IP
+166 001D1                   LOAD   s1, spram_sender_ip_0
+167 00004                   LOAD   s0, 4
+168 30112                   CALL   portcopy                 ; copy dest IP
+169 2A000                   RET   
+16A       do_udp_header   :                                 ; Fill a UDP header: s0 is low port byte, s1 is length
+16A 18108                   ADD    s1, UDP_MIN_PACKET_SIZE  ; add UDP minimum packet size
+16B 0021B                   LOAD   s2, UDP_CONN_PORT_HIGH   ; they're all the same, so just use one
+16C 2C203                   OUT    s2, ethernet_crc         ; dest port high (same as src)
+16D 2C003                   OUT    s0, ethernet_crc         ; dest port low (same as src)
+16E 2C203                   OUT    s2, ethernet_crc         ; source port high (same as dest)
+16F 2C003                   OUT    s0, ethernet_crc         ; source port low (same as dest)
+170 00000                   LOAD   s0, 0x00                 ; only send 0-255 bytes
+171 2C003                   OUT    s0, ethernet_crc         ; length high
+172 2C103                   OUT    s1, ethernet_crc         ; length low
+173 2C003                   OUT    s0, ethernet_crc         ; checksum high
+174 2C003                   OUT    s0, ethernet_crc         ; checksum low
+175 2A000                   RET                             ; done
+176       do_crc_out      :
+176 00121                   LOAD   s1, ethernet_crc_data    ; Prepare to portcopy (src)
+177 00201                   LOAD   s2, ethernet_data        ; Prepare to portcopy (dst)
+178 00300                   LOAD   s3, 0x00                 ; Prepare to portcopy (src increment)
+179 00400                   LOAD   s4, 0x00                 ; Prepare to portcopy (dst increment)
+17A 00004                   LOAD   s0, 4                    ; Prepare to portcopy (nbytes)
+17B 30112                   CALL   portcopy                 ; Copy Ethernet CRC to Ethernet TX
+17C 00041                   LOAD   s0, ETHERNET_CTL_TRANSMIT ; transmit
+17D 2C000                   OUT    s0, ethernet_ctl         ; actually output it
+17E 2A000                   RET   
+17F       store_connected_mac_ip:                           ; copy connected_mac and ip to sender_mac and ip
+17F 0000A                   LOAD   s0, 10                   ; prepare to portcopy (nbytes)
+180 001C0                   LOAD   s1, spram_connected_mac_0 ; prepare to portcopy (src)
+181 002CB                   LOAD   s2, spram_sender_mac_0   ; prepare to portcopy (dst)
+182 00301                   LOAD   s3, 1                    ; prepare to portcopy (src incr)
+183 00401                   LOAD   s4, 1                    ; prepare to portcopy (dst incr)
+184 34112                   JUMP   portcopy                 ; portcopy will ret for us
+185       wait_ethernet_tx_ready:                           ; Wait for Ethernet transmitter ready
+185 04000                   IN     s0, ethernet_ctl
+186 12010                   TEST   s0, ETHERNET_CTL_TXRDY_BIT
+187 35185                   JUMP   Z, wait_ethernet_tx_ready
+188 2A000                   RET   
+          ;
+          ; ISR GOES HERE
+          ;
+          ; The ISR now handles EVERY IP packet immediately as soon as it comes in,
+          ; and buffers it into an external dual-port RAM. This means that the total BRAM
+          ; cost is 2 dual-port RAMs (not counting the external FIFOs since every PHY
+          ; needs those).
+          ;
+          
+300                         ORG    0x300
+300       isr_frame       :                                 ; we have a frame
+          ;                       in       in0, ethernet_ctl                               ; check to see if it's completed
+          ;                      test     in0, ETHERNET_CTL_DONE_BIT                      ; check
+          ;                      jump     Z, isr_frame                                    ; if not, loop back
+300 04924                   IN     in0, eframe_etype        ; read ethernet frame type
+301 14906                   COMP   in0, ETHERTYPE_LOW_ARP   ; is it ARP?
+302 35306                   JUMP   Z, isr_arp               ; it is
+303 14900                   COMP   in0, ETHERTYPE_LOW_IP    ; is it IP?
+304 3532E                   JUMP   Z, isr_ip                ; it is
+305 3437D                   JUMP   isr_dump_frame           ; um, ooookay
+306       isr_arp         :                                 ; it's an ARP packet
+306 04902                   IN     in0, ethernet_done       ; check to see if it's completed
+307 12901                   TEST   in0, ETHERNET_DONE_ARP
+308 35306                   JUMP   Z, isr_arp
+309 04901                   IN     in0, ethernet_data       ; HTYPE, high
+30A 14900                   COMP   in0, ARP_HTYPE_HIGH_ETH  ; is it Ethernet? (what else would it be?!)
+30B 3577D                   JUMP   NZ, isr_dump_frame       ; no, go away
+30C 04901                   IN     in0, ethernet_data       ; HTYPE, low
+30D 14901                   COMP   in0, ARP_HTYPE_LOW_ETH   ; is it Ethernet?
+30E 3577D                   JUMP   NZ, isr_dump_frame       ; no, go away
+30F 04901                   IN     in0, ethernet_data       ; PTYPE, high
+310 14908                   COMP   in0, ARP_PTYPE_HIGH_IPV4 ; is it IPv4
+311 3577D                   JUMP   NZ, isr_dump_frame       ; no, go away
+312 04901                   IN     in0, ethernet_data       ; PTYPE, low
+313 14900                   COMP   in0, ARP_PTYPE_LOW_IPV4  ; is it IPv4
+314 3577D                   JUMP   NZ, isr_dump_frame       ; no, go away
+315 00903                   LOAD   in0, 3                   ;
+316 30368                   CALL   isr_skip                 ; skip HLEN, PLEN, high byte of OPER
+317 04901                   IN     in0, ethernet_data       ; check request
+318 14901                   COMP   in0, ARP_REQUEST         ; is it a request?
+319 3577D                   JUMP   NZ, isr_dump_frame       ; no, go away
+31A 0090A                   LOAD   in0, 10                  ; prepare to isr_copy (n)
+31B 00A01                   LOAD   in1, ethernet_data       ; prepare to isr_copy (src)
+31C 00BF0                   LOAD   in2, spram_isr_sender_mac_0 ; prepare to isr_copy (dst)
+31D 00C00                   LOAD   in3, 0                   ; prepare to isr_copy (src incr)
+31E 00D01                   LOAD   in4, 1                   ; prepare to isr_copy (dst incr)
+31F 3036C                   CALL   isr_copy                 ; copy data to scratchpad ram
+320 00906                   LOAD   in0, 6                   ; prepare to isr_skip
+321 30368                   CALL   isr_skip                 ; skip Target Hardware Address (6 bytes)
+322 30373                   CALL   isr_check_ip             ; check the next 4 bytes against our IP (if NZ, no match)
+323 3577D                   JUMP   NZ, isr_dump_frame       ; not for us, go away
+324       isr_arp_for_me  :                                 ; it's an ARP packet for me!
+324 00906                   LOAD   in0, ETHERTYPE_LOW_ARP   ; prepare to put into packet fifo
+325 2C904                   OUT    in0, packet_data         ; output $06 (packet fifo)
+326 00AF0                   LOAD   in1, spram_isr_sender_mac_0 ; prepare to isr_copy (src)
+327 00B04                   LOAD   in2, packet_data         ; prepare to isr_copy (dst)
+328 00C01                   LOAD   in3, 1                   ; prepare to isr_copy (src incr)
+329 00D00                   LOAD   in4, 0                   ; prepare to isr_copy (dst incr)
+32A 0090A                   LOAD   in0, 10                  ; prepare to put length into packet FIFO
+32B 2C904                   OUT    in0, packet_data         ; output length (also isr_copy's nbytes)
+32C 3036C                   CALL   isr_copy                 ; copy data to packet fifo
+32D 3437D                   JUMP   isr_dump_frame           ; we're done
+32E       isr_ip          :                                 ; we have an IP packet
+32E 04902                   IN     in0, ethernet_done       ; check to see if it's completed
+32F 12902                   TEST   in0, ETHERNET_DONE_IP    ; is the IP header completed?
+330 3532E                   JUMP   Z, isr_ip
+331 04925                   IN     in0, eframe_bcast        ; was this a broadcast IP? I don't like those
+332 14901                   COMP   in0, 1                   ; if it was eframe_bcast is 1
+333 3537D                   JUMP   Z, isr_dump_frame        ; OK, skip it, you jerk
+334 04901                   IN     in0, ethernet_data       ; load version and num header ints
+335 14945                   COMP   in0, IPV4_AND_5_INTS     ; we only handle 'normal' IP packets
+336 3577D                   JUMP   NZ, isr_dump_frame
+337 04901                   IN     in0, ethernet_data       ; Skip DSCP/ECN
+338 04901                   IN     in0, ethernet_data       ; get length high
+339 14900                   COMP   in0, 0                   ; we don't handle more than 256 byte packets. period. screw you, IPv4!
+33A 3577D                   JUMP   NZ, isr_dump_frame       ; go away
+33B 04901                   IN     in0, ethernet_data       ; get length low
+33C 1C914                   SUB    in0, 20                  ; subtract off the header
+33D 35B7D                   JUMP   C, isr_dump_frame        ; screwed up IP packet
+33E 3537D                   JUMP   Z, isr_dump_frame        ; zero byte IP packet (whatever)
+33F 2E93A                   STORE  in0, isr_ip_length       ; store length
+340 00905                   LOAD   in0, 5                   ; get ready to skip
+341 30368                   CALL   isr_skip                 ; skip ident, flags, fragment offset, and ttl
+342 04F01                   IN     in6, ethernet_data       ; get protocol
+343 14F11                   COMP   in6, IPPROTO_UDP         ; check if it's UDP
+344 35348                   JUMP   Z, isr_ip_udp_or_icmp    ; it is
+345 14F01                   COMP   in6, IPPROTO_ICMP        ; check if it's ICMP
+346 35348                   JUMP   Z, isr_ip_udp_or_icmp    ; it is
+347 3437D                   JUMP   isr_dump_frame           ; it's not, go away
+348       isr_ip_udp_or_icmp:                               ; we have a UDP or ICMP packet
+348 04901                   IN     in0, ethernet_data       ; skip header checksum
+349 04901                   IN     in0, ethernet_data       ; skip header checksum (2)
+34A 00A01                   LOAD   in1, ethernet_data       ; get ready to isr_copy (src)
+34B 00BF6                   LOAD   in2, spram_isr_sender_ip_0 ; get ready to isr_copy (dst)
+34C 00C00                   LOAD   in3, 0                   ; prepare to isr_copy (src incr)
+34D 00D01                   LOAD   in4, 1                   ; prepare to isr_copy (dst incr)
+34E 00904                   LOAD   in0, 4                   ; get ready to isr_copy (n)
+34F 3036C                   CALL   isr_copy                 ; copy data to scratchpad ram
+350 30373                   CALL   isr_check_ip             ; check if it's for me (if NZ, no match)
+351 3577D                   JUMP   NZ, isr_dump_frame       ; not for me, go away
+352       isr_ip_for_me   :                                 ; ICMP or UDP packet for me!
+352 04900                   IN     in0, ethernet_ctl        ; check to see if it's completed
+353 12908                   TEST   in0, ETHERNET_CTL_DONE_BIT ; check
+354 35352                   JUMP   Z, isr_ip_for_me         ; wait until it's done
+          
+355 2CF04                   OUT    in6, packet_data         ; write protocol type into packet fifo
+356 06F3A                   FETCH  in6, isr_ip_length       ; get length
+357 2CF04                   OUT    in6, packet_data         ; write length
+358 00A28                   LOAD   in1, eframe_sender_mac   ; get ready to isr_copy (src)
+359 00B04                   LOAD   in2, packet_data         ; get ready to isr_copy (dst)
+35A 00C01                   LOAD   in3, 1                   ; get ready to isr_copy (src incr)
+35B 00D00                   LOAD   in4, 0                   ; get ready to isr_copy (dst incr)
+35C 00906                   LOAD   in0, 6                   ; get ready to isr_copy (n)
+35D 3036C                   CALL   isr_copy                 ; copy 6 bytes from (eframe_sender_mac+5,eframe_sender_mac) to packet_data
+35E 00AF6                   LOAD   in1, spram_isr_sender_ip_0 ; get ready to isr_copy (src)
+35F 00B04                   LOAD   in2, packet_data         ; get ready to isr_copy (dst)
+360 00904                   LOAD   in0, 4                   ; get ready to isr_copy (n)
+361 3036C                   CALL   isr_copy                 ; copy SPRAM to packet data (src incr, dst incr stayed the same), incrementing src
+362 00A01                   LOAD   in1, ethernet_data       ; get ready to isr_copy (src)
+363 00B04                   LOAD   in2, packet_data         ; get ready to isr_copy (dst)
+364 00C00                   LOAD   in3, 0                   ; get ready to isr_copy (src incr)
+365 0693A                   FETCH  in0, isr_ip_length       ; get ready to isr_copy (n)
+366 3036C                   CALL   isr_copy                 ; copy to packet data (dst incr stayed the same): no src/dst increment
+367 3437D                   JUMP   isr_dump_frame           ; we're done
+          ; isr_skip:
+          ; in0: number of bytes to skip from ethernet_data (set this just before calling)
+          ; in1: used as a temporary register
+368 04A01 isr_skip        : IN     in1, ethernet_data
+369 1C901                   SUB    in0, 1
+36A 2B000                   RET    Z
+36B 34368                   JUMP   isr_skip
+          ; isr_copy: ludicrously slow, but useful
+          ; in0: number of bytes to copy (set this just before calling)
+          ; in1: source port
+36C 05EA0 isr_copy        : IN     in5, in1
+36D 2DEB0                   OUT    in5, in2
+36E 19AC0                   ADD    in1, in3
+36F 19BD0                   ADD    in2, in4
+370 1C901                   SUB    in0, 1
+371 2B000                   RET    Z
+372 3436C                   JUMP   isr_copy
+373 00B04 isr_check_ip    : LOAD   in2, 4
+374 00A36                   LOAD   in1, ip
+375 04901 isr_check_ip_lp0: IN     in0, ethernet_data
+376 05CA0                   IN     in3, in1
+377 159C0                   COMP   in0, in3
+378 2B400                   RET    NZ
+379 1CB01                   SUB    in2, 1
+37A 2B000                   RET    Z
+37B 18A01                   ADD    in1, 1
+37C 34375                   JUMP   isr_check_ip_lp0
+37D 00903 isr_dump_frame  : LOAD   in0, ETHERNET_CTL_DUMP
+37E 2C900                   OUT    in0, ethernet_ctl
+37F 38001                   RETI   enable                   ; completely done
+3FF                         ORG    0x3FF
+3FF       interrupt_vector:
+3FF 34300                   JUMP   isr_frame
+700                         .SCR   0x380
+700 00100 arp_htype         .WBE   0x0001                   ; length 2
+702 00008 arp_ptype         .WBE   0x0800                   ; length 2
+704 00006 arp_hlen          .BYT   0x06                     ; length 1
+705 00406 arp_plen          .BYT   0x04                     ; length 1
+706 00200 arp_oper          .WBE   0x0002                   ; length 2
+708   18  arp_filler        .BUF   24                       ; 2+2+1+1+2=8, 32-8 = 24
+720 06950 ident_string      .TXT   "PicoBlaze UDP v1.0 OK"
+736   0B  ident_filler      .BUF   11                       ;  32 - length of ident string
+741   20  p2                .BUF   32
+761   20  p3                .BUF   32
+781   20  p4                .BUF   32
+7A1   20  p5                .BUF   32
+7C1   20  p6                .BUF   32
+7E1   20  p7                .BUF   32                       ; length 32 - no filler

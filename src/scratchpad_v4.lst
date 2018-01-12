@@ -1,0 +1,580 @@
+PB3
+---------- source file: atri_i2c_v1.asm                                                            
+           
+           ; ATRI I2C interface
+           ;
+           ; Assembly for the I2C picoblaze interface for ATRI. First attempt.
+           ;
+           ; "Present Devices" byte bitmask values
+       80  tmp102_present    EQU    0x80
+       40  adm1178_present   EQU    0x40
+       20  eeprom_present    EQU    0x20
+       10  ad5667_present    EQU    0x10
+       08  gpio_present      EQU    0x08
+       7F  tmp102_mask       EQU    0x7F
+       BF  adm1178_mask      EQU    0xBF
+       DF  eeprom_mask       EQU    0xDF
+       EF  ad5667_mask       EQU    0xEF
+       F7  gpio_mask         EQU    0xF7
+           ;
+           
+           
+       08  timer             DSIO   0x08                    ; timer port: bit 0 = ADM1178, bit 1 = EEPROM
+       10  lram_page         DSIO   0x10
+       11  fifo_status       DSIO   0x11
+       20  db_status         DSIN   0x20
+       21  irs_status        DSIN   0x21
+       23  debug             DSOUT  0x23                    ; none of the sel outputs are triggered by 0x23: it's used to output data to ChipScope
+           ; LRAM is based at 0x40 (plus the page offset)
+       40  lram              DSRAM  0x40
+       80  fifo              DSRAM  0x80
+           ;
+           ;
+           ; ##############################################################################
+           ; # LRAM MEMORY MAP
+           ; ##############################################################################
+           ; Scratchpad RAM
+       00  tmp_devices       EQU    0x00                    ; Current devices present, most recent
+       01  tmp_temperature   EQU    0x01                    ; TMP102 temperature low byte, most recent reading
+       02  tmp_temperature_h EQU    0x02                    ; TMP102 temperature high byte, most recent reading
+       03  tmp_voltage       EQU    0x03                    ; ADM1178 voltage low byte, most recent reading
+       04  tmp_voltage_h     EQU    0x04                    ; ADM1178 voltage high byte, most recent reading
+       05  tmp_current       EQU    0x05                    ; ADM1178 current low byte, most recent reading
+       06  tmp_current_h     EQU    0x06                    ; ADM1178 current high byte, most recent reading
+       07  tmp_status        EQU    0x07                    ; ADM1178 status, most recent read
+       08  cur_packet        EQU    0x08                    ; packet number
+       09  cur_length        EQU    0x09                    ; length
+       0A  cur_type          EQU    0x0A                    ; type
+       0B  cur_address       EQU    0x0B                    ; destination address
+           
+       0C  dda_type          EQU    0x0C                    ; DDA type, if 0, it's revB or revC, if 1, it's revD.
+           ;
+           ;
+           ; Stack pointer
+     0F00  stack_pointer     EQU    sF                      ; sF is the stack pointer
+     0E00  tmp_register      EQU    sE                      ; sE is the temporary register. It is always available, and should
+           ; be assumed to always be changed after every function call
+     0C00  cnt_register      EQU    sC                      ; counter
+           ;
+           ;
+000 00F38  start           : LOAD   stack_pointer, 0x38     ; 8-entry stack
+001 3033E                    CALL   i2c_init
+002 3C001                    EINT                           ; start interrupts
+003 300D9                    CALL   vccaux_init             ; initialize VCCAUX on DDA_EVAL
+004        start_wait      :
+           ; ##############################################################################
+           ; # MAIN LOOP                                                                  #
+           ; ##############################################################################
+           ; # Do                                                                         #
+           ; # 1: check FIFO                                                              #
+           ; # 2: check IRS                                                               #
+           ; #11: begin again                                                             #
+           ; ##############################################################################
+004 30013  loop            : CALL   poll_fifo
+005 30007                    CALL   poll_irs
+006 34004                    JUMP   loop
+007 04021  poll_irs        : IN     s0, irs_status
+008 3006F                    CALL   push_operand
+009 12004                    TEST   s0, 0x04
+00A 314AB                    CALL   NZ, irs_init
+00B 3007E                    CALL   pop_operand
+00C 3006F                    CALL   push_operand
+00D 12002                    TEST   s0, 0x02
+00E 314D1                    CALL   NZ, gpio_tstclr
+00F 3007E                    CALL   pop_operand
+010 12001                    TEST   s0, 0x01
+011 314C8                    CALL   NZ, gpio_tstst
+012 2A000                    RET   
+013 04011  poll_fifo       : IN     s0, fifo_status
+014 12001                    TEST   s0, 0x01
+015 2B400                    RET    NZ                      ; we have a packet
+016 04080                    IN     s0, fifo                ; read packet number
+017 2E008                    STORE  s0, cur_packet          ; store packet number
+018 04080                    IN     s0, fifo                ; read packet length
+019 2E009                    STORE  s0, cur_length          ; store length
+01A 04080                    IN     s0, fifo                ; read type
+01B 2E00A                    STORE  s0, cur_type            ; store type
+01C 3001E                    CALL   handle_packet           ; handle the packet
+01D 2A000                    RET   
+01E 14000  handle_packet   : COMP   s0, 0                   ; is this a direct I2C packet?
+01F 35026                    JUMP   Z, handle_direct_i2c
+020 34021                    JUMP   dump_unknown_packet     ; otherwise we dump it
+021 06009  dump_unknown_packet: FETCH  s0, cur_length
+022 1C001  dump_unknown_lp0: SUB    s0, 1                   ; we already read 1 byte - the type
+023 2B000                    RET    Z                       ; if there's nothing left, we finish
+024 04E80                    IN     tmp_register, fifo      ; otherwise we dump it
+025 34022                    JUMP   dump_unknown_lp0
+026 04080  handle_direct_i2c: IN     s0, fifo               ; ok, read address
+027 2E00B                    STORE  s0, cur_address         ; store it
+028 12001                    TEST   s0, 0x01                ; check the R/W bit
+029 3502B                    JUMP   Z, handle_direct_i2c_write ; handle a direct I2C write
+02A 3404F                    JUMP   handle_direct_i2c_read  ; handle direct read
+02B 0690B  handle_direct_i2c_write: FETCH  i2c_reg0, cur_address
+02C 06A09                    FETCH  i2c_reg1, cur_length
+02D 1CA02                    SUB    i2c_reg1, 2
+02E 010A0                    LOAD   s0, i2c_reg1
+02F 2E009                    STORE  s0, cur_length          ; save it
+030 3035B                    CALL   i2c_write
+031 00110                    LOAD   s1, i2c_buffer
+032 04280  di2c_write_lp0  : IN     s2, fifo
+033 2F210                    STORE  s2, s1
+034 18101                    ADD    s1, 1
+035 1C001                    SUB    s0, 1
+036 35432                    JUMP   NZ, di2c_write_lp0
+037 300E5                    CALL   i2c_idle
+038 35447                    JUMP   NZ, handle_di2c_fail
+039 06008                    FETCH  s0, cur_packet
+03A 2C080                    OUT    s0, fifo
+03B 00003                    LOAD   s0, 3
+03C 2C080                    OUT    s0, fifo
+03D 00000                    LOAD   s0, 0
+03E 2C080                    OUT    s0, fifo
+03F 0600B                    FETCH  s0, cur_address
+040 2C080                    OUT    s0, fifo
+041 06009                    FETCH  s0, cur_length
+042 2C080                    OUT    s0, fifo
+043 34044                    JUMP   fifo_packet
+044 00010  fifo_packet     : LOAD   s0, 0x10                ; issue packet
+045 2C011                    OUT    s0, fifo_status
+046 2A000                    RET   
+047 06008  handle_di2c_fail: FETCH  s0, cur_packet
+048 2C080                    OUT    s0, fifo
+049 00001                    LOAD   s0, 1
+04A 2C080                    OUT    s0, fifo
+04B 000FF                    LOAD   s0, 0xFF
+04C 2C080                    OUT    s0, fifo
+04D 00010                    LOAD   s0, 0x10
+04E 34044                    JUMP   fifo_packet
+04F 04080  handle_direct_i2c_read: IN     s0, fifo
+050 2E009                    STORE  s0, cur_length
+051 0690B                    FETCH  i2c_reg0, cur_address
+052 01A00                    LOAD   i2c_reg1, s0
+053 30345                    CALL   i2c_read
+054 300E5                    CALL   i2c_idle
+055 35447                    JUMP   NZ, handle_di2c_fail
+056 06008                    FETCH  s0, cur_packet
+057 2C080                    OUT    s0, fifo
+058 06009                    FETCH  s0, cur_length
+059 18002                    ADD    s0, 2                   ; type and address
+05A 2C080                    OUT    s0, fifo
+05B 00000                    LOAD   s0, 0
+05C 2C080                    OUT    s0, fifo
+05D 0600B                    FETCH  s0, cur_address
+05E 2C080                    OUT    s0, fifo
+05F 06009                    FETCH  s0, cur_length
+060 1C000                    SUB    s0, 0
+061 35044                    JUMP   Z, fifo_packet
+062 00110                    LOAD   s1, i2c_buffer
+063 07210  di2c_read_lp0   : FETCH  s2, s1
+064 2C280                    OUT    s2, fifo
+065 18101                    ADD    s1, 1
+066 1C001                    SUB    s0, 1
+067 35463                    JUMP   NZ, di2c_read_lp0
+068 34044                    JUMP   fifo_packet
+           
+           ; ##############################################################################
+           ; # BEGIN                                                                      #
+           ; # UTILITY ROUTINES                                                           #
+           ; ##############################################################################
+069 2F3F0  push_operands_4 : STORE  s3, stack_pointer       ; store s3 first
+06A 18F01                    ADD    stack_pointer, 1        ; increment stack pointer
+06B 2F2F0  push_operands_3 : STORE  s2, stack_pointer       ; now store s2
+06C 18F01                    ADD    stack_pointer, 1        ; increment stack pointer
+06D 2F1F0  push_operands_2 : STORE  s1, stack_pointer       ; now store s1
+06E 18F01                    ADD    stack_pointer, 1        ; increment stack_pointer
+06F 2F0F0  push_operand    : STORE  s0, stack_pointer       ; now store s0
+070 18F01                    ADD    stack_pointer, 1        ; increment stack pointer
+071 2A000                    RET                            ; done
+072 30076  pop_operands_4  : CALL   pop_operands_3
+073 1CF01                    SUB    stack_pointer, 1
+074 073F0                    FETCH  s3, stack_pointer
+075 2A000                    RET   
+076 3007A  pop_operands_3  : CALL   pop_operands_2
+077 1CF01                    SUB    stack_pointer, 1
+078 072F0                    FETCH  s2, stack_pointer
+079 2A000                    RET   
+07A 3007E  pop_operands_2  : CALL   pop_operand
+07B 1CF01                    SUB    stack_pointer, 1
+07C 071F0                    FETCH  s1, stack_pointer
+07D 2A000                    RET   
+07E 1CF01  pop_operand     : SUB    stack_pointer, 1        ; decrement stack pointer
+07F 070F0                    FETCH  s0, stack_pointer       ; restore s0
+080 2A000                    RET   
+081 00200  sdiv8           : LOAD   s2, 0
+082 1D010  sdiv8_loop      : SUB    s0, s1
+083 35886                    JUMP   C, sdiv8_done
+084 18201                    ADD    s2, 1
+085 34082                    JUMP   sdiv8_loop
+086 19010  sdiv8_done      : ADD    s0, s1
+087 2A000                    RET   
+088 00400  sdiv16          : LOAD   s4, 0
+089 1D130  sdiv16_loop     : SUB    s1, s3
+08A 1F020                    SUBC   s0, s2
+08B 3588E                    JUMP   C, sdiv16_done
+08C 18401                    ADD    s4, 1
+08D 34089                    JUMP   sdiv16_loop
+08E 19130  sdiv16_done     : ADD    s1, s3
+08F 1B020                    ADDC   s0, s2
+090 2A000                    RET   
+091 20006  sl4             : SL0    s0
+092 20006                    SL0    s0
+093 20006                    SL0    s0
+094 20006                    SL0    s0
+095 2A000                    RET   
+096 2000E  sr4             : SR0    s0
+097 2000E                    SR0    s0
+098 2000E                    SR0    s0
+099 2000E                    SR0    s0
+09A 2A000                    RET   
+           ;
+           ; I2C housekeeping loop
+           ;
+           ;
+       2F  tmp_mem           EQU    0x2F
+           ; SUB clear_device
+           ; Input parameter: register s0
+           ; Clears the bit for the device in present_devices
+           ; s0 should contain the mask (i.e. ~ the bit for the device)
+09B 06E00  clear_device    : FETCH  tmp_register, tmp_devices ; load present devices
+09C 0BE00                    AND    tmp_register, s0        ; and present devices with parameter
+09D 2EE00                    STORE  tmp_register, tmp_devices ; done
+09E 2A000                    RET   
+           ;
+           ; SUB add_device
+           ; Input parameter: register s0
+           ; Sets the bit for the device in present_devices
+           ; s0 should contain the bit for the device
+09F 06E00  add_device      : FETCH  tmp_register, tmp_devices ; load present devices
+0A0 0DE00                    OR     tmp_register, s0        ; set parameter bit
+0A1 2EE00                    STORE  tmp_register, tmp_devices ; done
+0A2 2A000                    RET   
+           ; ##############################################################################
+           ; # BEGIN                                                                      #
+           ; # GPIO ROUTINES                                                              #
+           ; # Routines for accessing the PCA9536 I/O expander via I2C routines (v4)      #
+           ; ##############################################################################
+           
+       83  i2c_gpio_rd       EQU    0x83
+       82  i2c_gpio_wr       EQU    0x82
+       1C  i2c_dac_vped_wr   EQU    0x1C
+0A3 00982  gpio_outputs    : LOAD   i2c_reg0, i2c_gpio_wr
+0A4 00A02                    LOAD   i2c_reg1, 2
+0A5 3035B                    CALL   i2c_write
+0A6 2E011                    STORE  s0, i2c_buffer + 1
+0A7 00001                    LOAD   s0, 0x01
+0A8 2E010                    STORE  s0, i2c_buffer
+0A9 300E5                    CALL   i2c_idle
+0AA 2A000                    RET   
+           ; Initialize IRS. With DDA revD first attempt to power down the Vped DAC.
+           
+0AB 0091C  irs_init        : LOAD   i2c_reg0, i2c_dac_vped_wr
+0AC 00A02                    LOAD   i2c_reg1, 2
+0AD 3035B                    CALL   i2c_write
+0AE 00030                    LOAD   s0, 0x30
+0AF 2E010                    STORE  s0, i2c_buffer
+0B0 00000                    LOAD   s0, 0x00
+0B1 2E011                    STORE  s0, i2c_buffer + 1
+0B2 300E5                    CALL   i2c_idle
+0B3 350B7                    JUMP   Z, set_dda_revD
+0B4 00004                    LOAD   s0, 0x04
+0B5 00100                    LOAD   s1, 0x00
+0B6 340B9                    JUMP   irs_init_jp0
+0B7 00005  set_dda_revD    : LOAD   s0, 0x05
+0B8 00101                    LOAD   s1, 0x01
+0B9 2E10C  irs_init_jp0    : STORE  s1, dda_type
+0BA 300A3                    CALL   gpio_outputs
+0BB 00982                    LOAD   i2c_reg0, i2c_gpio_wr
+0BC 00A02                    LOAD   i2c_reg1, 2
+0BD 3035B                    CALL   i2c_write
+0BE 00003                    LOAD   s0, 0x03
+0BF 2E010                    STORE  s0, i2c_buffer
+0C0 00000                    LOAD   s0, 0x00                ; drive all outputs
+0C1 2E011                    STORE  s0, i2c_buffer + 1
+0C2 300E5                    CALL   i2c_idle
+0C3 354C6                    JUMP   NZ, gpio_not_present
+0C4 00008  gpio_is_present : LOAD   s0, gpio_present
+0C5 3409F                    JUMP   add_device
+0C6 000F7  gpio_not_present: LOAD   s0, gpio_mask
+0C7 3409B                    JUMP   clear_device
+0C8 0600C  gpio_tstst      : FETCH  s0, dda_type
+0C9 14001                    COMP   s0, 0x01
+0CA 2B000                    RET    Z
+0CB 00005                    LOAD   s0, 0x05
+0CC 300A3                    CALL   gpio_outputs
+0CD 00004                    LOAD   s0, 0x04
+0CE 300A3                    CALL   gpio_outputs
+0CF 354C6                    JUMP   NZ, gpio_not_present
+0D0 340C4                    JUMP   gpio_is_present
+0D1 0600C  gpio_tstclr     : FETCH  s0, dda_type
+0D2 0C006                    OR     s0, 0x06
+0D3 300A3                    CALL   gpio_outputs
+0D4 0600C                    FETCH  s0, dda_type
+0D5 0C004                    OR     s0, 0x04
+0D6 300A3                    CALL   gpio_outputs
+0D7 354C6                    JUMP   NZ, gpio_not_present
+0D8 340C4                    JUMP   gpio_is_present
+           
+           ; ##############################################################################
+           ; # VCCAUX initialization. Sets up VCCAUX to 2.5V, which switches the I2C      #
+           ; # interface over to the DDA.                                                 #
+           ; # Sequence is pretty simple: write 0x0F to register 0x39 on LP3906           #
+           ; # (110000=C0)                                                                #
+           ; ##############################################################################
+0D9        vccaux_init     :
+0D9 009C0                    LOAD   i2c_reg0, 0xC0
+0DA 00A02                    LOAD   i2c_reg1, 2
+0DB 3035B                    CALL   i2c_write
+0DC 00039                    LOAD   s0, 0x39
+0DD 2E010                    STORE  s0, i2c_buffer
+0DE 0000F                    LOAD   s0, 0x0F
+0DF 2E011                    STORE  s0, i2c_buffer + 1
+0E0 14801  vccaux_init_lp0 : COMP   i2c_regS, 1
+0E1 358E0                    JUMP   C, vccaux_init_lp0
+0E2 00004                    LOAD   s0, 0x04
+0E3 2C020                    OUT    s0, db_status
+0E4 2A000                    RET   
+           
+           ; ##############################################################################
+           ; # I2C idle routine. On return, Z is set on success, NZ if fail.              #
+           ; ##############################################################################
+0E5 14801  i2c_idle        : COMP   i2c_regS, 1
+0E6 358E5                    JUMP   C, i2c_idle
+0E7 2A000                    RET   
+           
+           ; ##############################################################################
+           ; # BEGIN                                                                      #
+           ; # I2C ROUTINE SECTION                                                        #
+           ; # I2C controller, version 4. Handles most of the I2C functions in the ISR,   #
+           ; # by self-modifying a jump instruction. i2c_regS is 1 when the operation is  #
+           ; # complete and successful, and 2 if the operation is complete and failed.    #
+           ; # This allows a loop of:                                                     #
+           ; # do_i2c:       call i2c_write                                               #
+           ; # do_i2c_lp:    comp i2c_regS, 1                                             #
+           ; #               jump C, do_i2c_lp                                            #
+           ; #               jump NZ, do_i2c_failed                                       #
+           ; # 83 total instructions.                                                     #
+           ; # Should be included LAST!                                                   #
+           ; ##############################################################################
+           ; #                                                                            #
+           ; # i2c routines:                                                              #
+           ; #                                                                            #
+           ; # i2c_read: read "i2c_reg1" bytes from "i2c_reg0" address into i2c_buffer    #
+           ; #           returns immediately: i2c_regS is 1 when operation was a success, #
+           ; #           2 when operation failed.
+           ; # i2c_write: write "i2c_reg1" bytes to "i2c_reg0" address from i2c_buffer    #
+           ; #           returns immediately: i2c_regS is 1 when operation was a success, #
+           ; #           2 when operation failed.
+           ; #                                                                            #
+           ; # i2c registers:                                                             #
+           ; #                                                                            #
+           ; # i2c_regS: Status return register (s8)                                      #
+           ; # i2c_reg0: General-purpose register (s9)                                    #
+           ; # i2c_reg1: General-purpose register (sA)                                    #
+           ; #                                                                            #
+           ; # i2c memory usage:                                                          #
+           ; #                                                                            #
+           ; # i2c_buffer: base of 0x30 - size is maximum length of transmitted/received  #
+           ; #             message (8 bytes is a good value)                              #
+           ; #                                                                            #
+           ; # i2c ports:                                                                 #
+           ; #                                                                            #
+           ; # i2c_base: Base address of WISHBONE I2C controller. Size = 5 addresses.     #
+           ; #                                                                            #
+           ; ##############################################################################
+           ;
+           ; I2C constants
+           ;
+       18  i2c_prerlo_value  EQU    24
+       00  i2c_prerhi_value  EQU    0
+           ;
+           ; I2C Ports
+           ;
+       00  i2c_base          EQU    0x00
+       00  i2c_prerlo        DSIO   i2c_base + 0x00
+       01  i2c_prerhi        DSIO   i2c_base + 0x01
+       02  i2c_ctr           DSIO   i2c_base + 0x02
+       03  i2c_txrx          DSIO   i2c_base + 0x03
+       04  i2c_crsr          DSIO   i2c_base + 0x04
+       38  i2c_jumptable     DSOUT  0x38
+           ;
+           ; I2C registers
+           ;
+     0800  i2c_regS          EQU    s8
+     0900  i2c_reg0          EQU    s9
+     0A00  i2c_reg1          EQU    sA
+           ;
+           ; I2C memory locations. Buffer is from 0x10-0x37, or 0x28 (40 bytes) deep
+           ;
+       10  i2c_buffer        EQU    0x10
+           ;
+           ; I2C jumptable values. These need to be fixed if code is modified!
+           ; See ORG definitions below!
+           ;
+       4B  i2c_jump_rd_1     EQU    0x4B                    ; i2c_read_wa_done
+       54  i2c_jump_rd_2     EQU    0x54                    ; i2c_read_done
+       61  i2c_jump_wr_1     EQU    0x61                    ; i2c_write_wa_done
+       6B  i2c_jump_wr_2     EQU    0x6B                    ; i2c_write_done
+       72  i2c_jump_fail     EQU    0x72                    ; i2c_fail
+       7D  i2c_jump_default  EQU    0x7D                    ; i2c_isr_default
+           ;
+           ; I2C private utility routines
+           ;
+           ; i2cprv_write_address: output I2C address and transmit
+32C                          ORG    0x32C
+32C 2C903  i2cprv_write_address: OUT    i2c_reg0, i2c_txrx  ; load address into transmit register
+32D 00890                    LOAD   i2c_regS, 0x90          ; set STA bit and WR bit..
+32E 2C804                    OUT    i2c_regS, i2c_crsr      ; .. in control register
+32F 2A000                    RET   
+           ; i2cprv_read: begin I2C read process (and stop if last transfer)
+330                          ORG    0x330
+330 00820  i2cprv_read     : LOAD   i2c_regS, 0x20          ; set RD bit..
+331 35733                    JUMP   NZ, i2c_read_crsr       ; before i2cprv_read, compare i2c_reg1 to 1: if C, done, if Z, this is last
+332 0C848                    OR     i2c_regS, 0x48          ; set STO bit and NAK bit
+333 2C804  i2c_read_crsr   : OUT    i2c_regS, i2c_crsr      ; .. in control register
+334 2A000                    RET   
+           ; i2cprv_write: output I2C data, begin write process (and stop if last transfer)
+335                          ORG    0x335
+335 2C803  i2cprv_write    : OUT    i2c_regS, i2c_txrx      ; write data to be written into transmit register
+336 00810                    LOAD   i2c_regS, 0x10          ; set WR bit..
+337 35739                    JUMP   NZ, i2cprv_write_crsr   ; before i2cprv_write, compare i2c_reg1 to 1: if C, done, if Z, this is last
+338 0C840                    OR     i2c_regS, 0x40          ; set STO bit
+339                          ORG    0x339
+339 2C804  i2cprv_write_crsr: OUT    i2c_regS, i2c_crsr     ; in control register
+33A 2A000                    RET   
+           ; i2cprv_stop: issue I2C stop
+33B                          ORG    0x33B
+33B 00840  i2cprv_stop     : LOAD   i2c_regS, 0x40          ; set STO bit
+33C 2C804                    OUT    i2c_regS, i2c_crsr      ; .. in control register
+33D 2A000                    RET   
+           ;
+           ; I2C main routines
+           ;
+33E                          ORG    0x33E
+33E 00800  i2c_init        : LOAD   i2c_regS, i2c_prerhi_value
+33F 2C801                    OUT    i2c_regS, i2c_prerhi
+340 00818                    LOAD   i2c_regS, i2c_prerlo_value
+341 2C800                    OUT    i2c_regS, i2c_prerlo
+342 008C0                    LOAD   i2c_regS, 0xC0
+343 2C802                    OUT    i2c_regS, i2c_ctr
+344 2A000                    RET   
+345                          ORG    0x345
+345 3032C  i2c_read        : CALL   i2cprv_write_address    ; output I2C address, issue "STA+WR" bit in control register
+346 0084B                    LOAD   i2c_regS, i2c_jump_rd_1 ; ... jumptable: on next interrupt, do i2c_read_wa_done
+347 2C838                    OUT    i2c_regS, i2c_jumptable ;
+348 00910                    LOAD   i2c_reg0, i2c_buffer    ; we don't need s0 anymore: so we use it to hold the address to write output data in
+349 00800                    LOAD   i2c_regS, 0             ; clear i2c_regS: operation isn't complete yet.
+34A 2A000                    RET   
+34B                          ORG    0x34B                   ; i2c_jump_rd_1 = $4B
+34B 128A0  i2c_read_wa_done: TEST   i2c_regS, 0xA0          ; arb lost or nack seen?
+34C 35770                    JUMP   NZ, i2c_do_fail         ; if so, do fail (set stop, then set i2c_regS = 2, reti enable)
+34D 14A01  i2c_read_wa_next: COMP   i2c_reg1, 1             ; where are we in the write process?
+34E 35B79                    JUMP   C, i2c_succeed          ; if so, return with succeed (set i2c_regS = 0, reti enable)
+34F 30330                    CALL   i2cprv_read
+350 00854                    LOAD   i2c_regS, i2c_jump_rd_2 ; ... jumptable: on next interrupt, do i2c_read_done
+351 2C838                    OUT    i2c_regS, i2c_jumptable ;
+352 00800                    LOAD   i2c_regS, 0             ; clear i2c_regS: operation isn't complete yet
+353 38001                    RETI   enable                  ; and return, enabling interrupt
+354                          ORG    0x354                   ; i2c_jump_rd_2 = $54
+354 12820  i2c_read_done   : TEST   i2c_regS, 0x20          ; Test to see if arbitration lost, ONLY. This was a read.
+355 35770                    JUMP   NZ, i2c_do_fail
+356 04803                    IN     i2c_regS, i2c_txrx      ; read input data...
+357 2F890                    STORE  i2c_regS, i2c_reg0      ; .. and store it into buffer
+358 18901                    ADD    i2c_reg0, 1
+359 1CA01                    SUB    i2c_reg1, 1             ;
+35A 3434D                    JUMP   i2c_read_wa_next        ; .. and loop
+35B                          ORG    0x35B
+35B 3032C  i2c_write       : CALL   i2cprv_write_address
+35C 00861                    LOAD   i2c_regS, i2c_jump_wr_1 ; jumptable: on next interrupt, do i2c_write_wa_done
+35D 2C838                    OUT    i2c_regS, i2c_jumptable ;
+35E 00910                    LOAD   i2c_reg0, i2c_buffer    ; initialize pointer to buffer
+35F 00800                    LOAD   i2c_regS, 0             ; clear i2c_regS: operation isn't complete yet
+360 2A000                    RET   
+361                          ORG    0x361                   ; i2c_jump_wr_1 = $61
+361 128A0  i2c_write_wa_done: TEST   i2c_regS, 0xA0         ; arb lost or nack seen?
+362 35770                    JUMP   NZ, i2c_do_fail         ; if so, do fail (set stop, then set
+363 14A01                    COMP   i2c_reg1, 1             ; where are we in the write process?
+364 35B79                    JUMP   C, i2c_succeed          ; if less than 1 (==0), jump with succeed
+365 07890                    FETCH  i2c_regS, i2c_reg0      ; fetch data to write
+366 30335                    CALL   i2cprv_write            ; do write command
+367 0086B                    LOAD   i2c_regS, i2c_jump_wr_2 ; jumptable: on next interrupt, do i2c_write_done
+368 2C838                    OUT    i2c_regS, i2c_jumptable ;
+369 00800                    LOAD   i2c_regS, 0             ; clear i2c_regS: operation isn't complete yet
+36A 38001                    RETI   enable                  ; return from interrupt, enable
+36B                          ORG    0x36B                   ; i2c_jump_wr_2 = $6B
+36B 128A0  i2c_write_done  : TEST   i2c_regS, 0xA0
+36C 35770                    JUMP   NZ, i2c_do_fail
+36D 1CA01                    SUB    i2c_reg1, 1             ; subtract length pointer,
+36E 18901                    ADD    i2c_reg0, 1             ; and increment buffer
+36F 34361                    JUMP   i2c_write_wa_done       ; and loop
+370                          ORG    0x370
+370 14A01  i2c_do_fail     : COMP   i2c_reg1, 1             ; was this the last one?
+371 35774                    JUMP   NZ, i2c_do_fail_stop    ; if not, output stop and wait, otherwise...
+372                          ORG    0x372                   ; i2c_jump_fail = $72
+372 00802  i2c_fail        : LOAD   i2c_regS, 0x02          ; indicate operation failure...
+373 38001                    RETI   enable                  ; and return, enabling interrupt
+374 3033B  i2c_do_fail_stop: CALL   i2cprv_stop             ; we need to stop the I2C transaction, so output stop command...
+375 00872                    LOAD   i2c_regS, i2c_jump_fail ; ... jumptable: on next interrupt, do i2c_fail
+376 2C838                    OUT    i2c_regS, i2c_jumptable
+377 00800                    LOAD   i2c_regS, 0x00          ; clear status register: operation isn't complete yet
+378 38001                    RETI   enable                  ; and return, enabling interrupt
+379                          ORG    0x379
+379 00872  i2c_succeed     : LOAD   i2c_regS, i2c_jump_fail ; operation done: so if another interrupt comes, fail and reti
+37A 2C838                    OUT    i2c_regS, i2c_jumptable ;
+37B 00801                    LOAD   i2c_regS, 0x01          ; indicate operation success...
+37C 38001                    RETI   enable                  ; and return, enabling interrupt
+37D                          ORG    0x37D                   ; i2c_jump_default = $7D
+37D 38001  i2c_isr_default : RETI   enable
+37E                          ORG    0x37E
+37E 04804  i2c_isr         : IN     i2c_regS, i2c_crsr
+37F 3437D                    JUMP   i2c_isr_default
+           ; ##############################################################################
+           ; # END                                                                        #
+           ; # I2C ROUTINE SECTION                                                        #
+           ; ##############################################################################
+           
+---------- source file: scratchpad_v4.asm                                                          
+700                          .SCR   0x380
+ 00    4D  scr1l1            .TXT   "MAC Address"           ; length 12
+ 0C    04  fil1l1            .BUF   4                       ; 16-12 = 4
+ 10    10  scr1l2            .BUF   16                      ; length 16 - no filler
+ 20    49  scr2l1            .TXT   "IP Address"            ; length 11
+ 2B    05  fil2l1            .BUF   5                       ; 16-11 = 5
+ 30    03  fil2l2p1          .BUF   3                       ; length 3
+ 33    2E  scr2l2p1          .TXT   "."                     ; length 2
+ 35    02  fil2l2p2          .BUF   2                       ; length 2
+ 37    2E  scr2l2p2          .TXT   "."                     ; length 2
+ 39    02  fil2l2p3          .BUF   2                       ; length 2
+ 3B    2E  scr2l2p3          .TXT   "."                     ; length 2
+ 3D    03  fil2l2p4          .BUF   3                       ; 3+2+2+2+2+2=13,16-13=3
+ 40    44  scr3l1            .TXT   "DDA Present: "         ; length 14
+ 4E    02  fil3l1            .BUF   2                       ; 16-14 = 2
+ 50    44  scr3l2            .TXT   "DDA Powered: "         ; length 14
+ 5E    02  fil3l2            .BUF   2                       ; 16-14 = 2
+ 60    44  scr4l1p1          .TXT   "DDA V: "               ; length 8
+ 68    2E  scr4l1p2          .TXT   "."                     ; length 2
+ 6A    01  fil4l1p1          .BUF   1                       ; length 1
+ 6B    20  scr4l1p3          .TXT   " V"                    ; length 3
+ 6E    02  fil4l1p2          .BUF   2                       ; 8+2+1+3=14, 16-14 = 2
+ 70    44  scr4l2p1          .TXT   "DDA I: "               ; length 8
+ 78    02  fil4l2p1          .BUF   2                       ; length 2
+ 7A    20  scr4l2p2          .TXT   " mA"                   ; length 4
+ 7E    02  fil4l2p2          .BUF   2                       ; 8+2+4=14, 16-14 = 2
+ 80    44  scr5l1p1          .TXT   "DDA T: "               ; length 8
+ 88    03  fil5l1p1          .BUF   3                       ; length 3
+ 8B    20  scr5l1p2          .TXT   " C"                    ; length 3
+ 8E    02  fil5l1p2          .BUF   2                       ; 8+3+3=14, 16-14 = 2
+ 90    44  scr5l2p1          .TXT   "DDA Devices: "         ; length 14
+ 9E    02  fil5l2p1          .BUF   2                       ; 16-14 = 2
+ A0    43  scr6l1p1          .TXT   "Connected: "           ; length 12
+ AC    04  fil6l1p1          .BUF   4                       ; 16-12 = 4
+ B0    50  scr6l2p1          .TXT   "Packets: "             ; length 10
+ BA    06  fil6l2p1          .BUF   6                       ; 16-10 = 6
+ C0    50  scr7l1p1          .TXT   "PC IP Address"         ; length 14
+ CE    02  fil7l1p1          .BUF   2                       ; 16-14 = 2
+ D0    03  fil7l2p1          .BUF   3                       ; length 3
+ D3    2E  scr7l2p1          .TXT   "."                     ; length 2
+ D5    02  fil7l2p2          .BUF   2                       ; length 2
+ D7    2E  scr7l2p2          .TXT   "."                     ; length 2
+ D9    02  fil7l2p3          .BUF   2                       ; length 2
+ DB    2E  scr7l2p3          .TXT   "."                     ; length 2
+ DD    03  fil7l2p4          .BUF   3                       ; 3+2+2+2+2+2=13,16-13=3

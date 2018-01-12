@@ -1,0 +1,1161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="C:/cygwin/home/barawn/repositories/ara/firmware/ATRI/branches/isemigrate/working/atriusb_test_isim_beh.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="atriusb_test" />
+            <top_module name="glbl" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="15" />
+   <wave_markers>
+      <marker time="100895000000" label="" />
+      <marker time="75935000000" label="" />
+      <marker time="107125000000" label="" />
+   </wave_markers>
+   <wvobject fp_name="group176" type="group">
+      <obj_property name="label">D1</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="group177" type="group">
+         <obj_property name="label">IRS</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="group279" type="group">
+            <obj_property name="label">Serial DAC</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+         </wvobject>
+         <wvobject fp_name="group280" type="group">
+            <obj_property name="label">Test Wilkinson</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <wvobject fp_name="/atriusb_test/D1TSTOUT" type="logic" db_ref_id="1">
+               <obj_property name="ElementShortName">D1TSTOUT</obj_property>
+               <obj_property name="ObjectShortName">D1TSTOUT</obj_property>
+            </wvobject>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/\IL[0].IRS.rdout /ramp_controller/state" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">state[2:0]</obj_property>
+            <obj_property name="ObjectShortName">state[2:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/\IL[0].IRS.rdout /ramp_controller/do_reset" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">do_reset</obj_property>
+            <obj_property name="ObjectShortName">do_reset</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/\IL[0].IRS.rdout /ramp_controller/rst_i" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">rst_i</obj_property>
+            <obj_property name="ObjectShortName">rst_i</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D1CLR" type="logic" db_ref_id="1">
+            <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="ElementShortName">D1CLR</obj_property>
+            <obj_property name="ObjectShortName">D1CLR</obj_property>
+            <obj_property name="label">D1CLR</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D1RAMP" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D1RAMP</obj_property>
+            <obj_property name="ObjectShortName">D1RAMP</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D1START" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D1START</obj_property>
+            <obj_property name="ObjectShortName">D1START</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D1TSA_CLOSE" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D1TSA_CLOSE</obj_property>
+            <obj_property name="ObjectShortName">D1TSA_CLOSE</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D1TSA" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D1TSA</obj_property>
+            <obj_property name="ObjectShortName">D1TSA</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D1TSAOUT" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D1TSAOUT</obj_property>
+            <obj_property name="ObjectShortName">D1TSAOUT</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D1RD" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">D1RD[9:0]</obj_property>
+            <obj_property name="ObjectShortName">D1RD[9:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D1RDEN" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D1RDEN</obj_property>
+            <obj_property name="ObjectShortName">D1RDEN</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D1SMP" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">D1SMP[5:0]</obj_property>
+            <obj_property name="ObjectShortName">D1SMP[5:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D1SMPALL" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D1SMPALL</obj_property>
+            <obj_property name="ObjectShortName">D1SMPALL</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D1CH" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">D1CH[2:0]</obj_property>
+            <obj_property name="ObjectShortName">D1CH[2:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group178" type="group">
+         <obj_property name="label">Sense/I2C</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="group306" type="group">
+            <obj_property name="label">PicoBlaze</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <wvobject fp_name="/atriusb_test/uut/u_atri/\I2C_CONTROL[0].ATRI.daughter /processor/s0_contents" type="array" db_ref_id="1">
+               <obj_property name="ElementShortName">s0_contents[7:0]</obj_property>
+               <obj_property name="ObjectShortName">s0_contents[7:0]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/atriusb_test/uut/u_atri/\I2C_CONTROL[0].ATRI.daughter /processor/spm0c_contents" type="array" db_ref_id="1">
+               <obj_property name="ElementShortName">spm0c_contents[7:0]</obj_property>
+               <obj_property name="ObjectShortName">spm0c_contents[7:0]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/atriusb_test/uut/u_atri/\I2C_CONTROL[0].ATRI.daughter /processor/spm10_contents" type="array" db_ref_id="1">
+               <obj_property name="ElementShortName">spm10_contents[7:0]</obj_property>
+               <obj_property name="ObjectShortName">spm10_contents[7:0]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/atriusb_test/uut/u_atri/\I2C_CONTROL[0].ATRI.daughter /processor/spm11_contents" type="array" db_ref_id="1">
+               <obj_property name="ElementShortName">spm11_contents[7:0]</obj_property>
+               <obj_property name="ObjectShortName">spm11_contents[7:0]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/atriusb_test/uut/u_atri/\I2C_CONTROL[0].ATRI.daughter /pb_address" type="array" db_ref_id="1">
+               <obj_property name="ElementShortName">pb_address[9:0]</obj_property>
+               <obj_property name="ObjectShortName">pb_address[9:0]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/atriusb_test/uut/u_atri/\I2C_CONTROL[0].ATRI.daughter /pb_port" type="array" db_ref_id="1">
+               <obj_property name="ElementShortName">pb_port[7:0]</obj_property>
+               <obj_property name="ObjectShortName">pb_port[7:0]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/atriusb_test/uut/u_atri/\I2C_CONTROL[0].ATRI.daughter /pb_outport" type="array" db_ref_id="1">
+               <obj_property name="ElementShortName">pb_outport[7:0]</obj_property>
+               <obj_property name="ObjectShortName">pb_outport[7:0]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/atriusb_test/uut/u_atri/\I2C_CONTROL[0].ATRI.daughter /pb_wr_stb" type="logic" db_ref_id="1">
+               <obj_property name="ElementShortName">pb_wr_stb</obj_property>
+               <obj_property name="ObjectShortName">pb_wr_stb</obj_property>
+            </wvobject>
+            <wvobject fp_name="/atriusb_test/uut/u_atri/\I2C_CONTROL[0].ATRI.daughter /pb_rd_stb" type="logic" db_ref_id="1">
+               <obj_property name="ElementShortName">pb_rd_stb</obj_property>
+               <obj_property name="ObjectShortName">pb_rd_stb</obj_property>
+            </wvobject>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D1DRSV" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">D1DRSV[10:9]</obj_property>
+            <obj_property name="ObjectShortName">D1DRSV[10:9]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D1DDASENSE" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D1DDASENSE</obj_property>
+            <obj_property name="ObjectShortName">D1DDASENSE</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D1TDASENSE" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D1TDASENSE</obj_property>
+            <obj_property name="ObjectShortName">D1TDASENSE</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D1SDA" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D1SDA</obj_property>
+            <obj_property name="ObjectShortName">D1SDA</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D1SCL" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D1SCL</obj_property>
+            <obj_property name="ObjectShortName">D1SCL</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/\I2C_CONTROL[0].ATRI.daughter /irs_requests[2]" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">[2]</obj_property>
+            <obj_property name="ObjectShortName">irs_requests[2]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/\I2C_CONTROL[0].ATRI.daughter /irs_requests[0]" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">[0]</obj_property>
+            <obj_property name="ObjectShortName">irs_requests[0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/d1dda/LEDFAULT" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">LEDFAULT[23:0]</obj_property>
+         <obj_property name="ObjectShortName">LEDFAULT[23:0]</obj_property>
+         <obj_property name="Radix">ASCIIRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/d1dda/LEDINIT" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">LEDINIT[23:0]</obj_property>
+         <obj_property name="ObjectShortName">LEDINIT[23:0]</obj_property>
+         <obj_property name="Radix">ASCIIRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/\IL[0].IRS.rdout /state" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">state[2:0]</obj_property>
+      <obj_property name="ObjectShortName">state[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/\IL[0].IRS.rdout /irs_dat_o" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">irs_dat_o[15:0]</obj_property>
+      <obj_property name="ObjectShortName">irs_dat_o[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/\IL[0].IRS.rdout /irs_valid_o" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">irs_valid_o</obj_property>
+      <obj_property name="ObjectShortName">irs_valid_o</obj_property>
+   </wvobject>
+   <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/\IL[0].IRS.rdout /readout_controller/start_i" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">start_i</obj_property>
+      <obj_property name="ObjectShortName">start_i</obj_property>
+   </wvobject>
+   <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/\IL[0].IRS.rdout /readout_controller/state" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">state[2:0]</obj_property>
+      <obj_property name="ObjectShortName">state[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="group196" type="group">
+      <obj_property name="label">D2</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="group215" type="group">
+         <obj_property name="label">IRS</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/atriusb_test/D2WR" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">D2WR[9:0]</obj_property>
+            <obj_property name="ObjectShortName">D2WR[9:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D2WRSTRB" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D2WRSTRB</obj_property>
+            <obj_property name="ObjectShortName">D2WRSTRB</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D2RD" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">D2RD[9:0]</obj_property>
+            <obj_property name="ObjectShortName">D2RD[9:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D2RDEN" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D2RDEN</obj_property>
+            <obj_property name="ObjectShortName">D2RDEN</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D2SMP" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">D2SMP[5:0]</obj_property>
+            <obj_property name="ObjectShortName">D2SMP[5:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D2SMPALL" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D2SMPALL</obj_property>
+            <obj_property name="ObjectShortName">D2SMPALL</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D2CH" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">D2CH[2:0]</obj_property>
+            <obj_property name="ObjectShortName">D2CH[2:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D2TSA" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D2TSA</obj_property>
+            <obj_property name="ObjectShortName">D2TSA</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D2TSA_CLOSE" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D2TSA_CLOSE</obj_property>
+            <obj_property name="ObjectShortName">D2TSA_CLOSE</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D2RAMP" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D2RAMP</obj_property>
+            <obj_property name="ObjectShortName">D2RAMP</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D2START" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D2START</obj_property>
+            <obj_property name="ObjectShortName">D2START</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D2CLR" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D2CLR</obj_property>
+            <obj_property name="ObjectShortName">D2CLR</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group216" type="group">
+         <obj_property name="label">Sense/I2C</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/atriusb_test/D2DDASENSE" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D2DDASENSE</obj_property>
+            <obj_property name="ObjectShortName">D2DDASENSE</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D2TDASENSE" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D2TDASENSE</obj_property>
+            <obj_property name="ObjectShortName">D2TDASENSE</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D2SDA" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D2SDA</obj_property>
+            <obj_property name="ObjectShortName">D2SDA</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D2SCL" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D2SCL</obj_property>
+            <obj_property name="ObjectShortName">D2SCL</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D2DRSV" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">D2DRSV[10:9]</obj_property>
+            <obj_property name="ObjectShortName">D2DRSV[10:9]</obj_property>
+         </wvobject>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group214" type="group">
+      <obj_property name="label">D3</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="group217" type="group">
+         <obj_property name="label">IRS</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/atriusb_test/D3WR" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">D3WR[9:0]</obj_property>
+            <obj_property name="ObjectShortName">D3WR[9:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D3WRSTRB" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D3WRSTRB</obj_property>
+            <obj_property name="ObjectShortName">D3WRSTRB</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D3RD" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">D3RD[9:0]</obj_property>
+            <obj_property name="ObjectShortName">D3RD[9:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D3RDEN" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D3RDEN</obj_property>
+            <obj_property name="ObjectShortName">D3RDEN</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D3SMP" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">D3SMP[5:0]</obj_property>
+            <obj_property name="ObjectShortName">D3SMP[5:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D3SMPALL" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D3SMPALL</obj_property>
+            <obj_property name="ObjectShortName">D3SMPALL</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D3CH" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">D3CH[2:0]</obj_property>
+            <obj_property name="ObjectShortName">D3CH[2:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D3TSA" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D3TSA</obj_property>
+            <obj_property name="ObjectShortName">D3TSA</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D3TSA_CLOSE" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D3TSA_CLOSE</obj_property>
+            <obj_property name="ObjectShortName">D3TSA_CLOSE</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D3RAMP" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D3RAMP</obj_property>
+            <obj_property name="ObjectShortName">D3RAMP</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D3START" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D3START</obj_property>
+            <obj_property name="ObjectShortName">D3START</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D3CLR" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D3CLR</obj_property>
+            <obj_property name="ObjectShortName">D3CLR</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group218" type="group">
+         <obj_property name="label">Sense/I2C</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/atriusb_test/D3DDASENSE" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D3DDASENSE</obj_property>
+            <obj_property name="ObjectShortName">D3DDASENSE</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D3TDASENSE" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D3TDASENSE</obj_property>
+            <obj_property name="ObjectShortName">D3TDASENSE</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D3SDA" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D3SDA</obj_property>
+            <obj_property name="ObjectShortName">D3SDA</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D3SCL" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D3SCL</obj_property>
+            <obj_property name="ObjectShortName">D3SCL</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D3DRSV" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">D3DRSV[10:9]</obj_property>
+            <obj_property name="ObjectShortName">D3DRSV[10:9]</obj_property>
+         </wvobject>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group42" type="group">
+      <obj_property name="label">D4</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="group43" type="group">
+         <obj_property name="label">IRS</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/atriusb_test/D4TSTOUT" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D4TSTOUT</obj_property>
+            <obj_property name="ObjectShortName">D4TSTOUT</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D4TSAOUT" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D4TSAOUT</obj_property>
+            <obj_property name="ObjectShortName">D4TSAOUT</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D4DAT" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">D4DAT[11:0]</obj_property>
+            <obj_property name="ObjectShortName">D4DAT[11:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D4WR" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">D4WR[9:0]</obj_property>
+            <obj_property name="ObjectShortName">D4WR[9:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D4WRSTRB" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D4WRSTRB</obj_property>
+            <obj_property name="ObjectShortName">D4WRSTRB</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D4RD" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">D4RD[9:0]</obj_property>
+            <obj_property name="ObjectShortName">D4RD[9:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D4RDEN" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D4RDEN</obj_property>
+            <obj_property name="ObjectShortName">D4RDEN</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D4SMP" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">D4SMP[5:0]</obj_property>
+            <obj_property name="ObjectShortName">D4SMP[5:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D4SMPALL" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D4SMPALL</obj_property>
+            <obj_property name="ObjectShortName">D4SMPALL</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D4CH" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">D4CH[2:0]</obj_property>
+            <obj_property name="ObjectShortName">D4CH[2:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D4TSA" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D4TSA</obj_property>
+            <obj_property name="ObjectShortName">D4TSA</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D4TSA_CLOSE" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D4TSA_CLOSE</obj_property>
+            <obj_property name="ObjectShortName">D4TSA_CLOSE</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D4RAMP" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D4RAMP</obj_property>
+            <obj_property name="ObjectShortName">D4RAMP</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D4START" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D4START</obj_property>
+            <obj_property name="ObjectShortName">D4START</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D4CLR" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D4CLR</obj_property>
+            <obj_property name="ObjectShortName">D4CLR</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group44" type="group">
+         <obj_property name="label">Sense/I2C</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/atriusb_test/D4DDASENSE" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D4DDASENSE</obj_property>
+            <obj_property name="ObjectShortName">D4DDASENSE</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D4TDASENSE" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D4TDASENSE</obj_property>
+            <obj_property name="ObjectShortName">D4TDASENSE</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D4DRSV" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">D4DRSV[10:9]</obj_property>
+            <obj_property name="ObjectShortName">D4DRSV[10:9]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D4SDA" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D4SDA</obj_property>
+            <obj_property name="ObjectShortName">D4SDA</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D4SCL" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">D4SCL</obj_property>
+            <obj_property name="ObjectShortName">D4SCL</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group45" type="group">
+         <obj_property name="label">Reserved</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+      </wvobject>
+      <wvobject fp_name="group47" type="group">
+         <obj_property name="label">Triggers</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/atriusb_test/D4TRG_P" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">D4TRG_P[7:0]</obj_property>
+            <obj_property name="ObjectShortName">D4TRG_P[7:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/D4TRG_N" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">D4TRG_N[7:0]</obj_property>
+            <obj_property name="ObjectShortName">D4TRG_N[7:0]</obj_property>
+         </wvobject>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group278" type="group">
+      <obj_property name="label">pc</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="group287" type="group">
+         <obj_property name="label">WISHBONE</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/pc/wb_clk_i" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">wb_clk_i</obj_property>
+            <obj_property name="ObjectShortName">wb_clk_i</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/pc/wb_rst_i" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">wb_rst_i</obj_property>
+            <obj_property name="ObjectShortName">wb_rst_i</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/pc/cyc_o" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">cyc_o</obj_property>
+            <obj_property name="ObjectShortName">cyc_o</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/pc/wb_wr_o" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">wb_wr_o</obj_property>
+            <obj_property name="ObjectShortName">wb_wr_o</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/pc/stb_o" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">stb_o</obj_property>
+            <obj_property name="ObjectShortName">stb_o</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/pc/ack_i" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">ack_i</obj_property>
+            <obj_property name="ObjectShortName">ack_i</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/pc/err_i" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">err_i</obj_property>
+            <obj_property name="ObjectShortName">err_i</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/pc/rty_i" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">rty_i</obj_property>
+            <obj_property name="ObjectShortName">rty_i</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/pc/adr_o" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">adr_o[15:0]</obj_property>
+            <obj_property name="ObjectShortName">adr_o[15:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/pc/wb_dat_o" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">wb_dat_o[7:0]</obj_property>
+            <obj_property name="ObjectShortName">wb_dat_o[7:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/pc/wb_dat_i" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">wb_dat_i[7:0]</obj_property>
+            <obj_property name="ObjectShortName">wb_dat_i[7:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group46" type="group">
+         <obj_property name="label">USB</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/atriusb_test/IFCLK" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">IFCLK</obj_property>
+            <obj_property name="ObjectShortName">IFCLK</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/phy_bridge/state" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">state[4:0]</obj_property>
+            <obj_property name="ObjectShortName">state[4:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/FLAGA" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">FLAGA</obj_property>
+            <obj_property name="ObjectShortName">FLAGA</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/FLAGB" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">FLAGB</obj_property>
+            <obj_property name="ObjectShortName">FLAGB</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/FLAGC" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">FLAGC</obj_property>
+            <obj_property name="ObjectShortName">FLAGC</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/FLAGD" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">FLAGD</obj_property>
+            <obj_property name="ObjectShortName">FLAGD</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/SLOE" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">SLOE</obj_property>
+            <obj_property name="ObjectShortName">SLOE</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/SLWR" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">SLWR</obj_property>
+            <obj_property name="ObjectShortName">SLWR</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/SLRD" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">SLRD</obj_property>
+            <obj_property name="ObjectShortName">SLRD</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/PKTEND" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">PKTEND</obj_property>
+            <obj_property name="ObjectShortName">PKTEND</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/FD" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">FD[7:0]</obj_property>
+            <obj_property name="ObjectShortName">FD[7:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/FIFOADR" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">FIFOADR[1:0]</obj_property>
+            <obj_property name="ObjectShortName">FIFOADR[1:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/pc/i2c_adr_o" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">i2c_adr_o[1:0]</obj_property>
+         <obj_property name="ObjectShortName">i2c_adr_o[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/pc/i2c_dat_o" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">i2c_dat_o[7:0]</obj_property>
+         <obj_property name="ObjectShortName">i2c_dat_o[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/pc/i2c_dat_i" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">i2c_dat_i[7:0]</obj_property>
+         <obj_property name="ObjectShortName">i2c_dat_i[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/pc/i2c_count_i" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">i2c_count_i[7:0]</obj_property>
+         <obj_property name="ObjectShortName">i2c_count_i[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/pc/i2c_wr_o" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">i2c_wr_o</obj_property>
+         <obj_property name="ObjectShortName">i2c_wr_o</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/pc/i2c_rd_o" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">i2c_rd_o</obj_property>
+         <obj_property name="ObjectShortName">i2c_rd_o</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/pc/wr_o" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">wr_o</obj_property>
+         <obj_property name="ObjectShortName">wr_o</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/pc/rd_o" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">rd_o</obj_property>
+         <obj_property name="ObjectShortName">rd_o</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/inbound_fifo/wr_en" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">wr_en</obj_property>
+         <obj_property name="ObjectShortName">wr_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/pc/empty_i" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">empty_i</obj_property>
+         <obj_property name="ObjectShortName">empty_i</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/pc/dat_o" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">dat_o[7:0]</obj_property>
+         <obj_property name="ObjectShortName">dat_o[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/pc/state" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">state[5:0]</obj_property>
+         <obj_property name="ObjectShortName">state[5:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/pc/dat_i" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">dat_i[7:0]</obj_property>
+         <obj_property name="ObjectShortName">dat_i[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/pc/packet_o" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">packet_o</obj_property>
+         <obj_property name="ObjectShortName">packet_o</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group253" type="group">
+      <obj_property name="label">Sample Monitor</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irswb/smon/smon/sample_data" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">sample_data</obj_property>
+         <obj_property name="ObjectShortName">sample_data</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irswb/smon/smon/sample_data_sync" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">sample_data_sync</obj_property>
+         <obj_property name="ObjectShortName">sample_data_sync</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irswb/smon/smon/latch_done" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">latch_done</obj_property>
+         <obj_property name="ObjectShortName">latch_done</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irswb/smon/smon/latch_done_sync" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">latch_done_sync</obj_property>
+         <obj_property name="ObjectShortName">latch_done_sync</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irswb/smon/smon/sample_mon_i" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">sample_mon_i[3:0]</obj_property>
+         <obj_property name="ObjectShortName">sample_mon_i[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irswb/smon/smon/pb_addr" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">pb_addr[9:0]</obj_property>
+         <obj_property name="ObjectShortName">pb_addr[9:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irswb/smon/smon/psen" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">psen</obj_property>
+         <obj_property name="ObjectShortName">psen</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irswb/smon/smon/psincdec" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">psincdec</obj_property>
+         <obj_property name="ObjectShortName">psincdec</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irswb/smon/smon/psdone" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">psdone</obj_property>
+         <obj_property name="ObjectShortName">psdone</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irswb/smon/smon/processor/s1_contents" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">s1_contents[7:0]</obj_property>
+         <obj_property name="ObjectShortName">s1_contents[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irswb/smon/smon/shift_dcm/RST" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">RST</obj_property>
+         <obj_property name="ObjectShortName">RST</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irswb/smon/smon/latching" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">latching[3:0]</obj_property>
+         <obj_property name="ObjectShortName">latching[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irswb/smon/smon/this_sample_data" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">this_sample_data[7:0]</obj_property>
+         <obj_property name="ObjectShortName">this_sample_data[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irswb/smon/smon/irs_monitor_value" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">irs_monitor_value[3:0,7:0]</obj_property>
+         <obj_property name="ObjectShortName">irs_monitor_value[3:0,7:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group168" type="group">
+      <obj_property name="label">Triggers</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/evrdwb/deadtime_counter" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">deadtime_counter[19:0]</obj_property>
+         <obj_property name="ObjectShortName">deadtime_counter[19:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/u_trig/trig_processor/l4_i" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">l4_i[4:0]</obj_property>
+         <obj_property name="ObjectShortName">l4_i[4:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/u_trig/trig_processor/l4_delayed" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">l4_delayed[4:0]</obj_property>
+         <obj_property name="ObjectShortName">l4_delayed[4:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/u_trig/trig_processor/l4_matched_o" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">l4_matched_o[4:0]</obj_property>
+         <obj_property name="ObjectShortName">l4_matched_o[4:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/tinfo_fifo/addr_i" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">addr_i[2:0]</obj_property>
+         <obj_property name="ObjectShortName">addr_i[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/tinfo_fifo/info_o" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">info_o[31:0]</obj_property>
+         <obj_property name="ObjectShortName">info_o[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/tinfo_fifo/rd_i" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">rd_i</obj_property>
+         <obj_property name="ObjectShortName">rd_i</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/u_trig/trig_o" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">trig_o</obj_property>
+         <obj_property name="ObjectShortName">trig_o</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/u_trig/trig_l4_o" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">trig_l4_o[4:0]</obj_property>
+         <obj_property name="ObjectShortName">trig_l4_o[4:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/u_trig/trig_l4_new_o" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">trig_l4_new_o[4:0]</obj_property>
+         <obj_property name="ObjectShortName">trig_l4_new_o[4:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/u_trig/trig_delay_o" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">trig_delay_o[8:0]</obj_property>
+         <obj_property name="ObjectShortName">trig_delay_o[8:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/tinfo_fifo/wr_i" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">wr_i[4:0]</obj_property>
+         <obj_property name="ObjectShortName">wr_i[4:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/tinfo_fifo/info_in" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">info_in[4:0,31:0]</obj_property>
+         <obj_property name="ObjectShortName">info_in[4:0,31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/sampling_o" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">sampling_o</obj_property>
+         <obj_property name="ObjectShortName">sampling_o</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/sampling_ce_o" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">sampling_ce_o</obj_property>
+         <obj_property name="ObjectShortName">sampling_ce_o</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/u_atri/u_trig/trig_processor/disable_mask" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">disable_mask</obj_property>
+         <obj_property name="ObjectShortName">disable_mask</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group226" type="group">
+      <obj_property name="label">Control Packets</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/atriusb_test/pktno" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">pktno[7:0]</obj_property>
+         <obj_property name="ObjectShortName">pktno[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/packet_available" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">packet_available</obj_property>
+         <obj_property name="ObjectShortName">packet_available</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/packet_number" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">packet_number[7:0]</obj_property>
+         <obj_property name="ObjectShortName">packet_number[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/packet" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">packet[2047:0,7:0]</obj_property>
+         <obj_property name="ObjectShortName">packet[2047:0,7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/packet_pointer" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">packet_pointer[31:0]</obj_property>
+         <obj_property name="ObjectShortName">packet_pointer[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/packet_length" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">packet_length[31:0]</obj_property>
+         <obj_property name="ObjectShortName">packet_length[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/packet_i" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">packet_i[31:0]</obj_property>
+         <obj_property name="ObjectShortName">packet_i[31:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group174" type="group">
+      <obj_property name="label">Event Readout</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="group225" type="group">
+         <obj_property name="label">D4</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/\IL[3].IRS.rdout /irs_dat_o" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">irs_dat_o[15:0]</obj_property>
+            <obj_property name="ObjectShortName">irs_dat_o[15:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/\IL[3].IRS.rdout /irs_valid_o" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">irs_valid_o</obj_property>
+            <obj_property name="ObjectShortName">irs_valid_o</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/\IL[3].IRS.rdout /irs_empty_o" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">irs_empty_o</obj_property>
+            <obj_property name="ObjectShortName">irs_empty_o</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/\IL[3].IRS.rdout /irs_rd_i" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">irs_rd_i</obj_property>
+            <obj_property name="ObjectShortName">irs_rd_i</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group220" type="group">
+         <obj_property name="label">D3</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/\IL[2].IRS.rdout /irs_dat_o" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">irs_dat_o[15:0]</obj_property>
+            <obj_property name="ObjectShortName">irs_dat_o[15:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/\IL[2].IRS.rdout /irs_valid_o" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">irs_valid_o</obj_property>
+            <obj_property name="ObjectShortName">irs_valid_o</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/\IL[2].IRS.rdout /irs_empty_o" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">irs_empty_o</obj_property>
+            <obj_property name="ObjectShortName">irs_empty_o</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/\IL[2].IRS.rdout /irs_rd_i" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">irs_rd_i</obj_property>
+            <obj_property name="ObjectShortName">irs_rd_i</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group210" type="group">
+         <obj_property name="label">D2</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/\IL[1].IRS.rdout /irs_dat_o" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">irs_dat_o[15:0]</obj_property>
+            <obj_property name="ObjectShortName">irs_dat_o[15:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/\IL[1].IRS.rdout /irs_valid_o" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">irs_valid_o</obj_property>
+            <obj_property name="ObjectShortName">irs_valid_o</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/\IL[1].IRS.rdout /irs_empty_o" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">irs_empty_o</obj_property>
+            <obj_property name="ObjectShortName">irs_empty_o</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/\IL[1].IRS.rdout /irs_rd_i" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">irs_rd_i</obj_property>
+            <obj_property name="ObjectShortName">irs_rd_i</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group205" type="group">
+         <obj_property name="label">D1</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/\IL[0].IRS.rdout /irs_dat_o" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">irs_dat_o[15:0]</obj_property>
+            <obj_property name="ObjectShortName">irs_dat_o[15:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/\IL[0].IRS.rdout /irs_rd_i" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">irs_rd_i</obj_property>
+            <obj_property name="ObjectShortName">irs_rd_i</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/\IL[0].IRS.rdout /irs_valid_o" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">irs_valid_o</obj_property>
+            <obj_property name="ObjectShortName">irs_valid_o</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/\IL[0].IRS.rdout /irs_empty_o" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">irs_empty_o</obj_property>
+            <obj_property name="ObjectShortName">irs_empty_o</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group213" type="group">
+         <obj_property name="label">DMA</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/dma/irs_read_o" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">irs_read_o</obj_property>
+            <obj_property name="ObjectShortName">irs_read_o</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/dma/irs_dat_i" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">irs_dat_i[15:0]</obj_property>
+            <obj_property name="ObjectShortName">irs_dat_i[15:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/dma/irs_valid_i" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">irs_valid_i</obj_property>
+            <obj_property name="ObjectShortName">irs_valid_i</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/dma/irs_empty_i" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">irs_empty_i</obj_property>
+            <obj_property name="ObjectShortName">irs_empty_i</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/dma/irs_addr" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">irs_addr[1:0]</obj_property>
+            <obj_property name="ObjectShortName">irs_addr[1:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/dma/event_dat_o" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">event_dat_o[15:0]</obj_property>
+            <obj_property name="ObjectShortName">event_dat_o[15:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/dma/event_wr_o" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">event_wr_o</obj_property>
+            <obj_property name="ObjectShortName">event_wr_o</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/dma/dma_count" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">dma_count[3:0,9:0]</obj_property>
+            <obj_property name="ObjectShortName">dma_count[3:0,9:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/dma/dma_count_full" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">dma_count_full[3:0,9:0]</obj_property>
+            <obj_property name="ObjectShortName">dma_count_full[3:0,9:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/dma/dma_active" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">dma_active</obj_property>
+            <obj_property name="ObjectShortName">dma_active</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group214" type="group">
+         <obj_property name="label">Block Buffer</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_controller/irs_buff_dat_o" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">irs_buff_dat_o[71:0]</obj_property>
+            <obj_property name="ObjectShortName">irs_buff_dat_o[71:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_controller/irs_buff_empty_o" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">irs_buff_empty_o</obj_property>
+            <obj_property name="ObjectShortName">irs_buff_empty_o</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_controller/irs_buff_read_i" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">irs_buff_read_i</obj_property>
+            <obj_property name="ObjectShortName">irs_buff_read_i</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group215" type="group">
+         <obj_property name="label">PicoBlaze</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/rdproc/processor/interrupt" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">interrupt</obj_property>
+            <obj_property name="ObjectShortName">interrupt</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/rdproc/processor/kcpsm3_opcode" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">kcpsm3_opcode[1:152]</obj_property>
+            <obj_property name="ObjectShortName">kcpsm3_opcode[1:152]</obj_property>
+            <obj_property name="Radix">ASCIIRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/rdproc/processor/kcpsm3_status" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">kcpsm3_status[1:104]</obj_property>
+            <obj_property name="ObjectShortName">kcpsm3_status[1:104]</obj_property>
+            <obj_property name="Radix">ASCIIRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/rdproc/processor/pc" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">pc[9:0]</obj_property>
+            <obj_property name="ObjectShortName">pc[9:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/rdproc/processor/in_port" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">in_port[7:0]</obj_property>
+            <obj_property name="ObjectShortName">in_port[7:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/rdproc/processor/out_port" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">out_port[7:0]</obj_property>
+            <obj_property name="ObjectShortName">out_port[7:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="VirtualBus" type="vbus" db_ref_id="1">
+            <obj_property name="label">Event Size</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="Reversed">false</obj_property>
+            <obj_property name="ElementShortName">VirtualBus[0:15]</obj_property>
+            <obj_property name="ObjectShortName">VirtualBus[0:15]</obj_property>
+            <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/rdproc/processor/sb_contents" type="array" db_ref_id="1">
+               <obj_property name="ElementShortName">sb_contents[7:0]</obj_property>
+               <obj_property name="ObjectShortName">sb_contents[7:0]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/rdproc/processor/sa_contents" type="array" db_ref_id="1">
+               <obj_property name="ElementShortName">sa_contents[7:0]</obj_property>
+               <obj_property name="ObjectShortName">sa_contents[7:0]</obj_property>
+            </wvobject>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/rdproc/processor/read_strobe" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">read_strobe</obj_property>
+            <obj_property name="ObjectShortName">read_strobe</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/u_atri/u_irs/irs_readout/rdproc/processor/write_strobe" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">write_strobe</obj_property>
+            <obj_property name="ObjectShortName">write_strobe</obj_property>
+         </wvobject>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group239" type="group">
+      <obj_property name="label">USB</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="group303" type="group">
+         <obj_property name="label">FX2 interface</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/atriusb_test/ev_buf_full" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">ev_buf_full[1:0]</obj_property>
+            <obj_property name="ObjectShortName">ev_buf_full[1:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/ev_buf_counter" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">ev_buf_counter[8:0]</obj_property>
+            <obj_property name="ObjectShortName">ev_buf_counter[8:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/FD" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">FD[7:0]</obj_property>
+            <obj_property name="ObjectShortName">FD[7:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/phy_bridge/FIFOADR" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">FIFOADR[1:0]</obj_property>
+            <obj_property name="ObjectShortName">FIFOADR[1:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/SLOE" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">SLOE</obj_property>
+            <obj_property name="ObjectShortName">SLOE</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/phy_bridge/SLRD" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">SLRD</obj_property>
+            <obj_property name="ObjectShortName">SLRD</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/phy_bridge/FLAGA" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">FLAGA</obj_property>
+            <obj_property name="ObjectShortName">FLAGA</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/phy_bridge/FLAGB" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">FLAGB</obj_property>
+            <obj_property name="ObjectShortName">FLAGB</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/phy_bridge/FLAGC" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">FLAGC</obj_property>
+            <obj_property name="ObjectShortName">FLAGC</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/SLWR" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">SLWR</obj_property>
+            <obj_property name="ObjectShortName">SLWR</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/PKTEND" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">PKTEND</obj_property>
+            <obj_property name="ObjectShortName">PKTEND</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group302" type="group">
+         <obj_property name="label">Control Readout</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/atriusb_test/uut/phy_bridge/ctrl_empty_i" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">ctrl_empty_i</obj_property>
+            <obj_property name="ObjectShortName">ctrl_empty_i</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/phy_bridge/ctrl_dat_i" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">ctrl_dat_i[7:0]</obj_property>
+            <obj_property name="ObjectShortName">ctrl_dat_i[7:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/phy_bridge/outbound_data" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">outbound_data[7:0]</obj_property>
+            <obj_property name="ObjectShortName">outbound_data[7:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/phy_bridge/ctrl_rd_o" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">ctrl_rd_o</obj_property>
+            <obj_property name="ObjectShortName">ctrl_rd_o</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/phy_bridge/ctrl_full_i" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">ctrl_full_i</obj_property>
+            <obj_property name="ObjectShortName">ctrl_full_i</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="/atriusb_test/uut/phy_bridge/state" type="array" db_ref_id="1">
+         <obj_property name="ElementShortName">state[4:0]</obj_property>
+         <obj_property name="ObjectShortName">state[4:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="group245" type="group">
+         <obj_property name="label">Event Readout</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/atriusb_test/uut/phy_bridge/event_data" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">event_data[7:0]</obj_property>
+            <obj_property name="ObjectShortName">event_data[7:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/phy_bridge/event_readout/state" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">state[4:0]</obj_property>
+            <obj_property name="ObjectShortName">state[4:0]</obj_property>
+            <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/phy_bridge/event_readout/fifo_data_out" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">fifo_data_out[7:0]</obj_property>
+            <obj_property name="ObjectShortName">fifo_data_out[7:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/phy_bridge/event_readout/transaction_counter" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">transaction_counter[8:0]</obj_property>
+            <obj_property name="ObjectShortName">transaction_counter[8:0]</obj_property>
+            <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="group337" type="group">
+            <obj_property name="label">Incoming</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <wvobject fp_name="/atriusb_test/uut/phy_bridge/event_readout/fifo_wr_i" type="logic" db_ref_id="1">
+               <obj_property name="ElementShortName">fifo_wr_i</obj_property>
+               <obj_property name="ObjectShortName">fifo_wr_i</obj_property>
+            </wvobject>
+            <wvobject fp_name="/atriusb_test/uut/phy_bridge/event_readout/fifo_dat_i" type="array" db_ref_id="1">
+               <obj_property name="ElementShortName">fifo_dat_i[15:0]</obj_property>
+               <obj_property name="ObjectShortName">fifo_dat_i[15:0]</obj_property>
+            </wvobject>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/ev_buf_full" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">ev_buf_full[1:0]</obj_property>
+            <obj_property name="ObjectShortName">ev_buf_full[1:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/ev_buf_counter" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">ev_buf_counter[8:0]</obj_property>
+            <obj_property name="ObjectShortName">ev_buf_counter[8:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="group324" type="group">
+            <obj_property name="label">Current Block Info</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <wvobject fp_name="/atriusb_test/uut/phy_bridge/event_readout/frame_type" type="array" db_ref_id="1">
+               <obj_property name="ElementShortName">frame_type[7:0]</obj_property>
+               <obj_property name="ObjectShortName">frame_type[7:0]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/atriusb_test/uut/phy_bridge/event_readout/frame_number" type="array" db_ref_id="1">
+               <obj_property name="ElementShortName">frame_number[7:0]</obj_property>
+               <obj_property name="ObjectShortName">frame_number[7:0]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/atriusb_test/uut/phy_bridge/event_readout/nwords" type="array" db_ref_id="1">
+               <obj_property name="ElementShortName">nwords[15:0]</obj_property>
+               <obj_property name="ObjectShortName">nwords[15:0]</obj_property>
+            </wvobject>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/phy_bridge/event_readout/bridge_request_o" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">bridge_request_o</obj_property>
+            <obj_property name="ObjectShortName">bridge_request_o</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/phy_bridge/event_readout/bridge_grant_i" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">bridge_grant_i</obj_property>
+            <obj_property name="ObjectShortName">bridge_grant_i</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/phy_bridge/event_readout/fifo_read" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">fifo_read</obj_property>
+            <obj_property name="ObjectShortName">fifo_read</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/phy_bridge/event_readout/next_to_last_write" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">next_to_last_write</obj_property>
+            <obj_property name="ObjectShortName">next_to_last_write</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/phy_bridge/event_readout/next_to_last_read" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">next_to_last_read</obj_property>
+            <obj_property name="ObjectShortName">next_to_last_read</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/phy_bridge/event_readout/fifo_empty" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">fifo_empty</obj_property>
+            <obj_property name="ObjectShortName">fifo_empty</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/phy_bridge/event_readout/words_available" type="logic" db_ref_id="1">
+            <obj_property name="ElementShortName">words_available</obj_property>
+            <obj_property name="ObjectShortName">words_available</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/phy_bridge/event_readout/nwords_remaining" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">nwords_remaining[16:0]</obj_property>
+            <obj_property name="ObjectShortName">nwords_remaining[16:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/atriusb_test/uut/phy_bridge/event_readout/rd_data_count" type="array" db_ref_id="1">
+            <obj_property name="ElementShortName">rd_data_count[17:0]</obj_property>
+            <obj_property name="ObjectShortName">rd_data_count[17:0]</obj_property>
+         </wvobject>
+      </wvobject>
+   </wvobject>
+</wave_config>

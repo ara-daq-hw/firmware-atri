@@ -1,0 +1,218 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!--This is an ISE project configuration file.-->
+<!--It holds project specific layout data for the projectmgr plugin.-->
+<!--Copyright (c) 1995-2009 Xilinx, Inc.  All rights reserved.-->
+<Project version="2" owner="projectmgr" name="ATRI" >
+   <!--This is an ISE project configuration file.-->
+   <ItemView engineview="SynthesisOnly" guiview="Source" compilemode="AutoCompile" >
+      <ClosedNodes>
+         <ClosedNodesVersion>2</ClosedNodesVersion>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/pcie - atri_pcie_bridge - rtl/app - pcie_app_s6/BMD - BMD/BMD_EP - BMD_EP</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/phy_bridge - atriusb_interface_v4</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/daughter - atri_i2c_controller_v2</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/daughter - atri_i2c_controller_v2/i2c_controller - i2c_master_top</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/dbg - debug_core</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/ext_trigger - ext_trigger_generator</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/i2c_mux - atri_i2c_mux_and_fifo</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/id - wishbone_id_block</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/pc - atri_packet_controller</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/power_ctrl - wishbone_power_block</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/sl5 - wishbone_dummy_slave</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/sl9 - wishbone_dummy_slave</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/tinfo_fifo - trigger_info_fifo</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_irs - irs_quad_top</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_irs - irs_quad_top/evrdwb - evrd_wishbone</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_irs - irs_quad_top/irs_controller - irs_event_controller_v3</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_irs - irs_quad_top/irs_readout - irs_read_top</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_irs - irs_quad_top/irswb - irs_wishbone_v4</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_irs - irs_quad_top/read_compat - irs_read_mode_compat</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_irs - irs_quad_top/writectl - irs_write_top/write_controller - irs_quad_write_controller_v6</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_trig - trigger_top_v2</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_trig - trigger_top_v2/daughter_map - trigger_scaler_map_v2/rsv_ts - trigger_scaler_v4</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_trig - trigger_top_v2/daughter_map - trigger_scaler_map_v2/tda_ts - trigger_scaler_v4/sc_gen - scaler_generator</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_trig - trigger_top_v2/rf_top - rf_trigger_top_v2</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_trig - trigger_top_v2/rf_top - rf_trigger_top_v2/uL2_d1 - l2_trigger_3of8</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_trig - trigger_top_v2/rf_top - rf_trigger_top_v2/uL2_d2 - l2_trigger_3of8</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_trig - trigger_top_v2/rf_top - rf_trigger_top_v2/uL2_d3 - l2_trigger_3of8</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_trig - trigger_top_v2/rf_top - rf_trigger_top_v2/uL2_d4 - l2_trigger_3of8</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_trig - trigger_top_v2/rf_top - rf_trigger_top_v2/uL4 - l4_trigger_3of8</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_trig - trigger_top_v2/rf_top - rf_trigger_top_v2/uL4RF1 - l4rf1_trigger</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_trig - trigger_top_v2/trig_processor - trigger_handling_v2</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_trig - trigger_top_v2/wb_scal - wishbone_scaler_block_v2</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_trig - trigger_top_v2/wb_scal - wishbone_scaler_block_v2/L3_scaler - par_scaler</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_trig - trigger_top_v2/wb_scal - wishbone_scaler_block_v2/L4_scaler - par_scaler</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_trig - trigger_top_v2/wb_scal - wishbone_scaler_block_v2/br_scaler - par_scaler</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_trig - trigger_top_v2/wb_scal - wishbone_scaler_block_v2/l1ext_scaler - par_scaler</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_trig - trigger_top_v2/wb_scal - wishbone_scaler_block_v2/l2ext_scaler - par_scaler</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_trig - trigger_top_v2/wb_scal - wishbone_scaler_block_v2/l3ext_scaler - par_scaler</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_trig - trigger_top_v2/wb_scal - wishbone_scaler_block_v2/l4ext_scaler - par_scaler</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_trig - trigger_top_v2/wb_scal - wishbone_scaler_block_v2/t1_scaler - par_scaler</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_trig - trigger_top_v2/wb_trigctrl - wishbone_trigctrl_block</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/wb_arb - atri_wishbone_bus</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/wb_pps - wishbone_pps_block</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/wb_pps - wishbone_pps_block/counter - Simple_Gray_Counter</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/wb_pps - wishbone_pps_block/counter_convert - Generic_Gray_to_Binary</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/wb_pps - wishbone_pps_block/pps_flag_fastclk_gen - SYNCEDGE_R</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|ATRI_revB.v/pcie - atri_pcie_bridge - rtl/app - pcie_app_s6/BMD - BMD</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|ATRI_revB.v/pcie - atri_pcie_bridge - rtl/app - pcie_app_s6/BMD - BMD/BMD_EP - BMD_EP/EP_MEM - BMD_EP_MEM_ACCESS</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|ATRI_revB.v/pcie - atri_pcie_bridge - rtl/app - pcie_app_s6/BMD - BMD/BMD_EP - BMD_EP/EP_TX - BMD_TX_ENGINE</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|ATRI_revB.v/pcie - atri_pcie_bridge - rtl/app - pcie_app_s6/atri_interface - pcie_interface - Behavioral</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|ATRI_revB.v/phy_bridge - atriusb_interface_v4</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|ATRI_revB.v/phy_bridge - atriusb_interface_v4/event_readout - atriusb_event_readout_v4</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|ATRI_revB.v/u_atri - atri_core</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/daughter - atri_i2c_controller_v2</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/daughter - atri_i2c_controller_v2/i2c_controller - i2c_master_top</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/dbg - debug_core</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/ext_trigger - ext_trigger_generator</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/i2c_mux - atri_i2c_mux_and_fifo</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/id - wishbone_id_block</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/pc - atri_packet_controller</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/power_ctrl - wishbone_power_block</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/sl5 - wishbone_dummy_slave</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/sl9 - wishbone_dummy_slave</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/tinfo_fifo - trigger_info_fifo</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_irs - irs_quad_top/evrdwb - evrd_wishbone</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_irs - irs_quad_top/irs_controller - irs_event_controller_v3</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_irs - irs_quad_top/irs_readout - irs_read_top/rdout - irs_block_readout_v3/address_selector - irs_block_readout_addr_v3</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_irs - irs_quad_top/irs_readout - irs_read_top/rdout - irs_block_readout_v3/ramp_controller - irs_ramp_control_v3</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_irs - irs_quad_top/irswb - irs_wishbone_v4</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_irs - irs_quad_top/read_compat - irs_read_mode_compat/irs3_dacinit - irs3_serial_dac_init</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_irs - irs_quad_top/writectl - irs_write_top</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/u_trig - trigger_top_v2</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/wb_arb - atri_wishbone_bus</ClosedNode>
+         <ClosedNode>/ATRI_revB C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|ATRI_revB.v/u_atri - atri_core/wb_pps - wishbone_pps_block</ClosedNode>
+         <ClosedNode>/atri_event_fifo C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|atri_event_fifo.v</ClosedNode>
+         <ClosedNode>/atri_event_fifo C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|atri_event_fifo.v</ClosedNode>
+         <ClosedNode>/atriusb_event_readout_v4 C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|atriusb_event_readout_v4.v</ClosedNode>
+         <ClosedNode>/atriusb_event_readout_v4 C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|atriusb_event_readout_v4.v</ClosedNode>
+         <ClosedNode>/atriusb_interface C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|atriusb_interface.v</ClosedNode>
+         <ClosedNode>/atriusb_interface C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|atriusb_interface.v</ClosedNode>
+         <ClosedNode>/atriusb_interface C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|atriusb_interface.v/event_readout - atriusb_event_readout</ClosedNode>
+         <ClosedNode>/atriusb_interface_v2 C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|atriusb_interface_v2.v</ClosedNode>
+         <ClosedNode>/atriusb_interface_v2 C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|atriusb_interface_v2.v</ClosedNode>
+         <ClosedNode>/atriusb_interface_v3 C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|atriusb_interface_v3.v</ClosedNode>
+         <ClosedNode>/atriusb_interface_v3 C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|atriusb_interface_v3.v</ClosedNode>
+         <ClosedNode>/event_readout_multiplexer C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|ATRI|event_readout_multiplexer.v</ClosedNode>
+         <ClosedNode>/event_readout_multiplexer C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|ATRI|event_readout_multiplexer.v</ClosedNode>
+         <ClosedNode>/i2c_reassign_controller C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|i2c_interface.v</ClosedNode>
+         <ClosedNode>/i2c_reassign_controller C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|i2c_interface.v</ClosedNode>
+         <ClosedNode>/miniATRI C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|trunk|rtl|miniATRI|miniATRI.v</ClosedNode>
+         <ClosedNode>/trigger_scaler_v4 C:|Users|tmeures|Documents|Projects|ARA|ARA_firmwareRepo|ara|firmware|ATRI|branches|tmeures|rtl|trigger_scaler_v4.v</ClosedNode>
+      </ClosedNodes>
+      <SelectedItems>
+         <SelectedItem>ATRI_revB (C:/Users/tmeures/Documents/Projects/ARA/ARA_firmwareRepo/ara/firmware/ATRI/branches/tmeures/rtl/ATRI/ATRI_revB.v)</SelectedItem>
+      </SelectedItems>
+      <ScrollbarPosition orientation="vertical" >17</ScrollbarPosition>
+      <ScrollbarPosition orientation="horizontal" >0</ScrollbarPosition>
+      <ViewHeaderState orientation="horizontal" >000000ff0000000000000001000000010000000000000000000000000000000002020000000100000001000000640000026a000000020000000000000000000000000200000064ffffffff0000008100000003000000020000026a0000000100000003000000000000000100000003</ViewHeaderState>
+      <UserChangedColumnWidths orientation="horizontal" >true</UserChangedColumnWidths>
+      <CurrentItem>ATRI_revB (C:/Users/tmeures/Documents/Projects/ARA/ARA_firmwareRepo/ara/firmware/ATRI/branches/tmeures/rtl/ATRI/ATRI_revB.v)</CurrentItem>
+   </ItemView>
+   <ItemView engineview="SynthesisOnly" sourcetype="DESUT_VERILOG" guiview="Process" >
+      <ClosedNodes>
+         <ClosedNodesVersion>1</ClosedNodesVersion>
+         <ClosedNode>Configure Target Device</ClosedNode>
+         <ClosedNode>Design Utilities</ClosedNode>
+         <ClosedNode>Implement Design/Map/Generate Post-Map Static Timing</ClosedNode>
+         <ClosedNode>Implement Design/Place &amp; Route/Back-annotate Pin Locations</ClosedNode>
+         <ClosedNode>Implement Design/Place &amp; Route/Generate IBIS Model</ClosedNode>
+         <ClosedNode>Implement Design/Place &amp; Route/Generate Post-Place &amp; Route Static Timing</ClosedNode>
+         <ClosedNode>User Constraints</ClosedNode>
+      </ClosedNodes>
+      <SelectedItems>
+         <SelectedItem>View RTL Schematic</SelectedItem>
+      </SelectedItems>
+      <ScrollbarPosition orientation="vertical" >9</ScrollbarPosition>
+      <ScrollbarPosition orientation="horizontal" >0</ScrollbarPosition>
+      <ViewHeaderState orientation="horizontal" >000000ff00000000000000010000000100000000000000000000000000000000000000000000000187000000010000000100000000000000000000000064ffffffff000000810000000000000001000001870000000100000000</ViewHeaderState>
+      <UserChangedColumnWidths orientation="horizontal" >false</UserChangedColumnWidths>
+      <CurrentItem>View RTL Schematic</CurrentItem>
+   </ItemView>
+   <ItemView guiview="File" >
+      <ClosedNodes>
+         <ClosedNodesVersion>1</ClosedNodesVersion>
+      </ClosedNodes>
+      <SelectedItems/>
+      <ScrollbarPosition orientation="vertical" >0</ScrollbarPosition>
+      <ScrollbarPosition orientation="horizontal" >0</ScrollbarPosition>
+      <ViewHeaderState orientation="horizontal" >000000ff00000000000000010000000000000000010000000000000000000000000000000000000392000000040101000100000000000000000000000064ffffffff0000008100000000000000040000010d0000000100000000000000d70000000100000000000000660000000100000000000001480000000100000000</ViewHeaderState>
+      <UserChangedColumnWidths orientation="horizontal" >false</UserChangedColumnWidths>
+      <CurrentItem>..\rtl\ATRI\atriusb_event_readout.v</CurrentItem>
+   </ItemView>
+   <ItemView guiview="Library" >
+      <ClosedNodes>
+         <ClosedNodesVersion>1</ClosedNodesVersion>
+         <ClosedNode>work</ClosedNode>
+      </ClosedNodes>
+      <SelectedItems/>
+      <ScrollbarPosition orientation="vertical" >0</ScrollbarPosition>
+      <ScrollbarPosition orientation="horizontal" >0</ScrollbarPosition>
+      <ViewHeaderState orientation="horizontal" >000000ff00000000000000010000000000000000010000000000000000000000000000000000000109000000010001000100000000000000000000000064ffffffff000000810000000000000001000001090000000100000000</ViewHeaderState>
+      <UserChangedColumnWidths orientation="horizontal" >false</UserChangedColumnWidths>
+      <CurrentItem>work</CurrentItem>
+   </ItemView>
+   <SourceProcessView>000000ff0000000000000002000001360000014a01000000050100000002</SourceProcessView>
+   <CurrentView>Implementation</CurrentView>
+   <ItemView engineview="SynthesisOnly" sourcetype="DESUT_UCF" guiview="Process" >
+      <ClosedNodes>
+         <ClosedNodesVersion>1</ClosedNodesVersion>
+         <ClosedNode>User Constraints</ClosedNode>
+      </ClosedNodes>
+      <SelectedItems>
+         <SelectedItem/>
+      </SelectedItems>
+      <ScrollbarPosition orientation="vertical" >0</ScrollbarPosition>
+      <ScrollbarPosition orientation="horizontal" >0</ScrollbarPosition>
+      <ViewHeaderState orientation="horizontal" >000000ff000000000000000100000001000000000000000000000000000000000000000000000002f3000000010000000100000000000000000000000064ffffffff000000810000000000000001000002f30000000100000000</ViewHeaderState>
+      <UserChangedColumnWidths orientation="horizontal" >false</UserChangedColumnWidths>
+      <CurrentItem/>
+   </ItemView>
+   <ItemView engineview="SynthesisOnly" sourcetype="" guiview="Process" >
+      <ClosedNodes>
+         <ClosedNodesVersion>1</ClosedNodesVersion>
+      </ClosedNodes>
+      <SelectedItems>
+         <SelectedItem/>
+      </SelectedItems>
+      <ScrollbarPosition orientation="vertical" >0</ScrollbarPosition>
+      <ScrollbarPosition orientation="horizontal" >0</ScrollbarPosition>
+      <ViewHeaderState orientation="horizontal" >000000ff000000000000000100000001000000000000000000000000000000000000000000000001d9000000010000000100000000000000000000000064ffffffff000000810000000000000001000001d90000000100000000</ViewHeaderState>
+      <UserChangedColumnWidths orientation="horizontal" >false</UserChangedColumnWidths>
+      <CurrentItem/>
+   </ItemView>
+   <ItemView engineview="SynthesisOnly" sourcetype="DESUT_XCO" guiview="Process" >
+      <ClosedNodes>
+         <ClosedNodesVersion>1</ClosedNodesVersion>
+         <ClosedNode>CORE Generator</ClosedNode>
+      </ClosedNodes>
+      <SelectedItems>
+         <SelectedItem/>
+      </SelectedItems>
+      <ScrollbarPosition orientation="vertical" >0</ScrollbarPosition>
+      <ScrollbarPosition orientation="horizontal" >0</ScrollbarPosition>
+      <ViewHeaderState orientation="horizontal" >000000ff000000000000000100000001000000000000000000000000000000000000000000000001d9000000010000000100000000000000000000000064ffffffff000000810000000000000001000001d90000000100000000</ViewHeaderState>
+      <UserChangedColumnWidths orientation="horizontal" >false</UserChangedColumnWidths>
+      <CurrentItem/>
+   </ItemView>
+   <ItemView engineview="SynthesisOnly" sourcetype="DESUT_VHDL_ARCHITECTURE" guiview="Process" >
+      <ClosedNodes>
+         <ClosedNodesVersion>1</ClosedNodesVersion>
+         <ClosedNode>Design Utilities</ClosedNode>
+      </ClosedNodes>
+      <SelectedItems>
+         <SelectedItem/>
+      </SelectedItems>
+      <ScrollbarPosition orientation="vertical" >0</ScrollbarPosition>
+      <ScrollbarPosition orientation="horizontal" >0</ScrollbarPosition>
+      <ViewHeaderState orientation="horizontal" >000000ff00000000000000010000000100000000000000000000000000000000000000000000000198000000010000000100000000000000000000000064ffffffff000000810000000000000001000001980000000100000000</ViewHeaderState>
+      <UserChangedColumnWidths orientation="horizontal" >false</UserChangedColumnWidths>
+      <CurrentItem/>
+   </ItemView>
+</Project>
+<?xml version="1.0" encoding="utf-8"?>
+<!--This is an ISE project configuration file.-->
+<!--It holds project specific layout data for the projectmgr plugin.-->
+<!--Copyright (c) 1995-2009 Xilinx, Inc.  All rights reserved.-->
+<Project version="2" owner="projectmgr" name="ATRI" >
+   <!--This is an ISE project configuration file.-->
+</Project>
