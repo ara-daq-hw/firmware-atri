@@ -183,11 +183,11 @@ module ATRI_revB(
 	//BOARD_ID = "ATR0" for ARA02, "ATRI" otherwise.
 	parameter [31:0] BOARD_ID = "ATRI";
 	parameter [3:0] VER_BOARD = 1;
-	parameter [3:0] VER_MONTH = 2;
-	parameter [7:0] VER_DAY = 28;
+	parameter [3:0] VER_MONTH = 1;
+	parameter [7:0] VER_DAY = 12;
 	parameter [3:0] VER_MAJOR = 0;
-	parameter [3:0] VER_MINOR = 10;
-	parameter [7:0] VER_REV = 9;
+	parameter [3:0] VER_MINOR = 11;
+	parameter [7:0] VER_REV = 0;
 
 	localparam MAX_DAUGHTERS = 4;
 

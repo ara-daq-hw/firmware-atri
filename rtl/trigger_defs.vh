@@ -63,15 +63,16 @@
 
 // Number of bits in the number of blocks field (i.e. 1-256 blocks).
 `define NBLOCK_BITS 8
-// Number of bits in the pretrigger blocks field (i.e. 0-16 pretrigger blocks).
+// Number of bits in the pretrigger blocks field (i.e. 0-64 pretrigger blocks).
 // If this is increased, trigger_handling needs to be able to handle more delay.
-`define PRETRG_BITS 4
+`define PRETRG_BITS 6
 
 // RF0 (deep ice)
 
 // Read out 20 blocks by default. This number is number of blocks-1.
 `define TRIG_RF0_NUM_BLOCKS 19
 // Number of pretrigger blocks.
+
 // There's a base offset of 8 blocks for all triggers. The current RF trigger only takes
 // 3-4 cycles, or 1.5-2 blocks. If we want 10 pretrigger blocks, that means we only need
 // this to be 4. (num_pretrig = ((trig_rf0_pretrigger) + base_offset - trigger delay))
@@ -113,10 +114,11 @@
 // ALL triggers, by default, are assumed predelayed by 8 blocks.
 // If a trigger wishes to be closer to its 'actual' time, then add
 // a delay specific for that trigger.
+
 `define BASE_OFFSET	  8
 
 // Number of bits in the delay field.
-`define DELAY_BITS 4
+`define DELAY_BITS 6
 // Number of bits in the info for each trigger.
 `define INFO_BITS 32
 // Number of bits in the trigger oneshot length.
