@@ -63,9 +63,9 @@
 
 // Number of bits in the number of blocks field (i.e. 1-256 blocks).
 `define NBLOCK_BITS 8
-// Number of bits in the pretrigger blocks field (i.e. 0-64 pretrigger blocks).
+// Number of bits in the pretrigger blocks field (i.e. 0-127 pretrigger blocks).
 // If this is increased, trigger_handling needs to be able to handle more delay.
-`define PRETRG_BITS 6
+`define PRETRG_BITS 7
 
 // RF0 (deep ice)
 

@@ -184,9 +184,9 @@ module ATRI_revB(
 	parameter [31:0] BOARD_ID = "ATRI";
 	parameter [3:0] VER_BOARD = 1;
 	parameter [3:0] VER_MONTH = 1;
-	parameter [7:0] VER_DAY = 12;
+	parameter [7:0] VER_DAY = 16;
 	parameter [3:0] VER_MAJOR = 0;
-	parameter [3:0] VER_MINOR = 11;
+	parameter [3:0] VER_MINOR = 12;
 	parameter [7:0] VER_REV = 0;
 
 	localparam MAX_DAUGHTERS = 4;

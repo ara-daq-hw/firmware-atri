@@ -159,7 +159,7 @@ module trigger_handling_v2(
 				SRLC32E #(.INIT(32'h00000000)) matchNL(.D(l4_new_match_chain),.CE(1'b1),.CLK(clk_i),.A({l4_offset[l4][3:0],1'b0}),
 																						  .Q(l4_new_match_long));
 				assign l4_matched_new_info[l4] = (l4_offset[l4][4]) ? l4_new_match_long : l4_new_match_short;
-			end else begin : QM
+			end else if (PRETRG_BITS == 6) begin : QM
 				// quad-length match
 				wire [3:0] l4_match_intermediate;
 				wire [2:0] l4_match_chain;
@@ -190,6 +190,60 @@ module trigger_handling_v2(
 																  .Q(l4_new_match_intermediate[3]));
 				assign l4_matched[l4] = l4_match_intermediate[l4_offset[l4][5:4]];
 				assign l4_matched_new_info[l4] = l4_new_match_intermediate[l4_offset[l4][5:4]];
+			end else begin : OM
+				wire [7:0] l4_match_intermediate;
+				wire [6:0] l4_match_chain;
+				wire [7:0] l4_new_match_intermediate;
+				wire [6:0] l4_new_match_chain;
+				SRLC32E #(.INIT(32'h00000000)) matchA(.D(l4_delayed[l4]),.CE(1'b1),.CLK(clk_i),.A({l4_offset[l4][3:0],1'b0}),
+																  .Q(l4_match_intermediate[0]),
+																  .Q31(l4_match_chain[0]));
+				SRLC32E #(.INIT(32'h00000000)) matchB(.D(l4_match_chain[0]),.CE(1'b1),.CLK(clk_i),.A({l4_offset[l4][3:0],1'b0}),
+																  .Q(l4_match_intermediate[1]),
+																  .Q31(l4_match_chain[1]));
+				SRLC32E #(.INIT(32'h00000000)) matchC(.D(l4_match_chain[1]),.CE(1'b1),.CLK(clk_i),.A({l4_offset[l4][3:0],1'b0}),
+																  .Q(l4_match_intermediate[2]),
+																  .Q31(l4_match_chain[2]));
+				SRLC32E #(.INIT(32'h00000000)) matchD(.D(l4_match_chain[2]),.CE(1'b1),.CLK(clk_i),.A({l4_offset[l4][3:0],1'b0}),
+																  .Q(l4_match_intermediate[3]),
+																  .Q31(l4_match_chain[3]));
+				SRLC32E #(.INIT(32'h00000000)) matchE(.D(l4_match_chain[3]),.CE(1'b1),.CLK(clk_i),.A({l4_offset[l4][3:0],1'b0}),
+																  .Q(l4_match_intermediate[4]),
+																  .Q31(l4_match_chain[4]));
+				SRLC32E #(.INIT(32'h00000000)) matchF(.D(l4_match_chain[4]),.CE(1'b1),.CLK(clk_i),.A({l4_offset[l4][3:0],1'b0}),
+																  .Q(l4_match_intermediate[5]),
+																  .Q31(l4_match_chain[5]));
+				SRLC32E #(.INIT(32'h00000000)) matchG(.D(l4_match_chain[5]),.CE(1'b1),.CLK(clk_i),.A({l4_offset[l4][3:0],1'b0}),
+																  .Q(l4_match_intermediate[6]),
+																  .Q31(l4_match_chain[6]));
+				SRLC32E #(.INIT(32'h00000000)) matchH(.D(l4_match_chain[6]),.CE(1'b1),.CLK(clk_i),.A({l4_offset[l4][3:0],1'b0}),
+																  .Q(l4_match_intermediate[7]));
+
+				SRLC32E #(.INIT(32'h00000000)) newmatchA(.D(l4_delayed_new_info[l4]),.CE(1'b1),.CLK(clk_i),.A({l4_offset[l4][3:0],1'b0}),
+																  .Q(l4_new_match_intermediate[0]),
+																  .Q31(l4_new_match_chain[0]));
+				SRLC32E #(.INIT(32'h00000000)) newmatchB(.D(l4_new_match_chain[0]),.CE(1'b1),.CLK(clk_i),.A({l4_offset[l4][3:0],1'b0}),
+																  .Q(l4_new_match_intermediate[1]),
+																  .Q31(l4_new_match_chain[1]));
+				SRLC32E #(.INIT(32'h00000000)) newmatchC(.D(l4_new_match_chain[1]),.CE(1'b1),.CLK(clk_i),.A({l4_offset[l4][3:0],1'b0}),
+																  .Q(l4_new_match_intermediate[2]),
+																  .Q31(l4_new_match_chain[2]));
+				SRLC32E #(.INIT(32'h00000000)) newmatchD(.D(l4_new_match_chain[2]),.CE(1'b1),.CLK(clk_i),.A({l4_offset[l4][3:0],1'b0}),
+																  .Q(l4_new_match_intermediate[3]),
+																  .Q31(l4_new_match_chain[3]));
+				SRLC32E #(.INIT(32'h00000000)) newmatchE(.D(l4_new_match_chain[3]),.CE(1'b1),.CLK(clk_i),.A({l4_offset[l4][3:0],1'b0}),
+																  .Q(l4_new_match_intermediate[4]),
+																  .Q31(l4_new_match_chain[4]));
+				SRLC32E #(.INIT(32'h00000000)) newmatchF(.D(l4_new_match_chain[4]),.CE(1'b1),.CLK(clk_i),.A({l4_offset[l4][3:0],1'b0}),
+																  .Q(l4_new_match_intermediate[5]),
+																  .Q31(l4_new_match_chain[5]));
+				SRLC32E #(.INIT(32'h00000000)) newmatchG(.D(l4_new_match_chain[5]),.CE(1'b1),.CLK(clk_i),.A({l4_offset[l4][3:0],1'b0}),
+																  .Q(l4_new_match_intermediate[6]),
+																  .Q31(l4_new_match_chain[6]));
+				SRLC32E #(.INIT(32'h00000000)) newmatchH(.D(l4_new_match_chain[6]),.CE(1'b1),.CLK(clk_i),.A({l4_offset[l4][3:0],1'b0}),
+																  .Q(l4_new_match_intermediate[7]));
+				assign l4_matched[l4] = l4_match_intermediate[l4_offset[l4][6:4]];
+				assign l4_matched_new_info[l4] = l4_new_match_intermediate[l4_offset[l4][6:4]];
 			end
 			// Calculate the offset.
 			always @(posedge clk_i) begin : CALC_OFFSET
