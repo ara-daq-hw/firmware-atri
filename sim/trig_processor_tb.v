@@ -24,7 +24,6 @@
 `include "../rtl/trigger_defs.vh"
 
 module trig_processor_tb;
-
 	parameter NUM_L4 = `SCAL_NUM_L4;
 	parameter DELAY_BITS = `DELAY_BITS;
 	parameter PRETRG_BITS = `PRETRG_BITS;
@@ -34,6 +33,7 @@ module trig_processor_tb;
 	reg [DELAY_BITS-1:0] delays[NUM_L4-1:0];
 	
 	wire [NUM_L4*PRETRG_BITS-1:0] pretrigger_vector_i;
+	wire [NUM_L4*DELAY_BITS-1:0] delay_vector_i;
 	generate
 		genvar i;
 		for (i=0;i<NUM_L4;i=i+1) begin : LP
@@ -42,7 +42,6 @@ module trig_processor_tb;
 		end
 	endgenerate
 	
-	wire [NUM_L4*DELAY_BITS-1:0] delay_vector_i;
 	reg [NUM_L4-1:0] l4_i;
 	reg [NUM_L4-1:0] l4_new_i;
 	reg T1_mask_i;
@@ -81,6 +80,10 @@ module trig_processor_tb;
 		.disable_ce_i(disable_ce_i)
 	);
 
+	always @(posedge clk_i) begin
+		disable_ce_i <= ~disable_ce_i;
+	end
+
 	initial begin
 		// Initialize Inputs
 		pretrigger[0] = 53;
@@ -102,10 +105,16 @@ module trig_processor_tb;
 		disable_i = 0;
 		disable_ce_i = 0;
 
+		#100;
+		@(posedge clk_i);
+		while (disable_ce_i) @(posedge clk_i);
+		disable_i = 1;
 		// Wait 100 ns for global reset to finish
 		#2000;
-        
-		// Add stimulus here
+		while (disable_ce_i) @(posedge clk_i);
+		disable_i = 0;
+      
+		// first set of triggers. These won't work.
 		@(posedge clk_i);
 		l4_i[0] = 1;
 		l4_new_i[0] = 1;
@@ -120,7 +129,26 @@ module trig_processor_tb;
 		@(posedge clk_i);
 		l4_i[0] = 0;
 		l4_i[1] = 0;		
+
+		#1000;
+
+		// next set. these will.
+		@(posedge clk_i);
+		l4_i[0] = 1;
+		l4_new_i[0] = 1;
+		l4_i[1] = 1;
+		l4_new_i[1] = 1;
+		@(posedge clk_i);
+		l4_new_i[0] = 0;
+		l4_new_i[1] = 0;
+		@(posedge clk_i);
+		@(posedge clk_i);
+		@(posedge clk_i);
+		@(posedge clk_i);
+		l4_i[0] = 0;
+		l4_i[1] = 0;		
+
+
 	end
-      
 endmodule
 
