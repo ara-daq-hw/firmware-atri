@@ -137,10 +137,22 @@ module irs_event_controller_v3(
 	wire [71:0] block_info_data;
 	assign block_info_data[8:0] = hist_block_i;
 	assign block_info_data[9] = new_event;
-	assign block_info_data[13:10] = trig_l4_reg;
-	assign block_info_data[15:14] = {2{1'b0}}; // reserved for 2 more triggers
-	assign block_info_data[19:16] = trig_l4_new;
-	assign block_info_data[23:20] = {4{1'b0}}; // reserved for 2 more triggers and 2 additional reserve bits
+	// This was a stupid bug.
+	//assign block_info_data[13:10] = trig_l4_reg;
+	//assign block_info_data[15:14] = {2{1'b0}}; // reserved for 2 more triggers
+	//assign block_info_data[19:16] = trig_l4_new;
+	//assign block_info_data[23:20] = {4{1'b0}}; // reserved for 2 more triggers and 2 additional reserve bits
+
+	assign block_info_data[10 +: NUM_L4] = trig_l4_reg;
+	assign block_info_data[16 +: NUM_L4] = trig_l4_new;
+	generate
+		if (NUM_L4 < 6) begin : RESERVED
+			assign block_info_data[10+NUM_L4 +: (6-NUM_L4)] = {(6-NUM_L4){1'b0}};
+			assign block_info_data[16+NUM_L4 +: (6-NUM_L4)] = {(6-NUM_L4){1'b0}};
+		end
+	endgenerate
+	// reserved
+	assign block_info_data[23:22] = {2{1'b0}};
 	assign block_info_data[39:24] = trig_second;
 	assign block_info_data[71:40] = trig_cycles;
 	wire bb_prog_full;
