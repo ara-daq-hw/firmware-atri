@@ -2,7 +2,17 @@
 `include "trigger_defs.vh"
 
 //% @brief Replacement for the trigger_handling module. This one can actually take variable pretrigger values.
-module trigger_handling_v2(
+//% Trigger handler. This is version 3, which integrates with 0.12+ firmware that has trigger info FIFOs.
+//% It has an additional "discarded L4 new" output. This is used with the trigger_info_fifo_v2 module,
+//% which has *2* FIFOs: one to capture the trigger info immediately at the trigger to hold until it's presented
+//% to the readout module, and 
+//%
+//% The point of the second trigger info FIFO is that the triggers don't know how long it will take for
+//% the actual trigger handling to occur, so they need to buffer their trigger info. They write in
+//% for *every* L4 new they send out. If it's masked off, l4_new_discard_o is eventually asserted,
+//% which causes a read from the trigger's FIFO, but no write into the readout FIFO.
+//% If it's not masked off, l4_new_o is asserted, causing a write into the readout FIFO.
+module trigger_handling_v3(
 		pretrigger_vector_i,
 		delay_vector_i,
 		l4_i,
@@ -10,6 +20,7 @@ module trigger_handling_v2(
 		T1_mask_i,
 		l4_matched_o,
 		l4_new_o,
+		l4_new_discard_o,
 		T1_o,
 		T1_scaler_o,
 		T1_offset_o,
@@ -309,6 +320,7 @@ module trigger_handling_v2(
 	// Match the L4 new info outputs to the T1 outputs.
 	wire [NUM_L4-1:0] l4new_delayed;
 	reg [NUM_L4-1:0] l4new_masked_out = {NUM_L4{1'b0}};
+	reg [NUM_L4-1:0] l4new_discarded_out = {NUM_L4{1'b0}};
 	Generic_Pipeline #(.WIDTH(NUM_L4),.LATENCY(1)) l4new_match_pipe(.I(l4_matched_new_info),.O(l4new_delayed),.CE(1'b1),.CLK(clk_i));
 	// We have to mask the L4NEW outputs because they ONLY are valid if a T1 is generated.
 	always @(posedge clk_i) begin
@@ -316,10 +328,18 @@ module trigger_handling_v2(
 			l4new_masked_out <= l4new_delayed;
 		else
 			l4new_masked_out <= {NUM_L4{1'b0}};
+		
+		// original is !A && !B, we want !(!A && !B) this is !!(A || B) = (A || B).
+		if (T1_mask_i || disable_or_hold)
+			l4new_discarded_out <= l4_new_delayed;
+		else
+			l4new_discarded_out <= {NUM_L4{1'b0}};
 	end
+	
 	always @(posedge clk_i) begin
 		T1_offset <= max_offset + BASE_OFFSET;
 	end
+	assign l4_new_discard_o = l4new_discarded_out;
 	assign l4_new_o = l4new_masked_out;
 	assign T1_o = T1_masked;
 	assign T1_scaler_o = T1;

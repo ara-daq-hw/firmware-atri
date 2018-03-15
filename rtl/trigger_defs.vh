@@ -63,9 +63,10 @@
 
 // Number of bits in the number of blocks field (i.e. 1-256 blocks).
 `define NBLOCK_BITS 8
-// Number of bits in the pretrigger blocks field (i.e. 0-127 pretrigger blocks).
-// If this is increased, trigger_handling needs to be able to handle more delay.
-`define PRETRG_BITS 7
+// Number of bits in the pretrigger blocks field (i.e. 0-63 pretrigger blocks).
+// Don't increase this past this. The firmware has code for it, but it does not
+// appear to function properly.
+`define PRETRG_BITS 6
 
 // RF0 (deep ice)
 
@@ -122,7 +123,7 @@
 // Number of bits in the info for each trigger.
 `define INFO_BITS 32
 // Number of bits in the trigger oneshot length.
-`define TRIG_ONESHOT_BITS 5
+`define TRIG_ONESHOT_BITS 6
 `define L1_ONESHOT_DEFAULT 10
 
 //FIXME: addition from Patrick's Patch: 4 lines
