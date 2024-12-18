@@ -497,3 +497,6 @@ INST "u_atri/phy_rst_rereg*" TNM = ts_phyrst_dst;
 INST "phy_rst_sync_pcie*" TNM = ts_phyrst_dst;
 TIMESPEC TS_phyrstcc = FROM "ts_phyrst_src" TO "ts_phyrst_dst" 20 ns DATAPATHONLY;
 
+INST "u_icapstart/*SyncA_clkB*" TNM = ts_icapstart_src;
+INST "u_icapstart/*SyncB_clkA*" TNM = ts_icapstart_dst;
+TIMESPEC TS_icapstrtcc = FROM "ts_icapstart_src" TO "ts_icapstart_dst" 20 ns DATAPATHONLY;
