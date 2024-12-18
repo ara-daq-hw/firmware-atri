@@ -1,6 +1,12 @@
 `timescale 1ns / 1ps
 //% @file atri_core.v Contains ATRI core support module.
 
+// From 0.15.98+, we add an additional parameter to
+// the core module to allow for the outbound FIFO to
+// be non-FWFT. We also (stupidly) add a new
+// clock "phy_ifclk_i" which becomes the raw clock,
+// allowing phy_clk_i to be a 48 MHz clock.
+
 `include "ev2_interface.vh"
 `include "wb_interface.vh"
 `include "irsi2c_interface.vh"
@@ -136,7 +142,8 @@ module atri_core(
 
 		// Clocking interface
 		output wrclk_o,
-		input phy_clk_i,				//% PHY interface clock
+		input phy_clk_i,				//% PHY logic clock (48 MHz)
+		input phy_ifclk_i,			//% PHY interface clock (arb.)
 		input phy_rst_i,				//% PHY reset
 		input slow_ce_i,				//% Slow clock enable (nominally 1 millisecond)
 		input micro_ce_i,				//% Semi-slow clock enable (nominally 1 microsecond)
@@ -145,15 +152,15 @@ module atri_core(
 		// PPS interface
 		input pps_i,
 		input pps_flag_i,
-		// PHY interface
-		input [7:0] phy_dat_i,
-		output [7:0] phy_dat_o,
-		output phy_packet_o,
-		input phy_wr_i,
-		input phy_rd_i,
-		output phy_out_empty_o,
-		output phy_out_mostly_empty_o,
-		output phy_in_full_o,
+		// PHY interwoface
+		input [7:0] phy_dat_i,		//% phy ifclk
+		output [7:0] phy_dat_o,		//% phy ifclk
+		output phy_packet_o,			//% phy ifclk
+		input phy_wr_i,				//% phy ifclk
+		input phy_rd_i,				//% phy ifclk
+		output phy_out_empty_o,		//% phy ifclk
+		output phy_out_mostly_empty_o, //% phy ifclk
+		output phy_in_full_o,		//% phy ifclk
 		inout [`EV2IF_SIZE-1:0] ev_interface_io,
 		input reset_i,
 		// Misc/debug
@@ -200,6 +207,8 @@ module atri_core(
 	parameter [3:0] VER_MAJOR = 0;
 	parameter [3:0] VER_MINOR = 9;
 	parameter [7:0] VER_REV = 0;
+	
+	parameter OUTBOUND_FWFT = "YES";
 	
 	parameter VCCAUX_I2C = "NO";
 	parameter IMPLEMENT_RESERVED = "YES";
@@ -583,18 +592,43 @@ module atri_core(
 	// These were shrunk in v0.9 to a 9x1024 FIFO so that they
 	// use 9k BRAMs rather than an 18k BRAM. The FIFO depth is
 	// way larger than is needed in any case.
-	atri_outbound_packet_buffer outbound_fifo(.rst(phy_rst_i),
-															.wr_clk(phy_clk_i),
-															.rd_clk(phy_clk_i),
-															.din(outbound_fifo_data_in),
-															.dout(outbound_fifo_data_out),
-															.wr_en(pc_wr),
-															.rd_en(phy_rd_i),
-															.full(pc_fifo_full),
-															.empty(phy_out_empty_o),
-															.prog_empty(phy_out_mostly_empty_o));
-	atri_outbound_packet_buffer inbound_fifo(.rst(phy_rst_i),
-														 .wr_clk(phy_clk_i),
+	// these should use phy ifclk-side resets
+	(* KEEP = "TRUE" *)
+	reg phy_rst_rereg = 0;
+	(* KEEP = "TRUE" *)
+	reg phy_ifclk_rst = 0;
+	always @(posedge phy_ifclk_i) begin
+		phy_rst_rereg <= phy_rst_i;
+		phy_ifclk_rst <= phy_rst_rereg;
+	end
+	generate
+		if (OUTBOUND_FWFT == "YES") begin : OB_FWFT
+			atri_outbound_packet_buffer outbound_fifo(.rst(phy_ifclk_rst),
+																	.wr_clk(phy_clk_i),
+																	.rd_clk(phy_ifclk_i),
+																	.din(outbound_fifo_data_in),
+																	.dout(outbound_fifo_data_out),
+																	.wr_en(pc_wr),
+																	.rd_en(phy_rd_i),
+																	.full(pc_fifo_full),
+																	.empty(phy_out_empty_o),
+																	.prog_empty(phy_out_mostly_empty_o));																	
+		end else begin : OB_NOFWFT
+			atri_outbound_packet_buffer_nofwft outbound_fifo(.rst(phy_ifclk_rst),
+																		    .wr_clk(phy_clk_i),
+																			 .rd_clk(phy_ifclk_i),
+																			 .din(outbound_fifo_data_in),
+																			 .dout(outbound_fifo_data_out),
+																			 .wr_en(pc_wr),
+																			 .rd_en(phy_rd_i),
+																			 .full(pc_fifo_full),
+																			 .empty(phy_out_empty_o),
+																			 .prog_empty(phy_out_mostly_empty_o));
+		end
+	endgenerate
+	// this is always non-fwft
+	atri_outbound_packet_buffer inbound_fifo(.rst(phy_ifclk_rst),
+														 .wr_clk(phy_ifclk_i),
 														 .rd_clk(phy_clk_i),
 														 .din(inbound_fifo_data_in),
 														 .dout(inbound_fifo_data_out),
