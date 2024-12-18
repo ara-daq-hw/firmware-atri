@@ -86,7 +86,7 @@ module debug_core(
 			assign ila1_debug = mux_debug;
 		end else if (DEBUG == "PC") begin : DBGPC
 			assign ila1_clk = phy_clk_i;
-			assign ila1_clk = pc_debug_i;
+			assign ila1_debug = pc_debug_i;
 		end else if (DEBUG == "I2C") begin : DBGI2C
 			assign ila1_clk = phy_clk_i;
 			assign ila1_debug = i2c_debug_i;
