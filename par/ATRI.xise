@@ -492,10 +492,6 @@
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="0"/>
       <association xil_pn:name="Implementation" xil_pn:seqID="86"/>
     </file>
-    <file xil_pn:name="ipcore_dir_ATRI/s6_pcie_v1_4.xco" xil_pn:type="FILE_COREGEN">
-      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="0"/>
-      <association xil_pn:name="Implementation" xil_pn:seqID="97"/>
-    </file>
     <file xil_pn:name="../rtl/pcie_modules/BMD.v" xil_pn:type="FILE_VERILOG">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="0"/>
       <association xil_pn:name="Implementation" xil_pn:seqID="60"/>
@@ -609,18 +605,43 @@
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="0"/>
       <association xil_pn:name="Implementation" xil_pn:seqID="78"/>
     </file>
-    <file xil_pn:name="../sim/signal_sync_tb.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="0"/>
-      <association xil_pn:name="PostMapSimulation" xil_pn:seqID="272"/>
-      <association xil_pn:name="PostRouteSimulation" xil_pn:seqID="272"/>
-      <association xil_pn:name="PostTranslateSimulation" xil_pn:seqID="272"/>
-    </file>
     <file xil_pn:name="../rtl/trigger_handling_v3.v" xil_pn:type="FILE_VERILOG">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="219"/>
       <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
     </file>
-    <file xil_pn:name="ipcore_dir_ATRI/s6_pcie_v1_4.xise" xil_pn:type="FILE_COREGENISE">
+    <file xil_pn:name="ipcore_dir_ATRI/atri_outbound_packet_buffer_nofwft.xco" xil_pn:type="FILE_COREGEN">
+      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="254"/>
+      <association xil_pn:name="Implementation" xil_pn:seqID="97"/>
+    </file>
+    <file xil_pn:name="../rtl/ATRI_nofx2/ifclk_infrastructure.v" xil_pn:type="FILE_VERILOG">
+      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="262"/>
       <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
+    </file>
+    <file xil_pn:name="../rtl/xillybus/xillybus.v" xil_pn:type="FILE_VERILOG">
+      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="264"/>
+      <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
+    </file>
+    <file xil_pn:name="../rtl/xillybus/xillybus_core.ngc" xil_pn:type="FILE_NGC">
+      <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
+    </file>
+    <file xil_pn:name="../rtl/xillybus/xillybus_core.v" xil_pn:type="FILE_VERILOG">
+      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="267"/>
+      <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
+    </file>
+    <file xil_pn:name="ipcore_dir_ATRI_nofx2/xilly_infifo16.xco" xil_pn:type="FILE_COREGEN">
+      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="269"/>
+      <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
+    </file>
+    <file xil_pn:name="ipcore_dir_ATRI_nofx2/pcie.xco" xil_pn:type="FILE_COREGEN">
+      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="276"/>
+      <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
+    </file>
+    <file xil_pn:name="ATRI_revB_nofx2.ucf" xil_pn:type="FILE_UCF">
+      <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
+    </file>
+    <file xil_pn:name="../rtl/ATRI_nofx2/ATRI_revB_nofx2.v" xil_pn:type="FILE_VERILOG">
+      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="282"/>
+      <association xil_pn:name="Implementation" xil_pn:seqID="282"/>
     </file>
     <file xil_pn:name="ipcore_dir_ATRI/data_fifo_to_pcie.xise" xil_pn:type="FILE_COREGENISE">
       <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
@@ -649,10 +670,18 @@
     <file xil_pn:name="ipcore_dir_ATRI/chipscope_icon.xise" xil_pn:type="FILE_COREGENISE">
       <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
     </file>
+    <file xil_pn:name="ipcore_dir_ATRI/atri_outbound_packet_buffer_nofwft.xise" xil_pn:type="FILE_COREGENISE">
+      <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
+    </file>
+    <file xil_pn:name="ipcore_dir_ATRI_nofx2/xilly_infifo16.xise" xil_pn:type="FILE_COREGENISE">
+      <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
+    </file>
+    <file xil_pn:name="ipcore_dir_ATRI_nofx2/pcie.xise" xil_pn:type="FILE_COREGENISE">
+      <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
+    </file>
   </files>
 
   <properties>
-    <property xil_pn:name="Auto Implementation Top" xil_pn:value="false" xil_pn:valueState="non-default"/>
     <property xil_pn:name="Combinatorial Logic Optimization" xil_pn:value="true" xil_pn:valueState="non-default"/>
     <property xil_pn:name="Cores Search Directories" xil_pn:value="../par/ipcore_dir_ATRI" xil_pn:valueState="non-default"/>
     <property xil_pn:name="Device" xil_pn:value="xc6slx150t" xil_pn:valueState="non-default"/>
@@ -716,6 +745,7 @@
 
   <bindings>
     <binding xil_pn:location="/ATRI_revB" xil_pn:name="ATRI_revB.ucf"/>
+    <binding xil_pn:location="/ATRI_revB_nofx2" xil_pn:name="ATRI_revB_nofx2.ucf"/>
   </bindings>
 
   <libraries/>
@@ -727,7 +757,7 @@
     <!-- Do not hand-edit this section, as it will be overwritten when the    -->
     <!-- project is analyzed based on files automatically identified as       -->
     <!-- include files.                                                       -->
-    <file xil_pn:name="../rtl/ev2_interface.vh" xil_pn:type="FILE_VERILOG"/>
+    <file xil_pn:name="../rtl/ev2_interface.vh" xil_pn:type=""/>
     <file xil_pn:name="../rtl/ev_interface.vh" xil_pn:type="FILE_VERILOG"/>
     <file xil_pn:name="../rtl/Verilog_Library/clogb2.vh" xil_pn:type="FILE_VERILOG"/>
     <file xil_pn:name="../rtl/wb_interface.vh" xil_pn:type="FILE_VERILOG"/>
