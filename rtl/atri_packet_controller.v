@@ -125,6 +125,7 @@ module atri_packet_controller(
 	localparam [FSM_BITS-1:0] WRITE_I2C_EOF = 54;
 	localparam [FSM_BITS-1:0] WRITE_I2C_PRIME2 = 55;
 	localparam [FSM_BITS-1:0] WRITE_I2C_PRIME3 = 56;
+	(* FSM_ENCODING = "USER" *)
 	reg [FSM_BITS-1:0] state = RESET;
 	
 	localparam [3:0] CONTROLLER = 0;
