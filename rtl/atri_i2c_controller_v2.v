@@ -75,7 +75,8 @@ module atri_i2c_controller_v2(
 	wire pb_rd_stb;											//% PicoBlaze read strobe
 	wire pb_interrupt;										//% PicoBlaze interrupt
 	wire pb_interrupt_ack;									//% PicoBlaze interrupt acknowledge
-	wire pb_reset;												//% PicoBlaze reset
+	wire pb_bram_reset; 										//% wtf does this come from	
+	wire pb_reset = rst_i || pb_bram_reset;			//% PicoBlaze reset
 
 	wire pb_wb_sel = (pb_port[7:3] == {5{1'b0}});			//% WISHBONE bus: ports 0x00-0x07
 	wire pb_timer_sel = (pb_port[7:3] == 5'b00001);			//% Timer port: port 0x08 (shadowed to 0x0F)
@@ -114,7 +115,7 @@ module atri_i2c_controller_v2(
 
 	atri_i2c_rom prom(.address(pb_address),
 							 .instruction(pb_instruction),
-							 .reset(pb_reset),.clk(clk_i),
+							 .reset(pb_bram_reset),.clk(clk_i),
 							 .jump_wr_stb(jumptable_wr_stb),
 							 .ram_address(lram_addr),.ram_data_out(lram_dat),
 							 .ram_data_in(pb_outport),.ram_wr_stb(lram_wr_stb));
