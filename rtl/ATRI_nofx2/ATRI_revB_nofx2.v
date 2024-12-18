@@ -187,7 +187,7 @@ module ATRI_revB_nofx2(
 	parameter [7:0] VER_DAY = 4;
 	parameter [3:0] VER_MAJOR = 0;
 	parameter [3:0] VER_MINOR = 15;
-	parameter [7:0] VER_REV = 102;
+	parameter [7:0] VER_REV = 103;
 
 	localparam MAX_DAUGHTERS = 4;
 
@@ -257,7 +257,7 @@ module ATRI_revB_nofx2(
 	               .full_i(ev2_full),
 	               .rst_o(ev2_rst),
 	               .rst_ack_i(ev2_rst_ack));
-	// INTERFACE_END
+	// INTERFACE_END	
 	
 	//% IRS clock infrastructure.
 	atri_clock_generator irs_clock_gen(.FPGA_REFCLK_P(FPGA_REFCLK_P),.FPGA_REFCLK_N(FPGA_REFCLK_N),
@@ -406,6 +406,45 @@ module ATRI_revB_nofx2(
 						 .phy_out_mostly_empty_o(to_phy_mostly_empty),
 						 .phy_in_full_o(from_phy_full),
 */
+/*
+module nofx2_event_buffer( input wr_clk,
+			   input [15:0] dat_i,
+			   input wr_i,
+			   output full_o,
+			   output [15:0] count_o,
+			   input rst_i,
+			   output rst_ack_o,
+
+			   input rd_clk,
+			   output [31:0] dat_o,
+			   input rd_i,
+			   output empty_o);
+	wire ev2_irsclk;
+	wire [15:0] ev2_dat;
+	wire [15:0] ev2_count;
+	wire ev2_wr;
+	wire ev2_full;
+	wire ev2_rst;
+	wire ev2_rst_ack;
+				*/
+	wire user_ev_rden;
+	wire user_ev_empty;
+	wire [31:0] user_ev_data;
+	wire user_ev_open; // who knows, maybe reset some'n
+	
+	// LET'S GIVE IT A WHIRL
+	nofx2_event_buffer u_evbuf(.wr_clk(ev2_irsclk),
+										.dat_i(ev2_dat),
+									   .wr_i(ev2_wr),
+										.full_o(ev2_full),
+										.count_o(ev2_count),
+										.rst_i(ev2_rst),
+										.rst_ack_o(ev2_rst_ack),
+										.rd_clk(pcie_clk),
+										.dat_o(user_ev_data),
+										.rd_i(user_ev_rden),
+										.empty_o(user_ev_empty));
+	
 	
 	xillybus u_xillybus( .PCIE_TX0_P( pci_exp_txp ),
 								.PCIE_TX0_N( pci_exp_txn ),
@@ -432,11 +471,11 @@ module ATRI_revB_nofx2(
 								.user_r_pkt_out_eof(1'b0),
 								.user_r_pkt_out_open(),
 								// TEMPORARY
-								.user_r_ev_out_rden(),
-								.user_r_ev_out_empty(1'b1),
-								.user_r_ev_out_data(16'h0000),
+								.user_r_ev_out_rden(user_ev_rden),
+								.user_r_ev_out_empty(user_ev_empty),
+								.user_r_ev_out_data(user_ev_data),
 								.user_r_ev_out_eof(1'b0),
-								.user_r_ev_out_open());
+								.user_r_ev_out_open(user_ev_open));
 								
 	
 	////////////////////////////////////////////////////////////////////

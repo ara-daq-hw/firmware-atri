@@ -1,3 +1,5 @@
 iseconfig
+ipcore_dir_*/*
+!.gitignore
 !*.xco
-ipcore_dir_*
+!*.xise
