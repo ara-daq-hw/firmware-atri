@@ -183,11 +183,11 @@ module ATRI_revB(
 	//BOARD_ID = "ATR0" for ARA02, "ATRI" otherwise.
 	parameter [31:0] BOARD_ID = "ATRI";
 	parameter [3:0] VER_BOARD = 1;
-	parameter [3:0] VER_MONTH = 1;
-	parameter [7:0] VER_DAY = 24;
+	parameter [3:0] VER_MONTH = 12;
+	parameter [7:0] VER_DAY = 4;
 	parameter [3:0] VER_MAJOR = 0;
-	parameter [3:0] VER_MINOR = 12;
-	parameter [7:0] VER_REV = 2;
+	parameter [3:0] VER_MINOR = 15;
+	parameter [7:0] VER_REV = 98;
 
 	localparam MAX_DAUGHTERS = 4;
 
@@ -258,9 +258,6 @@ module ATRI_revB(
 	// INTERFACE_END
 
 
-
-
-
 	//% Clock infrastructure.
 	usb_clock_infrastructure #(.IFCLK_PS(IFCLK_PS)) 
 									phy_clock(.IFCLK(IFCLK),.xIFCLK(xIFCLK));
@@ -328,6 +325,7 @@ module ATRI_revB(
 					.SENSE(SENSE),
 					.BOARD_ID(BOARD_ID),
 					.IMPLEMENT_RESERVED(IMPLEMENT_RESERVED),
+					.OUTBOUND_FWFT("YES"),
 					.VER_BOARD(VER_BOARD),.VER_MAJOR(VER_MAJOR),.VER_MINOR(VER_MINOR),.VER_REV(VER_REV),
 					.VER_MONTH(VER_MONTH),.VER_DAY(VER_DAY))
 				u_atri(
@@ -370,6 +368,7 @@ module ATRI_revB(
 						 .ext_trig_i(FPTRIG_IN),
 
 						 .phy_clk_i(xIFCLK),
+						 .phy_ifclk_i(xIFCLK),
 						 .phy_rst_i(phy_rst_o),
 						 .slow_ce_i(KHz_CE),
 						 .micro_ce_i(MHz_CE),
