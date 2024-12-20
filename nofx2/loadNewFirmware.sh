@@ -7,4 +7,4 @@ if [ -e /dev/xillybus_spi_in ]; then
 fi
 
 # Run the Python script to load new firmware onto the SPI Flash
-python3 /home/ara/loadSPIFlash.py $1
+python3 loadSPIFlash.py $1
