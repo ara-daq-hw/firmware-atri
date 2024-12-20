@@ -19,7 +19,7 @@ The first operating firmware image starts at 0x20_0000.
 
 Create a MultiBoot FPGA file with size 128M (it wants it in bits)
 for a Spartan-6 with 2 revisions. There's no way to generate an offset,
-so Python's going to rip apart the MCS file later.
+so bash's going to rip apart the MCS file later.
 
 When it asks for a file for revision 0 add atri_bootload_nodbg.bit.
 
@@ -34,3 +34,6 @@ This is an "Extended Linear Address" marker which jumps the top 16 bits
 of the address up to "0020" (0x0020) which is of course the start of
 the new file.
 
+Then run ``trim_mcs.sh`` to rip out the operating firmware portion of it.
+Should probably add an option or something to pass the start address.
+I have no idea.
