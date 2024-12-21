@@ -1,5 +1,44 @@
 #include "mcp.h"
 
+mcp2221_t *globalDevice = NULL;
+
+// internally these are called with like "initFx2ControlSocket"
+// stuff and "closeFx2Control" stuff.
+void mcpComLib_init() {
+  globalDevice = mcp_ara_open();
+}
+
+void mcpComLib_finish() {
+  if (globalDevice != NULL)
+    mcp_ara_close(globalDevice);
+}
+
+// this only gets used with mcpComLib stuff
+int sendVendorRequest(uint8_t bmRequestType,
+		      uint8_t bRequest,
+		      uint16_t wValue,
+		      uint16_t wIndex,
+		      unsigned char *data,
+		      uint16_t wLength) {
+  // i dunno do something else later
+  if (bRequest != VR_ATRI_I2C) return 0;
+  // NOTE: the addr that we get is the dumbcrap 8-bit address.
+  // so just freaking drop it.
+  if (bmRequestType == VR_HOST_TO_DEVICE) {
+    uint8_t addr = wValue >> 1;
+    mcp_ara_i2c_write(globalDevice,
+		      addr,
+		      data,
+		      wLength);
+  } else if (bmRequestType == VR_DEVICE_TO_HOST) {
+    uint8_t addr = wValue >> 1;
+    mcp_ara_i2c_read(globalDevice,
+		     addr,
+		     data,
+		     wLength);
+  }
+}
+
 mcp2221_t *mcp_ara_open() {
   mcp2221_init();
   int count = mcp2221_find(MCP2221_DEFAULT_VID,
@@ -10,7 +49,7 @@ mcp2221_t *mcp_ara_open() {
     mcp2221_exit();
     return NULL;
   }
-  mcp2221_t *dev = mcp2221_open();
+  mcp2221_t *myDev = mcp2221_open();
   mcp2221_gpioconfset_t gpioConf = mcp2221_GPIOConfInit();
 
   gpioConf.conf[0].gpios          = MCP2221_GPIO0 | MCP2221_GPIO1 | MCP2221_GPIO2 | MCP2221_GPIO3;
@@ -79,19 +118,13 @@ int mcp_ara_i2c_read(mcp2221_t *myDev,
 // we are trying to replace atriControlLib:
 // we sleazeball this by just replacing
 // sendVendorRequest.
-// bmRequestType = VR_HOST_TO_DEVICE
-// bRequest = VR_ATRI_I2C
+// bmRequestType = VR_HOST_TO_DEVICE (0x40) or VR_DEVICE_TO_HOST (0xC0)
+// bRequest = VR_ATRI_I2C (0xb4)
 // wValue = i2cAddress
 // wIndex = 0
 // dataLength = length
 // read is exactly the same except bmRequestType is VR_DEVICE_TO_HOST
-int sendVendorRequest(uint8_t bmRequestType,
-		      uint8_t bRequest,
-		      uint16_t wValue,
-		      uint16_t wIndex,
-		      unsigned char *data,
-		      uint16_t wLength) {
-  
-}
-
+#define VR_HOST_TO_DEVICE 0x40
+#define VR_DEVICE_TO_HOST 0xC0
+#define VR_ATRI_I2C 0xB4
 
