@@ -9,75 +9,91 @@ module nofx2_event_buffer( input wr_clk,
 			   input rd_clk,
 			   output [31:0] dat_o,
 			   input rd_i,
-			   output empty_o);
+			   output empty_o,
+				// DEBUGGING
+				// DEBUGGING WORKS IN WR_CLK LAND - WE NEED TO SWITCH
+				// THE PHY DEBUG FOR THIS
+				// 3 BITS STATE
+				// 16 BITS COUNTER
+				// 1 BIT WR
+				// 16 BITS DAT
+				// 16 BITS COUNT
+				// 1 BIT FIFO WR
+				output [52:0] debug_o
+				);
 
    // fill a 32-bit buffer with frame data
    // frame structure is always the same:
    // word 0: type
-   // word 1: length (number of following words)
+   // word 1: TOTAL length
    // so we just bounce
    // when we hit an odd number of words we just
    // write a dummy word, the software will
    // know because it'll pad the number of
    // subsequent reads after the header and just
    // lie about the delivered data
-
+	//
    reg [15:0] 			  data_holding = {32{1'b0}};
-   wire [31:0] 			  data_to_fifo = { dat_i, data_holding };   
+	// aaaugh
+	// I have NO IDEA HOW but SOMEHOW
+	// the 16-bit words got BYTE SWAPPED going to
+	// software. So the software is expecting these to be SWAPPED.
+	// So we STUPIDLY SWAP THEM HERE. Note that it's ONLY THE BYTES IN THE WORDS,
+	// NOT THE WORDS IN THE INT.
+	// For instance for a single event at the beginning we might get
+	// 4500
+	// 080D
+	// when this is written, data_holding is 4500, dat_i is 080D.
+	// Ryan expects 45, 00, 08, 0D.
+	// This then translates that to
+	// 0x0D080045, which in x86 (little-endian) gets stored as above
+   wire [31:0] 			  data_to_fifo = { dat_i[7:0], dat_i[15:8], data_holding[7:0], data_holding[15:8] };   
    
-   // we're small enough that we can hack-ball this, I hope
-   // in state LENGTH we want to capture a value such that
-   // we _add_ to the overflow. so for instance, if we get
-   // 1, we want to store FFFF so that in DATA_0 nwords_remaining_plus_1[16]
-   // is set.
-   // so look at this:
-   // ~0001 (1 remaining) = FFFE = 2 to go (1 off)
-   // ~8000 (32768 remaining)  = 7FFF = 32769 to go (1 off)
-   // etc.
-   // so what we can do is:
-   // if (state == (LENGTH || DATA_0 || DATA_1))
-   //    nwords_remaining <= nwords_in_plus_one;
-   // assign nwords_in = (state == LENGTH) ? ~dat_i : nwords_remaining;
-   // assign nwords_in_plus_one = nwords_in + 1;
-   //
-   // this is actually fully implementable in a single compact
-   // adder trivially, but who knows what Xilinx will do.
-   // (it just takes in dat_i/nwords_remaining/2 control bits)
-   // who cares, if we need to we'll do it ourselves.  
    reg [15:0] 			  nwords_remaining = {16{1'b0}};
    localparam FSM_BITS = 3;
    localparam [FSM_BITS-1:0] RESET = 0;
-   localparam [FSM_BITS-1:0] RESET_COMPLETE = 1;   
-   localparam [FSM_BITS-1:0] IDLE = 2;
-   localparam [FSM_BITS-1:0] LENGTH = 3;
-   localparam [FSM_BITS-1:0] DATA_0 = 4;
-   localparam [FSM_BITS-1:0] DATA_1 = 5;
-   localparam [FSM_BITS-1:0] PAD_1 = 6;   
+   localparam [FSM_BITS-1:0] RESET_COMPLETE = 1;
+	localparam [FSM_BITS-1:0] RESET_WAIT = 2;
+   localparam [FSM_BITS-1:0] IDLE = 3;
+   localparam [FSM_BITS-1:0] LENGTH = 4;
+   localparam [FSM_BITS-1:0] DATA_0 = 5;
+   localparam [FSM_BITS-1:0] DATA_1 = 6;
+   localparam [FSM_BITS-1:0] PAD_1 = 7;   
    reg [FSM_BITS-1:0] 		  state = RESET;
 
-   wire fifo_wr = (state == LENGTH ||
-		   state == DATA_1 ||
-		   state == PAD_1);   
+	// so effing stupid
+	// in LENGTH and DATA_1 the write needs to be qualified on wr_i
+	// The write in PAD_1 is forced.
+   wire fifo_wr = ((state == LENGTH || state == DATA_1) && wr_i) ||
+		   (state == PAD_1);   
    
    wire [15:0] 			  nwords_in = (state == LENGTH) ? ~dat_i : nwords_remaining;
-   wire [16:0] 			  nwords_in_plus_one = nwords_in + 1;   
+	wire [15:0]				  nwords_addend = 16'h1;
+   wire [16:0] 			  nwords_in_plus_one = nwords_in + nwords_addend;   
    
+	// sigh, reset needs to be rising-edge flag, otherwise rst_i
+	// will just hold us in reset.
+	reg reset_rereg = 0;
+	reg reset_flag = 0;
    wire 			  reset_delay;
    wire 			  reset_clear;   
-   SRLC32E u_reset_delay(.D(state == RESET),.CE(1'b1),.CLK(clk),
+   SRLC32E u_reset_delay(.D(state == RESET),.CE(1'b1),.CLK(wr_clk),
 			 .A(5'd15),
 			 .Q(reset_clear),
 			 .Q31(reset_delay));
    // this will need a CC
-   reg 				  reset_fifo = 0;
+   reg 				  reset_fifo = 0;	
    always @(posedge wr_clk) begin
+		reset_rereg <= rst_i;
+		reset_flag <= rst_i && !reset_rereg;
       reset_fifo <= (state == RESET && !reset_clear);
       
-      if (rst_i) state <= RESET;
+      if (reset_flag) state <= RESET;
       else begin 
 	 case (state)
 	   RESET: if (reset_delay) state <= RESET_COMPLETE;
-	   RESET_COMPLETE: state <= IDLE;	   
+	   RESET_COMPLETE: state <= RESET_WAIT;
+		RESET_WAIT: if (!rst_i) state <= IDLE;
 	   IDLE: if (wr_i) state <= LENGTH;
 	   LENGTH: if (wr_i) state <= DATA_0;
 	   DATA_0: if (wr_i) begin
@@ -138,7 +154,13 @@ module nofx2_event_buffer( input wr_clk,
 		       .dout(dat_o),
 		       .rd_en(rd_i),
 		       .empty(empty_o));   
-   assign rst_ack_o = (state == RESET_COMPLETE);
+   assign rst_ack_o = (state == RESET_COMPLETE || state == RESET_WAIT);
    assign count_o = out_data_count;   
    
+	assign debug_o[2:0] = state;
+	assign debug_o[3] = wr_i;
+	assign debug_o[4 +: 16] = nwords_remaining;
+	assign debug_o[20 +: 16] = dat_i;
+	assign debug_o[36 +: 16] = out_data_count;
+	assign debug_o[52] = fifo_wr;
 endmodule // nofx2_event_buffer
