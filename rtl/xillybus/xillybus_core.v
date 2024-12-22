@@ -21,7 +21,7 @@ module xillybus_core
   input  trn_rsrc_rdy_n_w,
   input  trn_tdst_rdy_n_w,
   input  trn_terr_drop_n_w,
-  input [15:0] user_r_ev_out_data_w,
+  input [31:0] user_r_ev_out_data_w,
   input  user_r_ev_out_empty_w,
   input  user_r_ev_out_eof_w,
   input [7:0] user_r_pkt_out_data_w,

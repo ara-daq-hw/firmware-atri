@@ -19,7 +19,7 @@ module xillybus(GPIO_LED, PCIE_TX0_P, PCIE_TX0_N, PCIE_RX0_P, PCIE_RX0_N,
   input [7:0] user_r_pkt_out_data;
   input  user_r_pkt_out_empty;
   input  user_r_pkt_out_eof;
-  input [15:0] user_r_ev_out_data;
+  input [31:0] user_r_ev_out_data;
   input  user_r_ev_out_empty;
   input  user_r_ev_out_eof;
   output [3:0] GPIO_LED;
