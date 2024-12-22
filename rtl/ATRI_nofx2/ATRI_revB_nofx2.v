@@ -187,7 +187,7 @@ module ATRI_revB_nofx2(
 	parameter [7:0] VER_DAY = 4;
 	parameter [3:0] VER_MAJOR = 0;
 	parameter [3:0] VER_MINOR = 15;
-	parameter [7:0] VER_REV = 103;
+	parameter [7:0] VER_REV = 111;
 
 	localparam MAX_DAUGHTERS = 4;
 
@@ -228,17 +228,7 @@ module ATRI_revB_nofx2(
 
 
 	wire [52:0] pcie_debug;
-	wire [52:0] pcie_debug1;
 	
-		//placeholders!
-	wire ev2_irsclk1;
-	wire [15:0] ev2_dat1;
-	wire [15:0] ev2_count1;
-	wire ev2_wr1;
-	wire ev2_full1;
-	wire ev2_rst1;
-	wire ev2_rst_ack1;
-
 	// INTERFACE_INS ev2 ev2_fifo RPL interface_io ev2_if_io
 	wire ev2_irsclk;
 	wire [15:0] ev2_dat;
@@ -432,6 +422,8 @@ module nofx2_event_buffer( input wr_clk,
 	wire [31:0] user_ev_data;
 	wire user_ev_open; // who knows, maybe reset some'n
 	
+	wire [52:0] event_debug;
+	
 	// LET'S GIVE IT A WHIRL
 	nofx2_event_buffer u_evbuf(.wr_clk(ev2_irsclk),
 										.dat_i(ev2_dat),
@@ -443,7 +435,8 @@ module nofx2_event_buffer( input wr_clk,
 										.rd_clk(pcie_clk),
 										.dat_o(user_ev_data),
 										.rd_i(user_ev_rden),
-										.empty_o(user_ev_empty));
+										.empty_o(user_ev_empty),
+										.debug_o(event_debug));
 	
 	
 	xillybus u_xillybus( .PCIE_TX0_P( pci_exp_txp ),
@@ -552,8 +545,8 @@ module nofx2_event_buffer( input wr_clk,
 						 .phy_out_mostly_empty_o(to_phy_mostly_empty),
 						 .phy_in_full_o(from_phy_full),
 						 .ev_interface_io(event_interface),
-						 .phy_debug_i(bridge_debug),
-						 .phy_debug_clk_i(pcie_clk),
+						 .phy_debug_i(event_debug),
+						 .phy_debug_clk_i(ev2_irsclk),
 						 .gpio_debug_o(gpio_debug),
 						 .pcie_debug_clk_i(pcie_clk),
 						 .pcie_debug_i(pcie_debug1)
